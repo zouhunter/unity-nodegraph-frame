@@ -236,84 +236,84 @@ namespace UnityEngine.AssetBundles.GraphTool
             }
         }
 
-        public override void Prepare(BuildTarget target,
-            Model.NodeData node,
-            IEnumerable<PerformGraph.AssetGroups> incoming,
-            IEnumerable<Model.ConnectionData> connectionsToOutput,
-            PerformGraph.Output Output)
-        {
-            // BundleBuilder do nothing without incoming connections
-            if (incoming == null)
-            {
-                return;
-            }
+//        public override void Prepare(BuildTarget target,
+//            Model.NodeData node,
+//            IEnumerable<PerformGraph.AssetGroups> incoming,
+//            IEnumerable<Model.ConnectionData> connectionsToOutput,
+//            PerformGraph.Output Output)
+//        {
+//            // BundleBuilder do nothing without incoming connections
+//            if (incoming == null)
+//            {
+//                return;
+//            }
 
-            if (string.IsNullOrEmpty(m_buildLocations[target]))
-            {
-                throw new NodeException("You must set build location.", node.Id);
-            }
+//            if (string.IsNullOrEmpty(m_buildLocations[target]))
+//            {
+//                throw new NodeException("You must set build location.", node.Id);
+//            }
 
-            if (string.IsNullOrEmpty(m_playerName[target]))
-            {
-                throw new NodeException("You must set player name.", node.Id);
-            }
-        }
+//            if (string.IsNullOrEmpty(m_playerName[target]))
+//            {
+//                throw new NodeException("You must set player name.", node.Id);
+//            }
+//        }
 
-        public override void Build(BuildTarget target,
-            Model.NodeData node,
-            IEnumerable<PerformGraph.AssetGroups> incoming,
-            IEnumerable<Model.ConnectionData> connectionsToOutput,
-            PerformGraph.Output Output,
-            Action<Model.NodeData, string, float> progressFunc)
-        {
-            if (incoming == null)
-            {
-                return;
-            }
+//        public override void Build(BuildTarget target,
+//            Model.NodeData node,
+//            IEnumerable<PerformGraph.AssetGroups> incoming,
+//            IEnumerable<Model.ConnectionData> connectionsToOutput,
+//            PerformGraph.Output Output,
+//            Action<Model.NodeData, string, float> progressFunc)
+//        {
+//            if (incoming == null)
+//            {
+//                return;
+//            }
 
-            if (!Directory.Exists(m_buildLocations[target]))
-            {
-                Directory.CreateDirectory(m_buildLocations[target]);
-            }
+//            if (!Directory.Exists(m_buildLocations[target]))
+//            {
+//                Directory.CreateDirectory(m_buildLocations[target]);
+//            }
 
-            var sceneGUIDs = m_scenes[target].Split(',');
+//            var sceneGUIDs = m_scenes[target].Split(',');
 
-#if UNITY_5_5_OR_NEWER
-            string manifestPath = string.Empty;
+//#if UNITY_5_5_OR_NEWER
+//            string manifestPath = string.Empty;
 
-            foreach (var ag in incoming)
-            {
-                foreach (var assets in ag.assetGroups.Values)
-                {
-                    var manifestBundle = assets.Where(a => a.assetType == typeof(AssetBundleManifestReference));
-                    if (manifestBundle.Any())
-                    {
-                        manifestPath = manifestBundle.First().importFrom;
-                    }
-                }
-            }
+//            foreach (var ag in incoming)
+//            {
+//                foreach (var assets in ag.assetGroups.Values)
+//                {
+//                    var manifestBundle = assets.Where(a => a.assetType == typeof(AssetBundleManifestReference));
+//                    if (manifestBundle.Any())
+//                    {
+//                        manifestPath = manifestBundle.First().importFrom;
+//                    }
+//                }
+//            }
 
-            BuildPlayerOptions opt;
-            opt.options = (BuildOptions)m_buildOptions[target];
-            opt.locationPathName = m_buildLocations[target] + "/" + m_playerName[target];
-            opt.assetBundleManifestPath = manifestPath;
-            opt.scenes = sceneGUIDs.Select(guid => AssetDatabase.GUIDToAssetPath(guid)).Where(path => !string.IsNullOrEmpty(path) && !path.Contains("__DELETED_GUID_Trash")).ToArray();
-            opt.target = target;
-#if UNITY_5_6_OR_NEWER
-            opt.targetGroup = BuildTargetUtility.TargetToGroup(target);
-#endif
-            var errorMsg = BuildPipeline.BuildPlayer(opt);
-#else
-            string[] levels = sceneGUIDs.Select(guid => AssetDatabase.GUIDToAssetPath(guid)).Where(path => !string.IsNullOrEmpty(path) && !path.Contains("__DELETED_GUID_Trash")).ToArray();
-            string locationPathName = m_buildLocations[target] + "/" + m_playerName[target];
-            BuildOptions opt = (BuildOptions)m_buildOptions[target];
+//            BuildPlayerOptions opt;
+//            opt.options = (BuildOptions)m_buildOptions[target];
+//            opt.locationPathName = m_buildLocations[target] + "/" + m_playerName[target];
+//            opt.assetBundleManifestPath = manifestPath;
+//            opt.scenes = sceneGUIDs.Select(guid => AssetDatabase.GUIDToAssetPath(guid)).Where(path => !string.IsNullOrEmpty(path) && !path.Contains("__DELETED_GUID_Trash")).ToArray();
+//            opt.target = target;
+//#if UNITY_5_6_OR_NEWER
+//            opt.targetGroup = BuildTargetUtility.TargetToGroup(target);
+//#endif
+//            var errorMsg = BuildPipeline.BuildPlayer(opt);
+//#else
+//            string[] levels = sceneGUIDs.Select(guid => AssetDatabase.GUIDToAssetPath(guid)).Where(path => !string.IsNullOrEmpty(path) && !path.Contains("__DELETED_GUID_Trash")).ToArray();
+//            string locationPathName = m_buildLocations[target] + "/" + m_playerName[target];
+//            BuildOptions opt = (BuildOptions)m_buildOptions[target];
 
-            var errorMsg = BuildPipeline.BuildPlayer(levels, locationPathName, target, opt);
-#endif
-            if (!string.IsNullOrEmpty(errorMsg))
-            {
-                throw new NodeException(node.Name + ":Player build failed:" + errorMsg, node.Id);
-            }
-        }
+//            var errorMsg = BuildPipeline.BuildPlayer(levels, locationPathName, target, opt);
+//#endif
+//            if (!string.IsNullOrEmpty(errorMsg))
+//            {
+//                throw new NodeException(node.Name + ":Player build failed:" + errorMsg, node.Id);
+//            }
+//        }
     }
 }

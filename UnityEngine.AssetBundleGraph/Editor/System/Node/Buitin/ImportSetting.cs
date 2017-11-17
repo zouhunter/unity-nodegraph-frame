@@ -117,25 +117,25 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			return newNode;
 		}
 
-		public override bool OnAssetsReimported(
-			Model.NodeData nodeData,
-			AssetReferenceStreamManager streamManager,
-			BuildTarget target, 
-			string[] importedAssets, 
-			string[] deletedAssets, 
-			string[] movedAssets, 
-			string[] movedFromAssetPaths)
-		{
-            var samplingDirectoryPath = FileUtility.PathCombine(Model.Settings.Path.ImporterSettingsPath, nodeData.Id);
+		//public override bool OnAssetsReimported(
+		//	Model.NodeData nodeData,
+		//	AssetReferenceStreamManager streamManager,
+		//	BuildTarget target, 
+		//	string[] importedAssets, 
+		//	string[] deletedAssets, 
+		//	string[] movedAssets, 
+		//	string[] movedFromAssetPaths)
+		//{
+  //          var samplingDirectoryPath = FileUtility.PathCombine(Model.Settings.Path.ImporterSettingsPath, nodeData.Id);
 
-			foreach(var imported in importedAssets) {
-				if(imported.StartsWith(samplingDirectoryPath)) {
-					return true;
-				}
-			}
+		//	foreach(var imported in importedAssets) {
+		//		if(imported.StartsWith(samplingDirectoryPath)) {
+		//			return true;
+		//		}
+		//	}
 
-			return false;
-		}
+		//	return false;
+		//}
 
 		public override void OnInspectorGUI(NodeGUI node, AssetReferenceStreamManager streamManager, NodeGUIEditor editor, Action onValueChanged) {
 
@@ -317,78 +317,78 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			return;
 		}
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			Action<Type, Type, AssetReference> multipleAssetTypeFound = (Type expectedType, Type foundType, AssetReference foundAsset) => {
-				throw new NodeException(string.Format("{3} :ImportSetting expect {0}, but different type of incoming asset is found({1} {2})", 
-					expectedType.FullName, foundType.FullName, foundAsset.fileNameAndExtension, node.Name), node.Id);
-			};
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+		//	Action<Type, Type, AssetReference> multipleAssetTypeFound = (Type expectedType, Type foundType, AssetReference foundAsset) => {
+		//		throw new NodeException(string.Format("{3} :ImportSetting expect {0}, but different type of incoming asset is found({1} {2})", 
+		//			expectedType.FullName, foundType.FullName, foundAsset.fileNameAndExtension, node.Name), node.Id);
+		//	};
 
-			Action<Type> unsupportedType = (Type unsupported) => {
-				throw new NodeException(string.Format("{0} :Incoming asset type is not supported by ImportSetting (Incoming type:{1}). Perhaps you want to use Modifier instead?",
-					node.Name, (unsupported != null)?unsupported.FullName:"null"), node.Id);
-			};
+		//	Action<Type> unsupportedType = (Type unsupported) => {
+		//		throw new NodeException(string.Format("{0} :Incoming asset type is not supported by ImportSetting (Incoming type:{1}). Perhaps you want to use Modifier instead?",
+		//			node.Name, (unsupported != null)?unsupported.FullName:"null"), node.Id);
+		//	};
 
-			Action<Type, Type> incomingTypeMismatch = (Type expectedType, Type incomingType) => {
-				throw new NodeException(string.Format("{0} :Incoming asset type is does not match with this ImportSetting (Expected type:{1}, Incoming type:{2}).",
-					node.Name, (expectedType != null)?expectedType.FullName:"null", (incomingType != null)?incomingType.FullName:"null"), node.Id);
-			};
-            Action customConfigIsNull = () => {
-                throw new NodeException(string.Format("{0} :You must select custom setting asset.", node.Name), node.Id);
-            };
+		//	Action<Type, Type> incomingTypeMismatch = (Type expectedType, Type incomingType) => {
+		//		throw new NodeException(string.Format("{0} :Incoming asset type is does not match with this ImportSetting (Expected type:{1}, Incoming type:{2}).",
+		//			node.Name, (expectedType != null)?expectedType.FullName:"null", (incomingType != null)?incomingType.FullName:"null"), node.Id);
+		//	};
+  //          Action customConfigIsNull = () => {
+  //              throw new NodeException(string.Format("{0} :You must select custom setting asset.", node.Name), node.Id);
+  //          };
 
-			Action<ConfigStatus> errorInConfig = (ConfigStatus _) => {
+		//	Action<ConfigStatus> errorInConfig = (ConfigStatus _) => {
 
-				var firstAsset = TypeUtility.GetFirstIncomingAsset(incoming);
+		//		var firstAsset = TypeUtility.GetFirstIncomingAsset(incoming);
 
-				if(firstAsset != null) {
-					// give a try first in sampling file
-					var configFilePath = FileUtility.GetImportSettingTemplateFilePath(firstAsset);
-					SaveSampleFile(node, configFilePath);
+		//		if(firstAsset != null) {
+		//			// give a try first in sampling file
+		//			var configFilePath = FileUtility.GetImportSettingTemplateFilePath(firstAsset);
+		//			SaveSampleFile(node, configFilePath);
 
-					ValidateInputSetting(node, target, incoming, multipleAssetTypeFound, unsupportedType, incomingTypeMismatch, (ConfigStatus eType) => {
-						if(eType == ConfigStatus.NoSampleFound) {
-							throw new NodeException(node.Name + " :ImportSetting has no sampling file. Please configure it from Inspector.", node.Id);
-						}
-						if(eType == ConfigStatus.TooManySamplesFound) {
-							throw new NodeException(node.Name + " :ImportSetting has too many sampling file. Please fix it from Inspector.", node.Id);
-                        }
-                    }, customConfigIsNull);
-				}
-			};
+		//			ValidateInputSetting(node, target, incoming, multipleAssetTypeFound, unsupportedType, incomingTypeMismatch, (ConfigStatus eType) => {
+		//				if(eType == ConfigStatus.NoSampleFound) {
+		//					throw new NodeException(node.Name + " :ImportSetting has no sampling file. Please configure it from Inspector.", node.Id);
+		//				}
+		//				if(eType == ConfigStatus.TooManySamplesFound) {
+		//					throw new NodeException(node.Name + " :ImportSetting has too many sampling file. Please fix it from Inspector.", node.Id);
+  //                      }
+  //                  }, customConfigIsNull);
+		//		}
+		//	};
 
-            ValidateInputSetting(node, target, incoming, multipleAssetTypeFound, unsupportedType, incomingTypeMismatch, errorInConfig, customConfigIsNull);
+  //          ValidateInputSetting(node, target, incoming, multipleAssetTypeFound, unsupportedType, incomingTypeMismatch, errorInConfig, customConfigIsNull);
 
-			// ImportSettings does not add, filter or change structure of group, so just pass given group of assets
-			if(Output != null) {
-				var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-					null : connectionsToOutput.First();
+		//	// ImportSettings does not add, filter or change structure of group, so just pass given group of assets
+		//	if(Output != null) {
+		//		var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+		//			null : connectionsToOutput.First();
 
-				if(incoming != null) {
-					foreach(var ag in incoming) {
-						Output(dst, ag.assetGroups);
-					}
-				} else {
-					Output(dst, new Dictionary<string, List<AssetReference>>());
-				}
-			}
-		}
+		//		if(incoming != null) {
+		//			foreach(var ag in incoming) {
+		//				Output(dst, ag.assetGroups);
+		//			}
+		//		} else {
+		//			Output(dst, new Dictionary<string, List<AssetReference>>());
+		//		}
+		//	}
+		//}
 
-		public override void Build (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output,
-			Action<Model.NodeData, string, float> progressFunc) 
-		{
-			if(incoming != null){
-				ApplyImportSetting(target, node, incoming);
-			}
-		}
+		//public override void Build (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output,
+		//	Action<Model.NodeData, string, float> progressFunc) 
+		//{
+		//	if(incoming != null){
+		//		ApplyImportSetting(target, node, incoming);
+		//	}
+		//}
 
 		private void SaveSampleFile(Model.NodeData node, string configFilePath) {
             var samplingDirectoryPath = FileUtility.PathCombine(Model.Settings.Path.ImporterSettingsPath, node.Id);

@@ -63,38 +63,38 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			return newNode;
 		}
 
-		public override bool OnAssetsReimported(
-            Model.NodeData nodeData,
-			AssetReferenceStreamManager streamManager,
-			BuildTarget target, 
-			string[] importedAssets, 
-			string[] deletedAssets, 
-			string[] movedAssets, 
-			string[] movedFromAssetPaths)
-		{
-			if (streamManager == null) {
-				return true;
-			}
+		//public override bool OnAssetsReimported(
+  //          Model.NodeData nodeData,
+		//	AssetReferenceStreamManager streamManager,
+		//	BuildTarget target, 
+		//	string[] importedAssets, 
+		//	string[] deletedAssets, 
+		//	string[] movedAssets, 
+		//	string[] movedFromAssetPaths)
+		//{
+		//	if (streamManager == null) {
+		//		return true;
+		//	}
 
-			var assetGroup = streamManager.FindAssetGroup(nodeData.OutputPoints[0]);
+		//	var assetGroup = streamManager.FindAssetGroup(nodeData.OutputPoints[0]);
 
 			
-			return false;
-		}
+		//	return false;
+		//}
 
 		public override void OnInspectorGUI(NodeGUI node, AssetReferenceStreamManager streamManager, NodeGUIEditor editor, Action onValueChanged) {
             EditorGUILayout.TextField(uiInfo.panelName);
 		}
 
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
 			
-		}
+		//}
 		
 		public static void ValidateLoadPath (string currentLoadPath, string combinedPath, Action NullOrEmpty, Action NotExist) {
 			if (string.IsNullOrEmpty(currentLoadPath)) NullOrEmpty();

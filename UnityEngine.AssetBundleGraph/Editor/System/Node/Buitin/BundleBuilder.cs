@@ -257,196 +257,196 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			}
 		}
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			// BundleBuilder do nothing without incoming connections
-			if(incoming == null) {
-				return;
-			}
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+		//	// BundleBuilder do nothing without incoming connections
+		//	if(incoming == null) {
+		//		return;
+		//	}
 
-            var bundleOutputDir = PrepareOutputDirectory (target, node, false, true);
+  //          var bundleOutputDir = PrepareOutputDirectory (target, node, false, true);
 
-			var bundleNames = incoming.SelectMany(v => v.assetGroups.Keys).Distinct().ToList();
-			var bundleVariants = new Dictionary<string, List<string>>();
+		//	var bundleNames = incoming.SelectMany(v => v.assetGroups.Keys).Distinct().ToList();
+		//	var bundleVariants = new Dictionary<string, List<string>>();
 
-			// get all variant name for bundles
-			foreach(var ag in incoming) {
-				foreach(var name in ag.assetGroups.Keys) {
-					if(!bundleVariants.ContainsKey(name)) {
-						bundleVariants[name] = new List<string>();
-					}
-					var assets = ag.assetGroups[name];
-					foreach(var a in assets) {
-						var variantName = a.variantName;
-						if(!bundleVariants[name].Contains(variantName)) {
-							bundleVariants[name].Add(variantName);
-						}
-					}
-				}
-			}
+		//	// get all variant name for bundles
+		//	foreach(var ag in incoming) {
+		//		foreach(var name in ag.assetGroups.Keys) {
+		//			if(!bundleVariants.ContainsKey(name)) {
+		//				bundleVariants[name] = new List<string>();
+		//			}
+		//			var assets = ag.assetGroups[name];
+		//			foreach(var a in assets) {
+		//				var variantName = a.variantName;
+		//				if(!bundleVariants[name].Contains(variantName)) {
+		//					bundleVariants[name].Add(variantName);
+		//				}
+		//			}
+		//		}
+		//	}
 
-			// add manifest file
-            var manifestName = GetManifestName(target);
-			bundleNames.Add( manifestName );
-			bundleVariants[manifestName] = new List<string>() {""};
+		//	// add manifest file
+  //          var manifestName = GetManifestName(target);
+		//	bundleNames.Add( manifestName );
+		//	bundleVariants[manifestName] = new List<string>() {""};
 
-			if(connectionsToOutput != null && Output != null) {
-				UnityEngine.Assertions.Assert.IsTrue(connectionsToOutput.Any());
+		//	if(connectionsToOutput != null && Output != null) {
+		//		UnityEngine.Assertions.Assert.IsTrue(connectionsToOutput.Any());
 
-				var outputDict = new Dictionary<string, List<AssetReference>>();
-				outputDict[key] = new List<AssetReference>();
+		//		var outputDict = new Dictionary<string, List<AssetReference>>();
+		//		outputDict[key] = new List<AssetReference>();
 
-				foreach (var name in bundleNames) {
-					foreach(var v in bundleVariants[name]) {
-						string bundleName = (string.IsNullOrEmpty(v))? name : name + "." + v;
-						AssetReference bundle = AssetReferenceDatabase.GetAssetBundleReference( FileUtility.PathCombine(bundleOutputDir, bundleName) );
-						AssetReference manifest = AssetReferenceDatabase.GetAssetBundleReference( FileUtility.PathCombine(bundleOutputDir, bundleName + Model.Settings.MANIFEST_FOOTER) );
-						outputDict[key].Add(bundle);
-						outputDict[key].Add(manifest);
-					}
-				}
+		//		foreach (var name in bundleNames) {
+		//			foreach(var v in bundleVariants[name]) {
+		//				string bundleName = (string.IsNullOrEmpty(v))? name : name + "." + v;
+		//				AssetReference bundle = AssetReferenceDatabase.GetAssetBundleReference( FileUtility.PathCombine(bundleOutputDir, bundleName) );
+		//				AssetReference manifest = AssetReferenceDatabase.GetAssetBundleReference( FileUtility.PathCombine(bundleOutputDir, bundleName + Model.Settings.MANIFEST_FOOTER) );
+		//				outputDict[key].Add(bundle);
+		//				outputDict[key].Add(manifest);
+		//			}
+		//		}
 
-				var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-					null : connectionsToOutput.First();
-				Output(dst, outputDict);
-			}
-		}
+		//		var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+		//			null : connectionsToOutput.First();
+		//		Output(dst, outputDict);
+		//	}
+		//}
 		
-		public override void Build (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output,
-			Action<Model.NodeData, string, float> progressFunc) 
-		{
-			if(incoming == null) {
-				return;
-			}
+		//public override void Build (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output,
+		//	Action<Model.NodeData, string, float> progressFunc) 
+		//{
+		//	if(incoming == null) {
+		//		return;
+		//	}
 
-			var aggregatedGroups = new Dictionary<string, List<AssetReference>>();
-			aggregatedGroups[key] = new List<AssetReference>();
+		//	var aggregatedGroups = new Dictionary<string, List<AssetReference>>();
+		//	aggregatedGroups[key] = new List<AssetReference>();
 
-			if(progressFunc != null) progressFunc(node, "Collecting all inputs...", 0f);
+		//	if(progressFunc != null) progressFunc(node, "Collecting all inputs...", 0f);
 
-			foreach(var ag in incoming) {
-				foreach(var name in ag.assetGroups.Keys) {
-					if(!aggregatedGroups.ContainsKey(name)) {
-						aggregatedGroups[name] = new List<AssetReference>();
-					}
-					aggregatedGroups[name].AddRange(ag.assetGroups[name].AsEnumerable());
-				}
-			}
+		//	foreach(var ag in incoming) {
+		//		foreach(var name in ag.assetGroups.Keys) {
+		//			if(!aggregatedGroups.ContainsKey(name)) {
+		//				aggregatedGroups[name] = new List<AssetReference>();
+		//			}
+		//			aggregatedGroups[name].AddRange(ag.assetGroups[name].AsEnumerable());
+		//		}
+		//	}
 
-            var bundleOutputDir = PrepareOutputDirectory (target, node, true, true);
-			var bundleNames = aggregatedGroups.Keys.ToList();
-			var bundleVariants = new Dictionary<string, List<string>>();
+  //          var bundleOutputDir = PrepareOutputDirectory (target, node, true, true);
+		//	var bundleNames = aggregatedGroups.Keys.ToList();
+		//	var bundleVariants = new Dictionary<string, List<string>>();
 
-			if(progressFunc != null) progressFunc(node, "Building bundle variants map...", 0.2f);
+		//	if(progressFunc != null) progressFunc(node, "Building bundle variants map...", 0.2f);
 
-			// get all variant name for bundles
-			foreach(var name in aggregatedGroups.Keys) {
-				if(!bundleVariants.ContainsKey(name)) {
-					bundleVariants[name] = new List<string>();
-				}
-				var assets = aggregatedGroups[name];
-				foreach(var a in assets) {
-					var variantName = a.variantName;
-					if(!bundleVariants[name].Contains(variantName)) {
-						bundleVariants[name].Add(variantName);
-					}
-				}
-			}
+		//	// get all variant name for bundles
+		//	foreach(var name in aggregatedGroups.Keys) {
+		//		if(!bundleVariants.ContainsKey(name)) {
+		//			bundleVariants[name] = new List<string>();
+		//		}
+		//		var assets = aggregatedGroups[name];
+		//		foreach(var a in assets) {
+		//			var variantName = a.variantName;
+		//			if(!bundleVariants[name].Contains(variantName)) {
+		//				bundleVariants[name].Add(variantName);
+		//			}
+		//		}
+		//	}
 
-			int validNames = 0;
-			foreach (var name in bundleNames) {
-				var assets = aggregatedGroups[name];
-				// we do not build bundle without any asset
-				if( assets.Count > 0 ) {
-					validNames += bundleVariants[name].Count;
-				}
-			}
+		//	int validNames = 0;
+		//	foreach (var name in bundleNames) {
+		//		var assets = aggregatedGroups[name];
+		//		// we do not build bundle without any asset
+		//		if( assets.Count > 0 ) {
+		//			validNames += bundleVariants[name].Count;
+		//		}
+		//	}
 
-			AssetBundleBuild[] bundleBuild = new AssetBundleBuild[validNames];
-			List<AssetImporterSetting> importerSetting = null;
+		//	AssetBundleBuild[] bundleBuild = new AssetBundleBuild[validNames];
+		//	List<AssetImporterSetting> importerSetting = null;
 
-			if (!m_overwriteImporterSetting) {
-				importerSetting = new List<AssetImporterSetting> ();
-			}
+		//	if (!m_overwriteImporterSetting) {
+		//		importerSetting = new List<AssetImporterSetting> ();
+		//	}
 
-			int bbIndex = 0;
-			foreach(var name in bundleNames) {
-				foreach(var v in bundleVariants[name]) {
-					var assets = aggregatedGroups[name];
+		//	int bbIndex = 0;
+		//	foreach(var name in bundleNames) {
+		//		foreach(var v in bundleVariants[name]) {
+		//			var assets = aggregatedGroups[name];
 
-					if(assets.Count <= 0) {
-						continue;
-					}
+		//			if(assets.Count <= 0) {
+		//				continue;
+		//			}
 
-					bundleBuild[bbIndex].assetBundleName = name;
-					bundleBuild[bbIndex].assetBundleVariant = v;
-					bundleBuild[bbIndex].assetNames = assets.Where(x => x.variantName == v).Select(x => x.importFrom).ToArray();
+		//			bundleBuild[bbIndex].assetBundleName = name;
+		//			bundleBuild[bbIndex].assetBundleVariant = v;
+		//			bundleBuild[bbIndex].assetNames = assets.Where(x => x.variantName == v).Select(x => x.importFrom).ToArray();
 
-					/**
-					 * WORKAROND: This will be unnecessary in future version
-					 * Unity currently have issue in configuring variant assets using AssetBundleBuild[] that
-					 * internal identifier does not match properly unless you configure value in AssetImporter.
-					 */
-					if (!string.IsNullOrEmpty (v)) {
-						foreach (var path in bundleBuild[bbIndex].assetNames) {
-							AssetImporter importer = AssetImporter.GetAtPath (path);
+		//			/**
+		//			 * WORKAROND: This will be unnecessary in future version
+		//			 * Unity currently have issue in configuring variant assets using AssetBundleBuild[] that
+		//			 * internal identifier does not match properly unless you configure value in AssetImporter.
+		//			 */
+		//			if (!string.IsNullOrEmpty (v)) {
+		//				foreach (var path in bundleBuild[bbIndex].assetNames) {
+		//					AssetImporter importer = AssetImporter.GetAtPath (path);
 
-							if (importer.assetBundleName != name || importer.assetBundleVariant != v) {
-								if (!m_overwriteImporterSetting) {
-									importerSetting.Add (new AssetImporterSetting(importer));
-								}
-								importer.SetAssetBundleNameAndVariant (name, v);
-								importer.SaveAndReimport ();
-							}
-						}
-					}
+		//					if (importer.assetBundleName != name || importer.assetBundleVariant != v) {
+		//						if (!m_overwriteImporterSetting) {
+		//							importerSetting.Add (new AssetImporterSetting(importer));
+		//						}
+		//						importer.SetAssetBundleNameAndVariant (name, v);
+		//						importer.SaveAndReimport ();
+		//					}
+		//				}
+		//			}
 
-					++bbIndex;
-				}
-			}
+		//			++bbIndex;
+		//		}
+		//	}
 
-			if(progressFunc != null) progressFunc(node, "Building Asset Bundles...", 0.7f);
+		//	if(progressFunc != null) progressFunc(node, "Building Asset Bundles...", 0.7f);
 
-			AssetBundleManifest m = BuildPipeline.BuildAssetBundles(bundleOutputDir, bundleBuild, (BuildAssetBundleOptions)m_enabledBundleOptions[target], target);
+		//	AssetBundleManifest m = BuildPipeline.BuildAssetBundles(bundleOutputDir, bundleBuild, (BuildAssetBundleOptions)m_enabledBundleOptions[target], target);
 
-			var output = new Dictionary<string, List<AssetReference>>();
-			output[key] = new List<AssetReference>();
+		//	var output = new Dictionary<string, List<AssetReference>>();
+		//	output[key] = new List<AssetReference>();
 
-			var generatedFiles = FileUtility.GetAllFilePathsInFolder(bundleOutputDir);
-            var manifestName = GetManifestName (target);
-			// add manifest file
-            bundleVariants.Add( manifestName.ToLower(), new List<string> { null } );
-			foreach (var path in generatedFiles) {
-				var fileName = path.Substring(bundleOutputDir.Length+1);
-				if( IsFileIntendedItem(fileName, bundleVariants) ) {
-                    if (fileName == manifestName) {
-                        output[key].Add( AssetReferenceDatabase.GetAssetBundleManifestReference(path) );
-                    } else {
-                        output[key].Add( AssetReferenceDatabase.GetAssetBundleReference(path) );
-                    }
-				}
-			}
+		//	var generatedFiles = FileUtility.GetAllFilePathsInFolder(bundleOutputDir);
+  //          var manifestName = GetManifestName (target);
+		//	// add manifest file
+  //          bundleVariants.Add( manifestName.ToLower(), new List<string> { null } );
+		//	foreach (var path in generatedFiles) {
+		//		var fileName = path.Substring(bundleOutputDir.Length+1);
+		//		if( IsFileIntendedItem(fileName, bundleVariants) ) {
+  //                  if (fileName == manifestName) {
+  //                      output[key].Add( AssetReferenceDatabase.GetAssetBundleManifestReference(path) );
+  //                  } else {
+  //                      output[key].Add( AssetReferenceDatabase.GetAssetBundleReference(path) );
+  //                  }
+		//		}
+		//	}
 
-			if(Output != null) {
-				var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-					null : connectionsToOutput.First();
-				Output(dst, output);
-			}
+		//	if(Output != null) {
+		//		var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+		//			null : connectionsToOutput.First();
+		//		Output(dst, output);
+		//	}
 
-			if (importerSetting != null) {
-				importerSetting.ForEach (i => i.WriteBack ());
-			}
+		//	if (importerSetting != null) {
+		//		importerSetting.ForEach (i => i.WriteBack ());
+		//	}
 
-            AssetBundleBuildReport.AddBuildReport(new AssetBundleBuildReport(node, m, manifestName, bundleBuild, output[key], aggregatedGroups, bundleVariants));
-		}
+  //          AssetBundleBuildReport.AddBuildReport(new AssetBundleBuildReport(node, m, manifestName, bundleBuild, output[key], aggregatedGroups, bundleVariants));
+		//}
 
         private string GetManifestName(BuildTarget target) {
             if (string.IsNullOrEmpty (m_outputDir [target])) {

@@ -65,66 +65,66 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			return newNode;
 		}
 
-		public override bool OnAssetsReimported(
-			Model.NodeData nodeData,
-			AssetReferenceStreamManager streamManager,
-			BuildTarget target, 
-			string[] importedAssets, 
-			string[] deletedAssets, 
-			string[] movedAssets, 
-			string[] movedFromAssetPaths)
-		{
-			if (streamManager == null) {
-				return true;
-			}
+		//public override bool OnAssetsReimported(
+		//	Model.NodeData nodeData,
+		//	AssetReferenceStreamManager streamManager,
+		//	BuildTarget target, 
+		//	string[] importedAssets, 
+		//	string[] deletedAssets, 
+		//	string[] movedAssets, 
+		//	string[] movedFromAssetPaths)
+		//{
+		//	if (streamManager == null) {
+		//		return true;
+		//	}
 
-			var loadPath = m_loadPath[target];
-			// if loadPath is null/empty, loader load everything except for settings
-			if(string.IsNullOrEmpty(loadPath)) {
-				// ignore config file path update
-                var notConfigFilePath = importedAssets.Where(path => !TypeUtility.IsGraphToolSystemAsset(path));
-                if(notConfigFilePath.Any()) {
-					LogUtility.Logger.LogFormat(LogType.Log, "{0} is marked to revisit", nodeData.Name);
-					return true;
-				}
-			}
+		//	var loadPath = m_loadPath[target];
+		//	// if loadPath is null/empty, loader load everything except for settings
+		//	if(string.IsNullOrEmpty(loadPath)) {
+		//		// ignore config file path update
+  //              var notConfigFilePath = importedAssets.Where(path => !TypeUtility.IsGraphToolSystemAsset(path));
+  //              if(notConfigFilePath.Any()) {
+		//			LogUtility.Logger.LogFormat(LogType.Log, "{0} is marked to revisit", nodeData.Name);
+		//			return true;
+		//		}
+		//	}
 
-			var assetGroup = streamManager.FindAssetGroup(nodeData.OutputPoints[0]);
+		//	var assetGroup = streamManager.FindAssetGroup(nodeData.OutputPoints[0]);
 
-			if( assetGroup.Count > 0 ) {
+		//	if( assetGroup.Count > 0 ) {
 
-				var importPath = string.Format("Assets/{0}", m_loadPath[target]);
+		//		var importPath = string.Format("Assets/{0}", m_loadPath[target]);
 
-				foreach(var path in importedAssets) {
-					if(path.StartsWith(importPath)) {
-						// if this is reimport, we don't need to redo Loader
-						if ( assetGroup["0"].Find(x => x.importFrom == path) == null ) {
-							LogUtility.Logger.LogFormat(LogType.Log, "{0} is marked to revisit", nodeData.Name);
-							return true;
-						}
-					}
-				}
-				foreach(var path in deletedAssets) {
-					if(path.StartsWith(importPath)) {
-						LogUtility.Logger.LogFormat(LogType.Log, "{0} is marked to revisit", nodeData.Name);
-						return true;
-					}
-				}
-				foreach(var path in movedAssets) {
-					if(path.StartsWith(importPath)) {
-						LogUtility.Logger.LogFormat(LogType.Log, "{0} is marked to revisit", nodeData.Name);
-						return true;
-					}
-				}
-				foreach(var path in movedFromAssetPaths) {
-					if(path.StartsWith(importPath)) {
-						LogUtility.Logger.LogFormat(LogType.Log, "{0} is marked to revisit", nodeData.Name);
-						return true;
-					}
-				}
-			}
-			return false;
-		}
+		//		foreach(var path in importedAssets) {
+		//			if(path.StartsWith(importPath)) {
+		//				// if this is reimport, we don't need to redo Loader
+		//				if ( assetGroup["0"].Find(x => x.importFrom == path) == null ) {
+		//					LogUtility.Logger.LogFormat(LogType.Log, "{0} is marked to revisit", nodeData.Name);
+		//					return true;
+		//				}
+		//			}
+		//		}
+		//		foreach(var path in deletedAssets) {
+		//			if(path.StartsWith(importPath)) {
+		//				LogUtility.Logger.LogFormat(LogType.Log, "{0} is marked to revisit", nodeData.Name);
+		//				return true;
+		//			}
+		//		}
+		//		foreach(var path in movedAssets) {
+		//			if(path.StartsWith(importPath)) {
+		//				LogUtility.Logger.LogFormat(LogType.Log, "{0} is marked to revisit", nodeData.Name);
+		//				return true;
+		//			}
+		//		}
+		//		foreach(var path in movedFromAssetPaths) {
+		//			if(path.StartsWith(importPath)) {
+		//				LogUtility.Logger.LogFormat(LogType.Log, "{0} is marked to revisit", nodeData.Name);
+		//				return true;
+		//			}
+		//		}
+		//	}
+		//	return false;
+		//}
 
         public static string NormalizeLoadPath(string path) {
             if(!string.IsNullOrEmpty(path)) {
@@ -225,26 +225,26 @@ namespace UnityEngine.AssetBundles.GraphTool {
 		}
 
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			ValidateLoadPath(
-				m_loadPath[target],
-				GetLoaderFullLoadPath(target),
-				() => {
-					//can be empty
-					//throw new NodeException(node.Name + ": Load Path is empty.", node.Id);
-				}, 
-				() => {
-					throw new NodeException(node.Name + ": Directory not found: " + GetLoaderFullLoadPath(target), node.Id);
-				}
-			);
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+		//	ValidateLoadPath(
+		//		m_loadPath[target],
+		//		GetLoaderFullLoadPath(target),
+		//		() => {
+		//			//can be empty
+		//			//throw new NodeException(node.Name + ": Load Path is empty.", node.Id);
+		//		}, 
+		//		() => {
+		//			throw new NodeException(node.Name + ": Directory not found: " + GetLoaderFullLoadPath(target), node.Id);
+		//		}
+		//	);
 
-			Load(target, node, connectionsToOutput, Output);
-		}
+		//	Load(target, node, connectionsToOutput, Output);
+		//}
 		
 		void Load (BuildTarget target, 
 			Model.NodeData node, 

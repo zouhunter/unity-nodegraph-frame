@@ -51,102 +51,103 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			return newNode;
 		}
 
-		public override bool OnAssetsReimported(
-			Model.NodeData nodeData,
-			AssetReferenceStreamManager streamManager,
-			BuildTarget target, 
-			string[] importedAssets, 
-			string[] deletedAssets, 
-			string[] movedAssets, 
-			string[] movedFromAssetPaths)
-		{
-			if (m_lastImportedAssetPaths == null) {
-				m_lastImportedAssetPaths = new List<string> ();
-			}
-		
-            var imported = importedAssets.Where (path => !TypeUtility.IsGraphToolSystemAsset (path));
-            var moved = movedAssets.Where (path => !TypeUtility.IsGraphToolSystemAsset (path));
+        //public override bool OnAssetsReimported(
+        //	Model.NodeData nodeData,
+        //	AssetReferenceStreamManager streamManager,
+        //	BuildTarget target, 
+        //	string[] importedAssets, 
+        //	string[] deletedAssets, 
+        //	string[] movedAssets, 
+        //	string[] movedFromAssetPaths)
+        //{
+        //	if (m_lastImportedAssetPaths == null) {
+        //		m_lastImportedAssetPaths = new List<string> ();
+        //	}
 
-			if (imported.Any () || moved.Any ()) {
-				m_lastImportedAssetPaths.Clear ();
-				m_lastImportedAssetPaths.AddRange (imported);
-				m_lastImportedAssetPaths.AddRange (moved);
-			}
+        //          var imported = importedAssets.Where (path => !TypeUtility.IsGraphToolSystemAsset (path));
+        //          var moved = movedAssets.Where (path => !TypeUtility.IsGraphToolSystemAsset (path));
 
-//			var assetsFolderPath = Application.dataPath + Model.Settings.UNITY_FOLDER_SEPARATOR;
-//
-//			foreach (var path in importedAssets) {
-//				if (path.StartsWith (assetsFolderPath)) {
-//					m_lastImportedAssetPaths.Add( path.Replace (assetsFolderPath, Model.Settings.ASSETS_PATH) );
-//				}
-//			}
-//
-//			foreach (var path in movedAssets) {
-//				if (path.StartsWith (assetsFolderPath)) {
-//					m_lastImportedAssetPaths.Add( path.Replace (assetsFolderPath, Model.Settings.ASSETS_PATH) );
-//				}
-//			}
+        //	if (imported.Any () || moved.Any ()) {
+        //		m_lastImportedAssetPaths.Clear ();
+        //		m_lastImportedAssetPaths.AddRange (imported);
+        //		m_lastImportedAssetPaths.AddRange (moved);
+        //	}
 
-			return true;
-		}
+        //			var assetsFolderPath = Application.dataPath + Model.Settings.UNITY_FOLDER_SEPARATOR;
+        //
+        //			foreach (var path in importedAssets) {
+        //				if (path.StartsWith (assetsFolderPath)) {
+        //					m_lastImportedAssetPaths.Add( path.Replace (assetsFolderPath, Model.Settings.ASSETS_PATH) );
+        //				}
+        //			}
+        //
+        //			foreach (var path in movedAssets) {
+        //				if (path.StartsWith (assetsFolderPath)) {
+        //					m_lastImportedAssetPaths.Add( path.Replace (assetsFolderPath, Model.Settings.ASSETS_PATH) );
+        //				}
+        //			}
 
-		public override void OnInspectorGUI(NodeGUI node, AssetReferenceStreamManager streamManager, NodeGUIEditor editor, Action onValueChanged) {
+        //	return true;
+        //}
 
-			EditorGUILayout.HelpBox("Last Imported Items: Load assets just imported.", MessageType.Info);
-			editor.UpdateNodeName(node);
+        public override void OnInspectorGUI(NodeGUI node, AssetReferenceStreamManager streamManager, NodeGUIEditor editor, Action onValueChanged)
+        {
 
-		}
+            EditorGUILayout.HelpBox("Last Imported Items: Load assets just imported.", MessageType.Info);
+            editor.UpdateNodeName(node);
 
-
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			if (m_lastImportedAssetPaths != null) {
-				m_lastImportedAssetPaths.RemoveAll (path => !File.Exists (path));
-			}
-
-			Load(target, node, connectionsToOutput, Output);
-		}
-		
-		void Load (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			if(connectionsToOutput == null || Output == null) {
-				return;
-			}
-			var outputSource = new List<AssetReference>();
-
-			if (m_lastImportedAssetPaths != null) {
-				foreach (var path in m_lastImportedAssetPaths) {
-                    if (TypeUtility.IsGraphToolSystemAsset (path)) {
-                        continue;
-                    }
-
-					var r = AssetReferenceDatabase.GetReference(path);
-
-					if(!TypeUtility.IsLoadingAsset(r)) {
-						continue;
-					}
-
-					if(r != null) {
-						outputSource.Add(r);
-					}
-				}
-			}
+        }
 
 
-			var output = new Dictionary<string, List<AssetReference>> {
-				{"0", outputSource}
-			};
+        //public override void Prepare (BuildTarget target, 
+        //	Model.NodeData node, 
+        //	IEnumerable<PerformGraph.AssetGroups> incoming, 
+        //	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+        //	PerformGraph.Output Output) 
+        //{
+        //	if (m_lastImportedAssetPaths != null) {
+        //		m_lastImportedAssetPaths.RemoveAll (path => !File.Exists (path));
+        //	}
 
-			var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-				null : connectionsToOutput.First();
-			Output(dst, output);
-		}
-	}
+        //	Load(target, node, connectionsToOutput, Output);
+        //}
+
+        //void Load (BuildTarget target, 
+        //	Model.NodeData node, 
+        //	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+        //	PerformGraph.Output Output) 
+        //{
+        //	if(connectionsToOutput == null || Output == null) {
+        //		return;
+        //	}
+        //	var outputSource = new List<AssetReference>();
+
+        //	if (m_lastImportedAssetPaths != null) {
+        //		foreach (var path in m_lastImportedAssetPaths) {
+        //                  if (TypeUtility.IsGraphToolSystemAsset (path)) {
+        //                      continue;
+        //                  }
+
+        //			var r = AssetReferenceDatabase.GetReference(path);
+
+        //			if(!TypeUtility.IsLoadingAsset(r)) {
+        //				continue;
+        //			}
+
+        //			if(r != null) {
+        //				outputSource.Add(r);
+        //			}
+        //		}
+        //	}
+
+
+        //	var output = new Dictionary<string, List<AssetReference>> {
+        //		{"0", outputSource}
+        //	};
+
+        //	var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+        //		null : connectionsToOutput.First();
+        //	Output(dst, output);
+        //}
+    }
 }

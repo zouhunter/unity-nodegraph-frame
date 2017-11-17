@@ -54,17 +54,17 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			return newNode;
 		}
 
-		public override bool OnAssetsReimported(
-			Model.NodeData nodeData,
-			AssetReferenceStreamManager streamManager,
-			BuildTarget target, 
-			string[] importedAssets, 
-			string[] deletedAssets, 
-			string[] movedAssets, 
-			string[] movedFromAssetPaths)
-		{
-			return true;
-		}
+		//public override bool OnAssetsReimported(
+		//	Model.NodeData nodeData,
+		//	AssetReferenceStreamManager streamManager,
+		//	BuildTarget target, 
+		//	string[] importedAssets, 
+		//	string[] deletedAssets, 
+		//	string[] movedAssets, 
+		//	string[] movedFromAssetPaths)
+		//{
+		//	return true;
+		//}
 
 		public override void OnInspectorGUI(NodeGUI node, AssetReferenceStreamManager streamManager, NodeGUIEditor editor, Action onValueChanged) {
 
@@ -112,21 +112,21 @@ namespace UnityEngine.AssetBundles.GraphTool {
 		}
 
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			ValidateSearchCondition(
-				m_searchFilter[target],
-				() => {
-					throw new NodeException(node.Name + ": Serach filter is empty", node.Id);
-				}
-			);
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+		//	ValidateSearchCondition(
+		//		m_searchFilter[target],
+		//		() => {
+		//			throw new NodeException(node.Name + ": Serach filter is empty", node.Id);
+		//		}
+		//	);
 
-			Load(target, node, connectionsToOutput, Output);
-		}
+		//	Load(target, node, connectionsToOutput, Output);
+		//}
 		
 		void Load (BuildTarget target, 
 			Model.NodeData node, 

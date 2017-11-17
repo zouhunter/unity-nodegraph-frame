@@ -208,35 +208,35 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			}
 		}
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			ValidateExportPath(
-				m_exportPath[target],
-				GetExportPath(m_exportPath[target]),
-				() => {
-					throw new NodeException(node.Name + ":Export Path is empty.", node.Id);
-				},
-				() => {
-					if( m_exportOption[target] == (int)ExportOption.ErrorIfNoExportDirectoryFound ) {
-						throw new NodeException(node.Name + ":Directory set to Export Path does not exist. Path:" + m_exportPath[target], node.Id);
-					}
-				}
-			);
-		}
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+		//	ValidateExportPath(
+		//		m_exportPath[target],
+		//		GetExportPath(m_exportPath[target]),
+		//		() => {
+		//			throw new NodeException(node.Name + ":Export Path is empty.", node.Id);
+		//		},
+		//		() => {
+		//			if( m_exportOption[target] == (int)ExportOption.ErrorIfNoExportDirectoryFound ) {
+		//				throw new NodeException(node.Name + ":Directory set to Export Path does not exist. Path:" + m_exportPath[target], node.Id);
+		//			}
+		//		}
+		//	);
+		//}
 		
-		public override void Build (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output,
-			Action<Model.NodeData, string, float> progressFunc) 
-		{
-			Export(target, node, incoming, connectionsToOutput, progressFunc);
-		}
+		//public override void Build (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output,
+		//	Action<Model.NodeData, string, float> progressFunc) 
+		//{
+		//	Export(target, node, incoming, connectionsToOutput, progressFunc);
+		//}
 
 		private void Export (BuildTarget target, 
 			Model.NodeData node, 

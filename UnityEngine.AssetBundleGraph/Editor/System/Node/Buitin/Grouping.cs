@@ -136,87 +136,87 @@ namespace UnityEngine.AssetBundles.GraphTool
 			}
 		}
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			GroupingOutput(target, node, incoming, connectionsToOutput, Output);
-		}
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+		//	GroupingOutput(target, node, incoming, connectionsToOutput, Output);
+		//}
 
-		private void GroupingOutput (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
+		//private void GroupingOutput (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
 
-			ValidateGroupingKeyword(
-				m_groupingKeyword[target],
-				(GroupingPatternType)m_patternType[target],
-				() => {
-					throw new NodeException("Grouping Keyword can not be empty.", node.Id);
-				},
-				() => {
-					throw new NodeException(String.Format("Grouping Keyword must contain {0} for numbering: currently {1}", Model.Settings.KEYWORD_WILDCARD, m_groupingKeyword[target]), node.Id);
-				}
-			);
+		//	ValidateGroupingKeyword(
+		//		m_groupingKeyword[target],
+		//		(GroupingPatternType)m_patternType[target],
+		//		() => {
+		//			throw new NodeException("Grouping Keyword can not be empty.", node.Id);
+		//		},
+		//		() => {
+		//			throw new NodeException(String.Format("Grouping Keyword must contain {0} for numbering: currently {1}", Model.Settings.KEYWORD_WILDCARD, m_groupingKeyword[target]), node.Id);
+		//		}
+		//	);
 
-			if(connectionsToOutput == null || Output == null) {
-				return;
-			}
+		//	if(connectionsToOutput == null || Output == null) {
+		//		return;
+		//	}
 
-			var outputDict = new Dictionary<string, List<AssetReference>>();
+		//	var outputDict = new Dictionary<string, List<AssetReference>>();
 
-			if(incoming != null) {
-				Regex regex = null;
-				switch((GroupingPatternType)m_patternType[target]) {
-				case GroupingPatternType.WildCard: 
-					{
-						var groupingKeyword = m_groupingKeyword[target];
-						var split = groupingKeyword.Split(Model.Settings.KEYWORD_WILDCARD);
-						var groupingKeywordPrefix  = split[0];
-						var groupingKeywordPostfix = split[1];
-						regex = new Regex(groupingKeywordPrefix + "(.*?)" + groupingKeywordPostfix);
-					}
-					break;
-				case GroupingPatternType.RegularExpression:
-					{
-						regex = new Regex(m_groupingKeyword[target]);
-					}
-					break;
-				}
+		//	if(incoming != null) {
+		//		Regex regex = null;
+		//		switch((GroupingPatternType)m_patternType[target]) {
+		//		case GroupingPatternType.WildCard: 
+		//			{
+		//				var groupingKeyword = m_groupingKeyword[target];
+		//				var split = groupingKeyword.Split(Model.Settings.KEYWORD_WILDCARD);
+		//				var groupingKeywordPrefix  = split[0];
+		//				var groupingKeywordPostfix = split[1];
+		//				regex = new Regex(groupingKeywordPrefix + "(.*?)" + groupingKeywordPostfix);
+		//			}
+		//			break;
+		//		case GroupingPatternType.RegularExpression:
+		//			{
+		//				regex = new Regex(m_groupingKeyword[target]);
+		//			}
+		//			break;
+		//		}
 
-				foreach(var ag in incoming) {
-					foreach (var assets in ag.assetGroups.Values) {
-						foreach(var a in assets) {
-							var targetPath = a.path;
+		//		foreach(var ag in incoming) {
+		//			foreach (var assets in ag.assetGroups.Values) {
+		//				foreach(var a in assets) {
+		//					var targetPath = a.path;
 
-							var match = regex.Match(targetPath);
+		//					var match = regex.Match(targetPath);
 
-							if (match.Success) {
-								var newGroupingKey = match.Groups[1].Value;
+		//					if (match.Success) {
+		//						var newGroupingKey = match.Groups[1].Value;
 
-								if(!m_allowSlash && newGroupingKey.Contains("/")) {
-									throw new NodeException(String.Format("Grouping Keyword with directory separator('/') found: \"{0}\" from asset: {1}", 
-										newGroupingKey, targetPath), node.Id);
-								}
+		//						if(!m_allowSlash && newGroupingKey.Contains("/")) {
+		//							throw new NodeException(String.Format("Grouping Keyword with directory separator('/') found: \"{0}\" from asset: {1}", 
+		//								newGroupingKey, targetPath), node.Id);
+		//						}
 
-								if (!outputDict.ContainsKey(newGroupingKey)) {
-									outputDict[newGroupingKey] = new List<AssetReference>();
-								}
-								outputDict[newGroupingKey].Add(a);
-							}
-						}
-					}
-				}
-			}
+		//						if (!outputDict.ContainsKey(newGroupingKey)) {
+		//							outputDict[newGroupingKey] = new List<AssetReference>();
+		//						}
+		//						outputDict[newGroupingKey].Add(a);
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
 
-			var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-				null : connectionsToOutput.First();
-			Output(dst, outputDict);
-		}
+		//	var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+		//		null : connectionsToOutput.First();
+		//	Output(dst, outputDict);
+		//}
 
 		private void ValidateGroupingKeyword (string currentGroupingKeyword, 
 			GroupingPatternType currentType,

@@ -68,17 +68,17 @@ namespace UnityEngine.AssetBundles.GraphTool {
     		return newNode;
     	}
 
-    	public override bool OnAssetsReimported(
-    		Model.NodeData nodeData,
-    		AssetReferenceStreamManager streamManager,
-    		BuildTarget target, 
-    		string[] importedAssets, 
-    		string[] deletedAssets, 
-    		string[] movedAssets, 
-    		string[] movedFromAssetPaths)
-    	{
-    		return true;
-    	}
+    	//public override bool OnAssetsReimported(
+    	//	Model.NodeData nodeData,
+    	//	AssetReferenceStreamManager streamManager,
+    	//	BuildTarget target, 
+    	//	string[] importedAssets, 
+    	//	string[] deletedAssets, 
+    	//	string[] movedAssets, 
+    	//	string[] movedFromAssetPaths)
+    	//{
+    	//	return true;
+    	//}
 
 
     	public override void OnInspectorGUI(NodeGUI node, AssetReferenceStreamManager streamManager, NodeGUIEditor editor, Action onValueChanged) {
@@ -171,51 +171,51 @@ namespace UnityEngine.AssetBundles.GraphTool {
     	/**
     	 * Prepare is called whenever graph needs update. 
     	 */ 
-    	public override void Prepare (BuildTarget target, 
-    		Model.NodeData node, 
-    		IEnumerable<PerformGraph.AssetGroups> incoming, 
-    		IEnumerable<Model.ConnectionData> connectionsToOutput, 
-    		PerformGraph.Output Output) 
-    	{
-    		if(string.IsNullOrEmpty(m_path[target])) {
-    			throw new NodeException(node.Name + ":Assertion Path is empty.", node.Id);
-    		}
+    	//public override void Prepare (BuildTarget target, 
+    	//	Model.NodeData node, 
+    	//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+    	//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+    	//	PerformGraph.Output Output) 
+    	//{
+    	//	if(string.IsNullOrEmpty(m_path[target])) {
+    	//		throw new NodeException(node.Name + ":Assertion Path is empty.", node.Id);
+    	//	}
 
-    		// Pass incoming assets straight to Output
-    		if(Output != null) {
-    			var destination = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-    				null : connectionsToOutput.First();
+    	//	// Pass incoming assets straight to Output
+    	//	if(Output != null) {
+    	//		var destination = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+    	//			null : connectionsToOutput.First();
 
-    			if(incoming != null) {
+    	//		if(incoming != null) {
 
-    				var checkPath = m_path[target];
-    				var allow = m_style == AssertionStyle.AllowOnlyAssetsUnderAssertionPath;
+    	//			var checkPath = m_path[target];
+    	//			var allow = m_style == AssertionStyle.AllowOnlyAssetsUnderAssertionPath;
 
-    				foreach(var ag in incoming) {
-    					foreach (var assets in ag.assetGroups.Values) {
-    						foreach(var a in assets) {
+    	//			foreach(var ag in incoming) {
+    	//				foreach (var assets in ag.assetGroups.Values) {
+    	//					foreach(var a in assets) {
 
-    							if(allow != a.importFrom.Contains(checkPath)) {
-    								throw new NodeException(node.Name + ":Unwanted asset '" + a.importFrom + "' found.", node.Id);
-    							}
+    	//						if(allow != a.importFrom.Contains(checkPath)) {
+    	//							throw new NodeException(node.Name + ":Unwanted asset '" + a.importFrom + "' found.", node.Id);
+    	//						}
 
-    							var dependencies = AssetDatabase.GetDependencies(new string[] { a.importFrom } );
+    	//						var dependencies = AssetDatabase.GetDependencies(new string[] { a.importFrom } );
 
-    							foreach(var d in dependencies) {
-    								if(allow != d.Contains(checkPath)) {
-    									throw new NodeException(node.Name + ":Unwanted asset found in dependency:'" + d 
-    										+ "' from following asset:" + a.importFrom, node.Id);
-    								}
-    							}
-    						}
-    					}
-    					Output(destination, ag.assetGroups);
-    				}
-    			} else {
-    				// Overwrite output with empty Dictionary when no there is incoming asset
-    				Output(destination, new Dictionary<string, List<AssetReference>>());
-    			}
-    		}
-    	}
+    	//						foreach(var d in dependencies) {
+    	//							if(allow != d.Contains(checkPath)) {
+    	//								throw new NodeException(node.Name + ":Unwanted asset found in dependency:'" + d 
+    	//									+ "' from following asset:" + a.importFrom, node.Id);
+    	//							}
+    	//						}
+    	//					}
+    	//				}
+    	//				Output(destination, ag.assetGroups);
+    	//			}
+    	//		} else {
+    	//			// Overwrite output with empty Dictionary when no there is incoming asset
+    	//			Output(destination, new Dictionary<string, List<AssetReference>>());
+    	//		}
+    	//	}
+    	//}
     }
 }

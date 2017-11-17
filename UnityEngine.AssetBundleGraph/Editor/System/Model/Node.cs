@@ -80,14 +80,14 @@ namespace UnityEngine.AssetBundles.GraphTool {
         /// <param name="incoming">Incoming group of assets for this node on executing graph.</param>
         /// <param name="connectionsToOutput">Outgoing connections from this node.</param>
         /// <param name="outputFunc">An interface to set outgoing group of assets.</param>
-		public virtual void Prepare (BuildTarget target, 
-			Model.NodeData nodeData, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output outputFunc) 
-		{
-			// Do nothing
-		}
+		//public virtual void Prepare (BuildTarget target, 
+		//	Model.NodeData nodeData, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output outputFunc) 
+		//{
+		//	// Do nothing
+		//}
 
         /// <summary>
         /// Build is the method which actualy performs the build. It is always called after Setup() is performed.
@@ -98,15 +98,15 @@ namespace UnityEngine.AssetBundles.GraphTool {
         /// <param name="connectionsToOutput">Outgoing connections from this node.</param>
         /// <param name="outputFunc">An interface to set outgoing group of assets.</param>
         /// <param name="progressFunc">An interface to display progress.</param>
-		public virtual void Build (BuildTarget target, 
-			Model.NodeData nodeData, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output outputFunc,
-			Action<Model.NodeData, string, float> progressFunc)
-		{
-			// Do nothing
-		}
+		//public virtual void Build (BuildTarget target, 
+		//	Model.NodeData nodeData, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output outputFunc,
+		//	Action<Model.NodeData, string, float> progressFunc)
+		//{
+		//	// Do nothing
+		//}
 
 		#endregion
 
@@ -150,17 +150,17 @@ namespace UnityEngine.AssetBundles.GraphTool {
         /// <param name="deletedAssets">Deleted asset paths.</param>
         /// <param name="movedAssets">Moved asset paths.</param>
         /// <param name="movedFromAssetPaths">Original paths of moved assets.</param>
-		public virtual bool OnAssetsReimported(
-			Model.NodeData nodeData,
-			AssetReferenceStreamManager streamManager,
-			BuildTarget target, 
-			string[] importedAssets, 
-			string[] deletedAssets, 
-			string[] movedAssets, 
-			string[] movedFromAssetPaths)
-		{
-			return false;
-		}
+		//public virtual bool OnAssetsReimported(
+		//	Model.NodeData nodeData,
+		//	AssetReferenceStreamManager streamManager,
+		//	BuildTarget target, 
+		//	string[] importedAssets, 
+		//	string[] deletedAssets, 
+		//	string[] movedAssets, 
+		//	string[] movedFromAssetPaths)
+		//{
+		//	return false;
+		//}
 
 		#endregion
 	}

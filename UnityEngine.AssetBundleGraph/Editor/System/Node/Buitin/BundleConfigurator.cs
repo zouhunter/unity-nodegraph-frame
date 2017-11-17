@@ -249,133 +249,133 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			}
 		}
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			int groupCount = 0;
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+		//	int groupCount = 0;
 
-			if(incoming != null) {
-				var groupNames = new List<string>();
-				foreach(var ag in incoming) {
-					foreach (var groupKey in ag.assetGroups.Keys) {
-						if(!groupNames.Contains(groupKey)) {
-							groupNames.Add(groupKey);
-						}
-					}
-				}
-				groupCount = groupNames.Count;
-			}
+		//	if(incoming != null) {
+		//		var groupNames = new List<string>();
+		//		foreach(var ag in incoming) {
+		//			foreach (var groupKey in ag.assetGroups.Keys) {
+		//				if(!groupNames.Contains(groupKey)) {
+		//					groupNames.Add(groupKey);
+		//				}
+		//			}
+		//		}
+		//		groupCount = groupNames.Count;
+		//	}
 
-			ValidateBundleNameTemplate(
-				m_bundleNameTemplate[target],
-				m_useGroupAsVariants,
-				groupCount,
-				() => {
-					throw new NodeException(node.Name + ":Bundle Name Template is empty.", node.Id);
-				},
-				() => {
-					throw new NodeException(node.Name + ":Bundle Name Template can not contain '" + Model.Settings.KEYWORD_WILDCARD.ToString() 
-						+ "' when group name is used for variants.", node.Id);
-				},
-				() => {
-					throw new NodeException(node.Name + ":Bundle Name Template must contain '" + Model.Settings.KEYWORD_WILDCARD.ToString() 
-						+ "' when group name is not used for variants and expecting multiple incoming groups.", node.Id);
-				}
-			);
+		//	ValidateBundleNameTemplate(
+		//		m_bundleNameTemplate[target],
+		//		m_useGroupAsVariants,
+		//		groupCount,
+		//		() => {
+		//			throw new NodeException(node.Name + ":Bundle Name Template is empty.", node.Id);
+		//		},
+		//		() => {
+		//			throw new NodeException(node.Name + ":Bundle Name Template can not contain '" + Model.Settings.KEYWORD_WILDCARD.ToString() 
+		//				+ "' when group name is used for variants.", node.Id);
+		//		},
+		//		() => {
+		//			throw new NodeException(node.Name + ":Bundle Name Template must contain '" + Model.Settings.KEYWORD_WILDCARD.ToString() 
+		//				+ "' when group name is not used for variants and expecting multiple incoming groups.", node.Id);
+		//		}
+		//	);
 
-			var variantNames = m_variants.Select(v=>v.Name).ToList();
-			foreach(var variant in m_variants) {
-				ValidateVariantName(variant.Name, variantNames, 
-					() => {
-						throw new NodeException(node.Name + ":Variant name is empty.", node.Id);
-					},
-					() => {
-						throw new NodeException(node.Name + ":Variant name cannot contain whitespace \"" + variant.Name + "\".", node.Id);
-					},
-					() => {
-						throw new NodeException(node.Name + ":Variant name already exists \"" + variant.Name + "\".", node.Id);
-					});
-			}
+		//	var variantNames = m_variants.Select(v=>v.Name).ToList();
+		//	foreach(var variant in m_variants) {
+		//		ValidateVariantName(variant.Name, variantNames, 
+		//			() => {
+		//				throw new NodeException(node.Name + ":Variant name is empty.", node.Id);
+		//			},
+		//			() => {
+		//				throw new NodeException(node.Name + ":Variant name cannot contain whitespace \"" + variant.Name + "\".", node.Id);
+		//			},
+		//			() => {
+		//				throw new NodeException(node.Name + ":Variant name already exists \"" + variant.Name + "\".", node.Id);
+		//			});
+		//	}
 
 
-			if(incoming != null) {
-				/**
-				 * Check if incoming asset has valid import path
-				 */
-				var invalids = new List<AssetReference>();
-				foreach(var ag in incoming) {
-					foreach (var groupKey in ag.assetGroups.Keys) {
-						ag.assetGroups[groupKey].ForEach( a => { if (string.IsNullOrEmpty(a.importFrom)) invalids.Add(a); } );
-					}
-				}
-				if (invalids.Any()) {
-					throw new NodeException(node.Name + 
-						": Invalid files are found. Following files need to be imported to put into asset bundle: " + 
-						string.Join(", ", invalids.Select(a =>a.absolutePath).ToArray()), node.Id );
-				}
-			}
+		//	if(incoming != null) {
+		//		/**
+		//		 * Check if incoming asset has valid import path
+		//		 */
+		//		var invalids = new List<AssetReference>();
+		//		foreach(var ag in incoming) {
+		//			foreach (var groupKey in ag.assetGroups.Keys) {
+		//				ag.assetGroups[groupKey].ForEach( a => { if (string.IsNullOrEmpty(a.importFrom)) invalids.Add(a); } );
+		//			}
+		//		}
+		//		if (invalids.Any()) {
+		//			throw new NodeException(node.Name + 
+		//				": Invalid files are found. Following files need to be imported to put into asset bundle: " + 
+		//				string.Join(", ", invalids.Select(a =>a.absolutePath).ToArray()), node.Id );
+		//		}
+		//	}
 
-			Dictionary<string, List<AssetReference>> output = null;
-			if(Output != null) {
-				output = new Dictionary<string, List<AssetReference>>();
-			}
+		//	Dictionary<string, List<AssetReference>> output = null;
+		//	if(Output != null) {
+		//		output = new Dictionary<string, List<AssetReference>>();
+		//	}
 
-			if(incoming != null) {
-				Dictionary<string, List<string>> variantsInfo = new Dictionary<string, List<string>> ();
+		//	if(incoming != null) {
+		//		Dictionary<string, List<string>> variantsInfo = new Dictionary<string, List<string>> ();
 
-				//var buildMap = AssetBundleBuildMap.GetBuildMap ();
-				//buildMap.ClearFromId (node.Id);
+		//		//var buildMap = AssetBundleBuildMap.GetBuildMap ();
+		//		//buildMap.ClearFromId (node.Id);
 
-				foreach(var ag in incoming) {
-					string variantName = null;
-					if(!m_useGroupAsVariants) {
-						var currentVariant = m_variants.Find( v => v.ConnectionPointId == ag.connection.ToNodeConnectionPointId );
-						variantName = (currentVariant == null) ? null : currentVariant.Name;
-					}
+		//		foreach(var ag in incoming) {
+		//			string variantName = null;
+		//			if(!m_useGroupAsVariants) {
+		//				var currentVariant = m_variants.Find( v => v.ConnectionPointId == ag.connection.ToNodeConnectionPointId );
+		//				variantName = (currentVariant == null) ? null : currentVariant.Name;
+		//			}
 
-					// set configured assets in bundle name
-					foreach (var groupKey in ag.assetGroups.Keys) {
-						if(m_useGroupAsVariants) {
-							variantName = groupKey;
-						}
-						var bundleName = GetBundleName(target, node, groupKey);
-						var assets = ag.assetGroups[groupKey];
+		//			// set configured assets in bundle name
+		//			foreach (var groupKey in ag.assetGroups.Keys) {
+		//				if(m_useGroupAsVariants) {
+		//					variantName = groupKey;
+		//				}
+		//				var bundleName = GetBundleName(target, node, groupKey);
+		//				var assets = ag.assetGroups[groupKey];
 
-						ConfigureAssetBundleSettings(variantName, assets);
+		//				ConfigureAssetBundleSettings(variantName, assets);
 
-						if (!string.IsNullOrEmpty (variantName)) {
-							if (!variantsInfo.ContainsKey (bundleName)) {
-								variantsInfo [bundleName] = new List<string> ();
-							}
-							variantsInfo [bundleName].Add (variantName.ToLower());
-						}
+		//				if (!string.IsNullOrEmpty (variantName)) {
+		//					if (!variantsInfo.ContainsKey (bundleName)) {
+		//						variantsInfo [bundleName] = new List<string> ();
+		//					}
+		//					variantsInfo [bundleName].Add (variantName.ToLower());
+		//				}
 
-						if(output != null) {
-							if(!output.ContainsKey(bundleName)) {
-								output[bundleName] = new List<AssetReference>();
-							} 
-							output[bundleName].AddRange(assets);
-						}
+		//				if(output != null) {
+		//					if(!output.ContainsKey(bundleName)) {
+		//						output[bundleName] = new List<AssetReference>();
+		//					} 
+		//					output[bundleName].AddRange(assets);
+		//				}
 
-						//var bundleConfig = buildMap.GetAssetBundleWithNameAndVariant (node.Id, bundleName, variantName);
-						//bundleConfig.AddAssets (node.Id, assets.Select(a => a.importFrom));
-					}
-				}
+		//				//var bundleConfig = buildMap.GetAssetBundleWithNameAndVariant (node.Id, bundleName, variantName);
+		//				//bundleConfig.AddAssets (node.Id, assets.Select(a => a.importFrom));
+		//			}
+		//		}
 
-				if (output != null) {
-					ValidateVariantsProperlyConfiguired (node, output, variantsInfo);
-				}
-			}
+		//		if (output != null) {
+		//			ValidateVariantsProperlyConfiguired (node, output, variantsInfo);
+		//		}
+		//	}
 
-			if(Output != null) {
-				var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-					null : connectionsToOutput.First();
-				Output(dst, output);
-			}
-		}
+		//	if(Output != null) {
+		//		var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+		//			null : connectionsToOutput.First();
+		//		Output(dst, output);
+		//	}
+		//}
 
 		public void ConfigureAssetBundleSettings (string variantName, List<AssetReference> assets) {		
 

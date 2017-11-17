@@ -184,46 +184,46 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			}
 		}
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-            if (string.IsNullOrEmpty(m_srcPath [target])) {
-                throw new NodeException(node.Name + ":Mirror Directory can not set project directory as source.", node.Id);
-            }
-            if (string.IsNullOrEmpty(m_dstPath [target])) {
-                throw new NodeException(node.Name + ":Mirror Directory can not set project directory as destination.", node.Id);
-            }
-            if (!Directory.Exists (GetNormalizedPath (m_srcPath [target]))) {
-                throw new NodeException(node.Name + ":Source Directory does not exist. Path:" + m_srcPath[target], node.Id);
-            }
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+  //          if (string.IsNullOrEmpty(m_srcPath [target])) {
+  //              throw new NodeException(node.Name + ":Mirror Directory can not set project directory as source.", node.Id);
+  //          }
+  //          if (string.IsNullOrEmpty(m_dstPath [target])) {
+  //              throw new NodeException(node.Name + ":Mirror Directory can not set project directory as destination.", node.Id);
+  //          }
+  //          if (!Directory.Exists (GetNormalizedPath (m_srcPath [target]))) {
+  //              throw new NodeException(node.Name + ":Source Directory does not exist. Path:" + m_srcPath[target], node.Id);
+  //          }
 
-            // MirrorDirectory does not add, filter or change structure of group, so just pass given group of assets
-            if(Output != null) {
-                var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-                    null : connectionsToOutput.First();
+  //          // MirrorDirectory does not add, filter or change structure of group, so just pass given group of assets
+  //          if(Output != null) {
+  //              var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+  //                  null : connectionsToOutput.First();
 
-                if(incoming != null) {
-                    foreach(var ag in incoming) {
-                        Output(dst, ag.assetGroups);
-                    }
-                } else {
-                    Output(dst, new Dictionary<string, List<AssetReference>>());
-                }
-            }
-		}
+  //              if(incoming != null) {
+  //                  foreach(var ag in incoming) {
+  //                      Output(dst, ag.assetGroups);
+  //                  }
+  //              } else {
+  //                  Output(dst, new Dictionary<string, List<AssetReference>>());
+  //              }
+  //          }
+		//}
 		
-		public override void Build (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output,
-			Action<Model.NodeData, string, float> progressFunc) 
-		{
-			Mirror(target, node, incoming, connectionsToOutput, progressFunc);
-		}
+		//public override void Build (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output,
+		//	Action<Model.NodeData, string, float> progressFunc) 
+		//{
+		//	Mirror(target, node, incoming, connectionsToOutput, progressFunc);
+		//}
 
         private void Mirror (BuildTarget target, 
 			Model.NodeData node, 

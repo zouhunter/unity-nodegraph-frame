@@ -51,35 +51,35 @@ namespace UnityEngine.AssetBundles.GraphTool
 			editor.UpdateNodeName(node);
 		}
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-            if(connectionsToOutput == null || Output == null) {
-                return;
-            }
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+  //          if(connectionsToOutput == null || Output == null) {
+  //              return;
+  //          }
 
-            var outputDict = new Dictionary<string, List<AssetReference>>();
+  //          var outputDict = new Dictionary<string, List<AssetReference>>();
 
-            if(incoming != null) {
-                int i = 0;
-                foreach(var ag in incoming) {
-                    foreach (var assets in ag.assetGroups.Values) {
-                        foreach(var a in assets) {
-                            var key = i.ToString ();
-                            outputDict[key] = new List<AssetReference>();
-                            outputDict [key].Add (a);
-                            ++i;
-                        }
-                    }
-                }
-            }
+  //          if(incoming != null) {
+  //              int i = 0;
+  //              foreach(var ag in incoming) {
+  //                  foreach (var assets in ag.assetGroups.Values) {
+  //                      foreach(var a in assets) {
+  //                          var key = i.ToString ();
+  //                          outputDict[key] = new List<AssetReference>();
+  //                          outputDict [key].Add (a);
+  //                          ++i;
+  //                      }
+  //                  }
+  //              }
+  //          }
 
-            var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-                null : connectionsToOutput.First();
-            Output(dst, outputDict);
-        }
+  //          var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+  //              null : connectionsToOutput.First();
+  //          Output(dst, outputDict);
+  //      }
 	}
 }

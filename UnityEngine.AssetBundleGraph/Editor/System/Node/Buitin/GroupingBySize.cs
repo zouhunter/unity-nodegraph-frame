@@ -112,77 +112,77 @@ namespace UnityEngine.AssetBundles.GraphTool
 			}
 		}
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			GroupingOutput(target, node, incoming, connectionsToOutput, Output);
-		}
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+		//	GroupingOutput(target, node, incoming, connectionsToOutput, Output);
+		//}
 
-		private void GroupingOutput (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			ValidateGroupingKeyword(
-				m_groupSizeByte[target],
-				() => {
-					throw new NodeException("Invalid size.", node.Id);
-				}
-			);
+		//private void GroupingOutput (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+		//	ValidateGroupingKeyword(
+		//		m_groupSizeByte[target],
+		//		() => {
+		//			throw new NodeException("Invalid size.", node.Id);
+		//		}
+		//	);
 
-			if(connectionsToOutput == null || Output == null) {
-				return;
-			}
+		//	if(connectionsToOutput == null || Output == null) {
+		//		return;
+		//	}
 
-            var outputDict = new Dictionary<string, List<AssetReference>>();
-			long szGroup = m_groupSizeByte[target] * 1000;
+  //          var outputDict = new Dictionary<string, List<AssetReference>>();
+		//	long szGroup = m_groupSizeByte[target] * 1000;
 
-			int groupCount = 0;
-			long szGroupCount = 0;
-			var groupName = groupCount.ToString();
+		//	int groupCount = 0;
+		//	long szGroupCount = 0;
+		//	var groupName = groupCount.ToString();
 
-			if(incoming != null) {
+		//	if(incoming != null) {
 
-				foreach(var ag in incoming) {
-					foreach (var assets in ag.assetGroups.Values) {
-						foreach(var a in assets) {
-                            szGroupCount += GetSizeOfAsset(a, (GroupingType)m_groupingType[target]);
+		//		foreach(var ag in incoming) {
+		//			foreach (var assets in ag.assetGroups.Values) {
+		//				foreach(var a in assets) {
+  //                          szGroupCount += GetSizeOfAsset(a, (GroupingType)m_groupingType[target]);
 
-							if (!outputDict.ContainsKey(groupName)) {
-								outputDict[groupName] = new List<AssetReference>();
-							}
-							outputDict[groupName].Add(a);
+		//					if (!outputDict.ContainsKey(groupName)) {
+		//						outputDict[groupName] = new List<AssetReference>();
+		//					}
+		//					outputDict[groupName].Add(a);
 
-							if(szGroupCount >= szGroup) {
-								szGroupCount = 0;
-								++groupCount;
-								groupName = groupCount.ToString();
-							}
-						}
-					}
-				}
-			}
+		//					if(szGroupCount >= szGroup) {
+		//						szGroupCount = 0;
+		//						++groupCount;
+		//						groupName = groupCount.ToString();
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
 
-			var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-				null : connectionsToOutput.First();
-			Output(dst, outputDict);
-		}
+		//	var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+		//		null : connectionsToOutput.First();
+		//	Output(dst, outputDict);
+		//}
 
-		public override bool OnAssetsReimported(
-			Model.NodeData nodeData,
-			AssetReferenceStreamManager streamManager,
-			BuildTarget target, 
-			string[] importedAssets, 
-			string[] deletedAssets, 
-			string[] movedAssets, 
-			string[] movedFromAssetPaths)
-		{
-			return true;
-		}
+		//public override bool OnAssetsReimported(
+		//	Model.NodeData nodeData,
+		//	AssetReferenceStreamManager streamManager,
+		//	BuildTarget target, 
+		//	string[] importedAssets, 
+		//	string[] deletedAssets, 
+		//	string[] movedAssets, 
+		//	string[] movedFromAssetPaths)
+		//{
+		//	return true;
+		//}
 
         private long GetSizeOfAsset(AssetReference a, GroupingType t) {
 

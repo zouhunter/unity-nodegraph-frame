@@ -168,12 +168,12 @@ namespace UnityEngine.AssetBundles.GraphTool {
 					updateHandler(currentNodeData, "Starting...", 0f);
 				}
 
-				if(isActualRun) {
-					currentNodeData.Operation.Object.Build(target, currentNodeData, incoming, connectionsToOutput, outputFunc, updateHandler);
-				}
-				else {
-					currentNodeData.Operation.Object.Prepare(target, currentNodeData, incoming, connectionsToOutput, outputFunc);
-				}
+				//if(isActualRun) {
+				//	currentNodeData.Operation.Object.Build(target, currentNodeData, incoming, connectionsToOutput, outputFunc, updateHandler);
+				//}
+				//else {
+				//	currentNodeData.Operation.Object.Prepare(target, currentNodeData, incoming, connectionsToOutput, outputFunc);
+				//}
 
 				if (updateHandler != null) {
 					updateHandler(currentNodeData, "Completed.", 1f);
@@ -220,11 +220,11 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			bool isAnyNodeAffected = false;
 
 			foreach(var n in m_targetGraph.Nodes) {
-				bool affected = n.Operation.Object.OnAssetsReimported(n, m_streamManager, m_lastTarget, importedAssets, deletedAssets, movedAssets, movedFromAssetPaths);
-				if(affected) {
-					n.NeedsRevisit = true;
-				}
-				isAnyNodeAffected |= affected;
+				//bool affected = n.Operation.Object.OnAssetsReimported(n, m_streamManager, m_lastTarget, importedAssets, deletedAssets, movedAssets, movedFromAssetPaths);
+				//if(affected) {
+				//	n.NeedsRevisit = true;
+				//}
+				//isAnyNodeAffected |= affected;
 			}
 
 			if(isAnyNodeAffected) {

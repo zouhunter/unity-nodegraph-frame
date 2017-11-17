@@ -78,56 +78,56 @@ namespace UnityEngine.AssetBundles.GraphTool
 			}
 		}
 
-		public override void Prepare (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output) 
-		{
-			// Label does not add, filter or change structure of group, so just pass given group of assets
-			if(Output != null) {
-				var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-					null : connectionsToOutput.First();
+		//public override void Prepare (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output) 
+		//{
+		//	// Label does not add, filter or change structure of group, so just pass given group of assets
+		//	if(Output != null) {
+		//		var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+		//			null : connectionsToOutput.First();
 
-				if(incoming != null) {
-					foreach(var ag in incoming) {
-						Output(dst, ag.assetGroups);
-					}
-				} else {
-					Output(dst, new Dictionary<string, List<AssetReference>>());
-				}
-			}
-		}
+		//		if(incoming != null) {
+		//			foreach(var ag in incoming) {
+		//				Output(dst, ag.assetGroups);
+		//			}
+		//		} else {
+		//			Output(dst, new Dictionary<string, List<AssetReference>>());
+		//		}
+		//	}
+		//}
 
-		public override void Build (BuildTarget target, 
-			Model.NodeData node, 
-			IEnumerable<PerformGraph.AssetGroups> incoming, 
-			IEnumerable<Model.ConnectionData> connectionsToOutput, 
-			PerformGraph.Output Output,
-			Action<Model.NodeData, string, float> progressFunc) 
-		{
-			if(incoming != null) {
-				foreach(var ag in incoming) {
-					foreach (var groupName in ag.assetGroups.Keys) {
-						var labels = m_label.Replace ("*", groupName).Split(',').Select (s => s.Trim ()).Where (s => !string.IsNullOrEmpty (s)).Distinct ();
-						if (labels.Any()) {
-							var assets = ag.assetGroups [groupName];
-							foreach(var a in assets) {
-								var o = AssetDatabase.LoadMainAssetAtPath (a.importFrom);
+		//public override void Build (BuildTarget target, 
+		//	Model.NodeData node, 
+		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
+		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+		//	PerformGraph.Output Output,
+		//	Action<Model.NodeData, string, float> progressFunc) 
+		//{
+		//	if(incoming != null) {
+		//		foreach(var ag in incoming) {
+		//			foreach (var groupName in ag.assetGroups.Keys) {
+		//				var labels = m_label.Replace ("*", groupName).Split(',').Select (s => s.Trim ()).Where (s => !string.IsNullOrEmpty (s)).Distinct ();
+		//				if (labels.Any()) {
+		//					var assets = ag.assetGroups [groupName];
+		//					foreach(var a in assets) {
+		//						var o = AssetDatabase.LoadMainAssetAtPath (a.importFrom);
 
-								if (m_overwriteLabels) {
-									AssetDatabase.SetLabels (o, labels.ToArray());
-								} else {
-									var currentLabels = AssetDatabase.GetLabels (o);
-									var combined = labels.ToList ();
-									combined.AddRange (currentLabels);
-									AssetDatabase.SetLabels (o, combined.Distinct().ToArray());
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		//						if (m_overwriteLabels) {
+		//							AssetDatabase.SetLabels (o, labels.ToArray());
+		//						} else {
+		//							var currentLabels = AssetDatabase.GetLabels (o);
+		//							var combined = labels.ToList ();
+		//							combined.AddRange (currentLabels);
+		//							AssetDatabase.SetLabels (o, combined.Distinct().ToArray());
+		//						}
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
 	}
 }
