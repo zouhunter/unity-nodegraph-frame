@@ -281,13 +281,13 @@ namespace UnityEngine.AssetBundles.GraphTool.DataModel.Version2 {
 					n   = v;
 				}
 				break;
-			case V1.NodeKind.FILTER_GUI:
-				{
-					var v = new Filter();
-					imp = v;
-					n   = v;
-				}
-				break;
+			//case V1.NodeKind.FILTER_GUI:
+			//	{
+			//		var v = new Filter();
+			//		imp = v;
+			//		n   = v;
+			//	}
+			//	break;
 			case V1.NodeKind.IMPORTSETTING_GUI:
 				{
 					var v = new ImportSetting();
