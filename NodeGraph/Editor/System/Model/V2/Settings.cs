@@ -168,11 +168,11 @@ namespace NodeGraph.DataModel.Version2 {
             new BuildAssetBundleOption("Ignore TypeTree Changes", BuildAssetBundleOptions.IgnoreTypeTreeChanges),
             new BuildAssetBundleOption("Append Hash To AssetBundle Name", BuildAssetBundleOptions.AppendHashToAssetBundleName),
             new BuildAssetBundleOption("ChunkBased Compression", BuildAssetBundleOptions.ChunkBasedCompression),
-            new BuildAssetBundleOption("Strict Mode", BuildAssetBundleOptions.StrictMode)
+            //new BuildAssetBundleOption("Strict Mode", BuildAssetBundleOptions.StrictMode)
             #if !UNITY_5_5_OR_NEWER
-            ,
+            //,
             // UnityEditor.BuildAssetBundleOptions does no longer have OmitClassVersions available
-            new BuildAssetBundleOption("Omit Class Versions", BuildAssetBundleOptions.OmitClassVersions)
+            //new BuildAssetBundleOption("Omit Class Versions", BuildAssetBundleOptions.OmitClassVersions)
             #endif
         };
 
@@ -185,7 +185,7 @@ namespace NodeGraph.DataModel.Version2 {
             #if UNITY_5_6_OR_NEWER
             new BuildPlayerOption("Compress With LZ4", BuildOptions.CompressWithLz4),
             #endif
-            new BuildPlayerOption("Compute CRC", BuildOptions.ComputeCRC),
+            //new BuildPlayerOption("Compute CRC", BuildOptions.ComputeCRC),
             new BuildPlayerOption("Connect To Host", BuildOptions.ConnectToHost),
             new BuildPlayerOption("Connect With Profiler", BuildOptions.ConnectWithProfiler),
             new BuildPlayerOption("Development Build", BuildOptions.Development),
@@ -197,7 +197,7 @@ namespace NodeGraph.DataModel.Version2 {
             new BuildPlayerOption("Use IL2CPP", BuildOptions.Il2CPP),
             new BuildPlayerOption("Install In Build Folder", BuildOptions.InstallInBuildFolder),
             new BuildPlayerOption("Show Built Player", BuildOptions.ShowBuiltPlayer),
-            new BuildPlayerOption("Strict Mode", BuildOptions.StrictMode),
+            //new BuildPlayerOption("Strict Mode", BuildOptions.StrictMode),
             new BuildPlayerOption("Symlink Libraries", BuildOptions.SymlinkLibraries),
             new BuildPlayerOption("Uncompressed AssetBundle", BuildOptions.UncompressedAssetBundle)
 		};

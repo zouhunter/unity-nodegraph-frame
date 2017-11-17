@@ -170,8 +170,8 @@ namespace NodeGraph {
 						onValueChanged();
 					}
 				});
-
-				using (disabledScope) {
+                #region DisableGroup
+                EditorGUI.BeginDisabledGroup(disabledScope);
 					var path = m_loadPath[editor.CurrentEditingGroup];
 					EditorGUILayout.LabelField("Load Path:");
 
@@ -195,7 +195,8 @@ namespace NodeGraph {
 					GUILayout.Space(10f);
 
 					using (new EditorGUILayout.HorizontalScope()) {
-						using(new EditorGUI.DisabledScope(string.IsNullOrEmpty(newLoadPath)||!dirExists)) 
+                    EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(newLoadPath) || !dirExists);
+						//using(new EditorGUI.DisabledScope()) 
 						{
 							GUILayout.FlexibleSpace();
 							if(GUILayout.Button("Highlight in Project Window", GUILayout.Width(180f))) {
@@ -207,6 +208,7 @@ namespace NodeGraph {
 								EditorGUIUtility.PingObject(obj);
 							}
 						}
+                    EditorGUI.EndDisabledGroup();
 					}
 
 					if(!dirExists) {
@@ -220,9 +222,11 @@ namespace NodeGraph {
 							}
 						}
 					}
-				}
-			}
-		}
+
+                #endregion
+                EditorGUI.EndDisabledGroup();
+            }
+        }
 
 
 		//public override void Prepare (BuildTarget target, 

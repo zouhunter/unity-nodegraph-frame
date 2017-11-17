@@ -235,9 +235,9 @@ namespace NodeGraph {
 			if(GUI.changed) {
                 Model.Settings.UserSettings.BatchBuildUseCollectionState = m_useGraphCollection;
 			}
-
-			using(new EditorGUI.DisabledScope(!m_useGraphCollection)) {
-				GUILayout.Space(4f);
+            EditorGUI.BeginDisabledGroup(!m_useGraphCollection);
+            /*using (new EditorGUI.DisabledScope()) {*/
+            GUILayout.Space(4f);
 				using(new EditorGUILayout.HorizontalScope()) {
 					if (GUILayout.Button(new GUIContent(currentCollectionName, "Select Collection"), EditorStyles.popup)) {
 						GenericMenu menu = new GenericMenu();
@@ -266,18 +266,21 @@ namespace NodeGraph {
 						m_currentCollection = null;
 					}
 				}
-				using(new EditorGUI.DisabledScope(m_currentCollection == null)) {
+                EditorGUI.BeginDisabledGroup(m_currentCollection == null);
+				//using(new EditorGUI.DisabledScope()) {
 					var newName = EditorGUILayout.TextField("Name", currentCollectionName);
 					if(newName != currentCollectionName) {
 						currentCollectionName = newName;
 						m_currentCollection.Name = newName;
 						BatchBuildConfig.SetConfigDirty();
 					}
-				}
-			}
-		}
+				//}
+                EditorGUI.EndDisabledGroup();
+            //}
+            EditorGUI.EndDisabledGroup();
+        }
 
-		public void OnEnable () {
+        public void OnEnable () {
 			Init();
 		}
 

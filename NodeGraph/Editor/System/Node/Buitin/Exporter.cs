@@ -113,9 +113,10 @@ namespace NodeGraph {
 						onValueChanged();
 					}
 				} );
-
-				using (disabledScope) {
-					ExportOption opt = (ExportOption)m_exportOption[currentEditingGroup];
+                EditorGUI.BeginDisabledGroup(disabledScope);
+                #region DisableGroup
+                //using (disabledScope) {
+                ExportOption opt = (ExportOption)m_exportOption[currentEditingGroup];
 					var newOption = (ExportOption)EditorGUILayout.EnumPopup("Export Option", opt);
 					if(newOption != opt) {
 						using(new RecordUndoScope("Change Export Option", node, true)){
@@ -204,7 +205,8 @@ namespace NodeGraph {
 							}
 						}
 					}
-				}
+                #endregion
+                EditorGUI.EndDisabledGroup();
 			}
 		}
 

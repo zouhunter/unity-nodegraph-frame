@@ -116,10 +116,10 @@ namespace NodeGraph {
 			return editGroupChanged;
 		}
 
-		public EditorGUI.DisabledScope DrawOverrideTargetToggle(NodeGUI node, bool status, Action<bool> onStatusChange) {
+		public bool DrawOverrideTargetToggle(NodeGUI node, bool status, Action<bool> onStatusChange) {
 
 			if( currentEditingGroup == BuildTargetUtility.DefaultTarget ) {
-				return new EditorGUI.DisabledScope(false);
+				return false;
 			}
 
 			bool newStatus = GUILayout.Toggle(status, 
@@ -128,7 +128,7 @@ namespace NodeGraph {
 			if(newStatus != status && onStatusChange != null) {
 				onStatusChange(newStatus);
 			}
-			return new EditorGUI.DisabledScope(!newStatus);
+			return !newStatus;
 		}
 
         public string DrawFolderSelector(string label, 

@@ -219,13 +219,13 @@ namespace NodeGraph {
 
 			bool isAnyNodeAffected = false;
 
-			foreach(var n in m_targetGraph.Nodes) {
+			//foreach(var n in m_targetGraph.Nodes) {
 				//bool affected = n.Operation.Object.OnAssetsReimported(n, m_streamManager, m_lastTarget, importedAssets, deletedAssets, movedAssets, movedFromAssetPaths);
 				//if(affected) {
 				//	n.NeedsRevisit = true;
 				//}
 				//isAnyNodeAffected |= affected;
-			}
+			//}
 
 			if(isAnyNodeAffected) {
 				Perform(m_lastTarget, false, false, null);

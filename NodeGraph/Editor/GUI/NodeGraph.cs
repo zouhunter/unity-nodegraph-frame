@@ -999,8 +999,8 @@ public class NodeGraphWindow : EditorWindow
                 target = supportedTargets[newIndex];
                 Setup(true);
             }
-
-            using (new EditorGUI.DisabledScope(controller.IsAnyIssueFound))
+            EditorGUI.BeginDisabledGroup(controller.IsAnyIssueFound);
+            //using (new EditorGUI.DisabledScope(controller.IsAnyIssueFound))
             {
                 if (GUILayout.Button("Build", EditorStyles.toolbarButton, GUILayout.Height(Model.Settings.GUI.TOOLBAR_HEIGHT)))
                 {
@@ -1008,6 +1008,7 @@ public class NodeGraphWindow : EditorWindow
                     Debug.Log("Build Clicked");
                 }
             }
+            EditorGUI.EndDisabledGroup();
         }
     }
 

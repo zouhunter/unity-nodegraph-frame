@@ -168,9 +168,10 @@ namespace NodeGraph {
 						onValueChanged();
 					}
 				}
-
-				using (new EditorGUI.DisabledScope(newUseGroupAsVariantValue)) {
-					GUILayout.Label("Variants:");
+                EditorGUI.BeginDisabledGroup(newUseGroupAsVariantValue);
+                #region DisableGroup
+                //using (new EditorGUI.DisabledScope(newUseGroupAsVariantValue)) {
+                GUILayout.Label("Variants:");
 					var variantNames = m_variants.Select(v => v.Name).ToList();
 					Variant removing = null;
 					foreach (var v in m_variants) {
@@ -219,11 +220,12 @@ namespace NodeGraph {
 							onValueChanged();
 						}
 					}
+                #endregion
+                EditorGUI.EndDisabledGroup();
 				}
-			}
 
-			//Show target configuration tab
-			editor.DrawPlatformSelector(node);
+        //Show target configuration tab
+        editor.DrawPlatformSelector(node);
 			using (new EditorGUILayout.VerticalScope(GUI.skin.box)) {
 				var disabledScope = editor.DrawOverrideTargetToggle(node, m_bundleNameTemplate.ContainsValueOf(editor.CurrentEditingGroup), (bool enabled) => {
 					using(new RecordUndoScope("Remove Target Bundle Name Template Setting", node, true)){
@@ -236,7 +238,8 @@ namespace NodeGraph {
 					}
 				});
 
-				using (disabledScope) {
+                EditorGUI.BeginDisabledGroup(disabledScope);
+				//using (disabledScope) {
 					var bundleNameTemplate = EditorGUILayout.TextField("Bundle Name Template", m_bundleNameTemplate[editor.CurrentEditingGroup]).ToLower();
 
 					if (bundleNameTemplate != m_bundleNameTemplate[editor.CurrentEditingGroup]) {
@@ -245,7 +248,8 @@ namespace NodeGraph {
 							onValueChanged();
 						}
 					}
-				}
+                //}
+                EditorGUI.EndDisabledGroup();
 			}
 		}
 

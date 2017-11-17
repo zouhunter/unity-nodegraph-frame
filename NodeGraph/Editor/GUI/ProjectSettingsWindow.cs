@@ -100,8 +100,8 @@ namespace NodeGraph {
                         Model.Settings.UserSettings.AssetBundleBuildCacheDir = newCacheDir;
                     }
                 }
-
-                using (new EditorGUI.DisabledScope (!Directory.Exists (cacheDir))) 
+                EditorGUI.BeginDisabledGroup(!Directory.Exists(cacheDir));
+                //using (new EditorGUI.DisabledScope (!Directory.Exists (cacheDir))) 
                 {
                     using (new EditorGUILayout.HorizontalScope ()) {
                         GUILayout.FlexibleSpace ();
@@ -115,6 +115,7 @@ namespace NodeGraph {
                         }
                     }
                 }
+                EditorGUI.EndDisabledGroup();
 			}
 		}
 	}

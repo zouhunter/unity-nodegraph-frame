@@ -104,8 +104,8 @@ namespace NodeGraph
 						onValueChanged();
 					}
 				});
-
-				using (disabledScope) {
+                EditorGUI.BeginDisabledGroup(disabledScope);
+				//using (disabledScope) {
 					var newType = (GroupingPatternType)EditorGUILayout.EnumPopup("Pattern Type",(GroupingPatternType)m_patternType[editor.CurrentEditingGroup]);
 					if (newType != (GroupingPatternType)m_patternType[editor.CurrentEditingGroup]) {
 						using(new RecordUndoScope("Change Grouping Pattern Type", node, true)){
@@ -133,92 +133,93 @@ namespace NodeGraph
 						}
 					}
 				}
-			}
-		}
+            EditorGUI.EndDisabledGroup();
 
-		//public override void Prepare (BuildTarget target, 
-		//	Model.NodeData node, 
-		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
-		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
-		//	PerformGraph.Output Output) 
-		//{
-		//	GroupingOutput(target, node, incoming, connectionsToOutput, Output);
-		//}
+        }
 
-		//private void GroupingOutput (BuildTarget target, 
-		//	Model.NodeData node, 
-		//	IEnumerable<PerformGraph.AssetGroups> incoming, 
-		//	IEnumerable<Model.ConnectionData> connectionsToOutput, 
-		//	PerformGraph.Output Output) 
-		//{
+        //public override void Prepare (BuildTarget target, 
+        //	Model.NodeData node, 
+        //	IEnumerable<PerformGraph.AssetGroups> incoming, 
+        //	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+        //	PerformGraph.Output Output) 
+        //{
+        //	GroupingOutput(target, node, incoming, connectionsToOutput, Output);
+        //}
 
-		//	ValidateGroupingKeyword(
-		//		m_groupingKeyword[target],
-		//		(GroupingPatternType)m_patternType[target],
-		//		() => {
-		//			throw new NodeException("Grouping Keyword can not be empty.", node.Id);
-		//		},
-		//		() => {
-		//			throw new NodeException(String.Format("Grouping Keyword must contain {0} for numbering: currently {1}", Model.Settings.KEYWORD_WILDCARD, m_groupingKeyword[target]), node.Id);
-		//		}
-		//	);
+        //private void GroupingOutput (BuildTarget target, 
+        //	Model.NodeData node, 
+        //	IEnumerable<PerformGraph.AssetGroups> incoming, 
+        //	IEnumerable<Model.ConnectionData> connectionsToOutput, 
+        //	PerformGraph.Output Output) 
+        //{
 
-		//	if(connectionsToOutput == null || Output == null) {
-		//		return;
-		//	}
+        //	ValidateGroupingKeyword(
+        //		m_groupingKeyword[target],
+        //		(GroupingPatternType)m_patternType[target],
+        //		() => {
+        //			throw new NodeException("Grouping Keyword can not be empty.", node.Id);
+        //		},
+        //		() => {
+        //			throw new NodeException(String.Format("Grouping Keyword must contain {0} for numbering: currently {1}", Model.Settings.KEYWORD_WILDCARD, m_groupingKeyword[target]), node.Id);
+        //		}
+        //	);
 
-		//	var outputDict = new Dictionary<string, List<AssetReference>>();
+        //	if(connectionsToOutput == null || Output == null) {
+        //		return;
+        //	}
 
-		//	if(incoming != null) {
-		//		Regex regex = null;
-		//		switch((GroupingPatternType)m_patternType[target]) {
-		//		case GroupingPatternType.WildCard: 
-		//			{
-		//				var groupingKeyword = m_groupingKeyword[target];
-		//				var split = groupingKeyword.Split(Model.Settings.KEYWORD_WILDCARD);
-		//				var groupingKeywordPrefix  = split[0];
-		//				var groupingKeywordPostfix = split[1];
-		//				regex = new Regex(groupingKeywordPrefix + "(.*?)" + groupingKeywordPostfix);
-		//			}
-		//			break;
-		//		case GroupingPatternType.RegularExpression:
-		//			{
-		//				regex = new Regex(m_groupingKeyword[target]);
-		//			}
-		//			break;
-		//		}
+        //	var outputDict = new Dictionary<string, List<AssetReference>>();
 
-		//		foreach(var ag in incoming) {
-		//			foreach (var assets in ag.assetGroups.Values) {
-		//				foreach(var a in assets) {
-		//					var targetPath = a.path;
+        //	if(incoming != null) {
+        //		Regex regex = null;
+        //		switch((GroupingPatternType)m_patternType[target]) {
+        //		case GroupingPatternType.WildCard: 
+        //			{
+        //				var groupingKeyword = m_groupingKeyword[target];
+        //				var split = groupingKeyword.Split(Model.Settings.KEYWORD_WILDCARD);
+        //				var groupingKeywordPrefix  = split[0];
+        //				var groupingKeywordPostfix = split[1];
+        //				regex = new Regex(groupingKeywordPrefix + "(.*?)" + groupingKeywordPostfix);
+        //			}
+        //			break;
+        //		case GroupingPatternType.RegularExpression:
+        //			{
+        //				regex = new Regex(m_groupingKeyword[target]);
+        //			}
+        //			break;
+        //		}
 
-		//					var match = regex.Match(targetPath);
+        //		foreach(var ag in incoming) {
+        //			foreach (var assets in ag.assetGroups.Values) {
+        //				foreach(var a in assets) {
+        //					var targetPath = a.path;
 
-		//					if (match.Success) {
-		//						var newGroupingKey = match.Groups[1].Value;
+        //					var match = regex.Match(targetPath);
 
-		//						if(!m_allowSlash && newGroupingKey.Contains("/")) {
-		//							throw new NodeException(String.Format("Grouping Keyword with directory separator('/') found: \"{0}\" from asset: {1}", 
-		//								newGroupingKey, targetPath), node.Id);
-		//						}
+        //					if (match.Success) {
+        //						var newGroupingKey = match.Groups[1].Value;
 
-		//						if (!outputDict.ContainsKey(newGroupingKey)) {
-		//							outputDict[newGroupingKey] = new List<AssetReference>();
-		//						}
-		//						outputDict[newGroupingKey].Add(a);
-		//					}
-		//				}
-		//			}
-		//		}
-		//	}
+        //						if(!m_allowSlash && newGroupingKey.Contains("/")) {
+        //							throw new NodeException(String.Format("Grouping Keyword with directory separator('/') found: \"{0}\" from asset: {1}", 
+        //								newGroupingKey, targetPath), node.Id);
+        //						}
 
-		//	var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-		//		null : connectionsToOutput.First();
-		//	Output(dst, outputDict);
-		//}
+        //						if (!outputDict.ContainsKey(newGroupingKey)) {
+        //							outputDict[newGroupingKey] = new List<AssetReference>();
+        //						}
+        //						outputDict[newGroupingKey].Add(a);
+        //					}
+        //				}
+        //			}
+        //		}
+        //	}
 
-		private void ValidateGroupingKeyword (string currentGroupingKeyword, 
+        //	var dst = (connectionsToOutput == null || !connectionsToOutput.Any())? 
+        //		null : connectionsToOutput.First();
+        //	Output(dst, outputDict);
+        //}
+
+        private void ValidateGroupingKeyword (string currentGroupingKeyword, 
 			GroupingPatternType currentType,
 			Action NullOrEmpty, 
 			Action ShouldContainWildCardKey
