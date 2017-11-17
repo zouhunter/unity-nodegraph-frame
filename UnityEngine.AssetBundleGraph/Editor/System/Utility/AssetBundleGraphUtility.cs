@@ -110,7 +110,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
         /// <param name="c">C.</param>
 		public static List<ExecuteGraphResult> ExecuteGraphCollection(BuildTarget t, BatchBuildConfig.GraphCollection c) {
 
-            AssetBundleBuildMap.GetBuildMap ().Clear ();
+            //AssetBundleBuildMap.GetBuildMap ().Clear ();
 
             List<ExecuteGraphResult> resultCollection = new List<ExecuteGraphResult>(c.GraphGUIDs.Count);
 

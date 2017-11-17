@@ -326,8 +326,8 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			if(incoming != null) {
 				Dictionary<string, List<string>> variantsInfo = new Dictionary<string, List<string>> ();
 
-				var buildMap = AssetBundleBuildMap.GetBuildMap ();
-				buildMap.ClearFromId (node.Id);
+				//var buildMap = AssetBundleBuildMap.GetBuildMap ();
+				//buildMap.ClearFromId (node.Id);
 
 				foreach(var ag in incoming) {
 					string variantName = null;
@@ -360,8 +360,8 @@ namespace UnityEngine.AssetBundles.GraphTool {
 							output[bundleName].AddRange(assets);
 						}
 
-						var bundleConfig = buildMap.GetAssetBundleWithNameAndVariant (node.Id, bundleName, variantName);
-						bundleConfig.AddAssets (node.Id, assets.Select(a => a.importFrom));
+						//var bundleConfig = buildMap.GetAssetBundleWithNameAndVariant (node.Id, bundleName, variantName);
+						//bundleConfig.AddAssets (node.Id, assets.Select(a => a.importFrom));
 					}
 				}
 

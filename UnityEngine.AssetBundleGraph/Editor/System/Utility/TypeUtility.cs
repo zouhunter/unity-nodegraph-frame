@@ -116,7 +116,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
             typeof(Model.ConnectionPointData),
             typeof(Model.NodeData),
             typeof(AssetReferenceDatabase),
-            typeof(AssetBundleBuildMap)
+            //typeof(AssetBundleBuildMap)
         };
 
         public static bool IsGraphToolSystemAssetType(Type t) {

@@ -764,7 +764,7 @@ public class UIBridgeWindow : EditorWindow
         try
         {
             AssetDatabase.SaveAssets();
-            AssetBundleBuildMap.GetBuildMap().Clear();
+            //AssetBundleBuildMap.GetBuildMap().Clear();
 
             float currentCount = 0f;
             float totalCount = (float)controller.TargetGraph.Nodes.Count;
