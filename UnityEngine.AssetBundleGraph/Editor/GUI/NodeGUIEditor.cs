@@ -17,7 +17,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			BuildTargetUtility.DefaultTarget;
 
 		//[NonSerialized] private IModifier m_modifier;
-		[NonSerialized] private IPrefabBuilder m_prefabBuilder;
+		//[NonSerialized] private IPrefabBuilder m_prefabBuilder;
 
 		public BuildTargetGroup CurrentEditingGroup {
 			get {

@@ -309,13 +309,13 @@ namespace UnityEngine.AssetBundles.GraphTool.DataModel.Version2 {
 					n   = v;
 				}
 				break;
-			case V1.NodeKind.PREFABBUILDER_GUI:
-				{
-					var v = new PrefabBuilder();
-					imp = v;
-					n   = v;
-				}
-				break;
+			//case V1.NodeKind.PREFABBUILDER_GUI:
+			//	{
+			//		var v = new PrefabBuilder();
+			//		imp = v;
+			//		n   = v;
+			//	}
+			//	break;
 			case V1.NodeKind.BUNDLECONFIG_GUI:
 				{
 					var v = new BundleConfigurator();
