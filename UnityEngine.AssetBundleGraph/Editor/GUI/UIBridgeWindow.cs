@@ -313,36 +313,36 @@ public class UIBridgeWindow : EditorWindow
     /*
         menu items
     */
-    [MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_FILTER)]
-    public static void GenerateCustomFilter()
-    {
-        GenerateScript(ScriptType.SCRIPT_FILTER);
-    }
-    [MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_MODIFIER)]
-    public static void GenerateModifier()
-    {
-        GenerateScript(ScriptType.SCRIPT_MODIFIER);
-    }
-    [MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_PREFABBUILDER)]
-    public static void GeneratePrefabBuilder()
-    {
-        GenerateScript(ScriptType.SCRIPT_PREFABBUILDER);
-    }
-    [MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_POSTPROCESS)]
-    public static void GeneratePostprocess()
-    {
-        GenerateScript(ScriptType.SCRIPT_POSTPROCESS);
-    }
-    [MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_NODE)]
-    public static void GenerateCustomNode()
-    {
-        GenerateScript(ScriptType.SCRIPT_NODE);
-    }
-    [MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_ASSETGENERATOR)]
-    public static void GenerateAssetGenerator()
-    {
-        GenerateScript(ScriptType.SCRIPT_ASSETGENERATOR);
-    }
+    //[MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_FILTER)]
+    //public static void GenerateCustomFilter()
+    //{
+    //    GenerateScript(ScriptType.SCRIPT_FILTER);
+    //}
+    //[MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_MODIFIER)]
+    //public static void GenerateModifier()
+    //{
+    //    GenerateScript(ScriptType.SCRIPT_MODIFIER);
+    //}
+    //[MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_PREFABBUILDER)]
+    //public static void GeneratePrefabBuilder()
+    //{
+    //    GenerateScript(ScriptType.SCRIPT_PREFABBUILDER);
+    //}
+    //[MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_POSTPROCESS)]
+    //public static void GeneratePostprocess()
+    //{
+    //    GenerateScript(ScriptType.SCRIPT_POSTPROCESS);
+    //}
+    //[MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_NODE)]
+    //public static void GenerateCustomNode()
+    //{
+    //    GenerateScript(ScriptType.SCRIPT_NODE);
+    //}
+    //[MenuItem(Model.Settings.GUI_TEXT_MENU_GENERATE_ASSETGENERATOR)]
+    //public static void GenerateAssetGenerator()
+    //{
+    //    GenerateScript(ScriptType.SCRIPT_ASSETGENERATOR);
+    //}
 
     [MenuItem(Settings.GUI_TEXT_MENU_OPEN, false, 1)]
     public static void Open()
@@ -350,49 +350,49 @@ public class UIBridgeWindow : EditorWindow
         GetWindow<UIBridgeWindow>();
     }
 
-    [MenuItem(Model.Settings.GUI_TEXT_MENU_DELETE_CACHE)]
-    public static void DeleteCache()
-    {
-        FileUtility.RemakeDirectory(Model.Settings.Path.CachePath);
+    //[MenuItem(Model.Settings.GUI_TEXT_MENU_DELETE_CACHE)]
+    //public static void DeleteCache()
+    //{
+    //    FileUtility.RemakeDirectory(Model.Settings.Path.CachePath);
 
-        AssetDatabase.Refresh();
-    }
+    //    AssetDatabase.Refresh();
+    //}
 
-    [MenuItem(Model.Settings.GUI_TEXT_MENU_DELETE_IMPORTSETTING_SETTINGS)]
-    public static void DeleteImportSettingSample()
-    {
+    //[MenuItem(Model.Settings.GUI_TEXT_MENU_DELETE_IMPORTSETTING_SETTINGS)]
+    //public static void DeleteImportSettingSample()
+    //{
 
-        var result = EditorUtility.DisplayDialog("Erase All Import Settings", "Do you want to erase settings for all ImportSetting node? " +
-            "This operation is not undoable. It will affect all graphs in this project.", "Yes", "Cancel");
+    //    var result = EditorUtility.DisplayDialog("Erase All Import Settings", "Do you want to erase settings for all ImportSetting node? " +
+    //        "This operation is not undoable. It will affect all graphs in this project.", "Yes", "Cancel");
 
-        if (result)
-        {
-            FileUtility.RemakeDirectory(Model.Settings.Path.ImporterSettingsPath);
-            AssetDatabase.Refresh();
-        }
-    }
+    //    if (result)
+    //    {
+    //        FileUtility.RemakeDirectory(Model.Settings.Path.ImporterSettingsPath);
+    //        AssetDatabase.Refresh();
+    //    }
+    //}
 
-    [MenuItem(Model.Settings.GUI_TEXT_MENU_BUILD, true, 1 + 101)]
-    public static bool BuildFromMenuValidator()
-    {
-        // Calling GetWindow<>() will force open window
-        // That's not what we want to do in validator function,
-        // so just reference s_currentController directly
-        var w = Window;
-        if (w == null)
-        {
-            return false;
-        }
-        return !w.IsAnyIssueFound;
-    }
+    //[MenuItem(Model.Settings.GUI_TEXT_MENU_BUILD, true, 1 + 101)]
+    //public static bool BuildFromMenuValidator()
+    //{
+    //    // Calling GetWindow<>() will force open window
+    //    // That's not what we want to do in validator function,
+    //    // so just reference s_currentController directly
+    //    var w = Window;
+    //    if (w == null)
+    //    {
+    //        return false;
+    //    }
+    //    return !w.IsAnyIssueFound;
+    //}
 
-    [MenuItem(Model.Settings.GUI_TEXT_MENU_BUILD, false, 1 + 101)]
-    public static void BuildFromMenu()
-    {
-        var window = GetWindow<UIBridgeWindow>();
-        window.SaveGraph();
-        window.Run();
-    }
+    //[MenuItem(Model.Settings.GUI_TEXT_MENU_BUILD, false, 1 + 101)]
+    //public static void BuildFromMenu()
+    //{
+    //    var window = GetWindow<UIBridgeWindow>();
+    //    window.SaveGraph();
+    //    window.Run();
+    //}
 
 
     public void OnFocus()
@@ -1005,7 +1005,7 @@ public class UIBridgeWindow : EditorWindow
             {
                 if (GUILayout.Button("Build", EditorStyles.toolbarButton, GUILayout.Height(Model.Settings.GUI.TOOLBAR_HEIGHT)))
                 {
-                    EditorApplication.delayCall += BuildFromMenu;
+                    //EditorApplication.delayCall += BuildFromMenu;
                     Debug.Log("Build Clicked");
                 }
             }

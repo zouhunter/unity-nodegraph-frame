@@ -12,25 +12,25 @@ namespace UnityEngine.AssetBundles.GraphTool.DataModel.Version2 {
 		*/
 		public const bool IGNORE_META = true;
 
-		public const string GUI_TEXT_MENU_OPEN = "Window/AssetBundleGraph/Open Graph Editor";
-        public const string GUI_TEXT_MENU_BATCHWINDOW_OPEN = "Window/AssetBundleGraph/Open Batch Build Window";
-        public const string GUI_TEXT_MENU_PROJECTWINDOW_OPEN = "Window/AssetBundleGraph/Open Project Window";
-		public const string GUI_TEXT_MENU_BUILD = "Window/AssetBundleGraph/Build Bundles for Current Platform";
-		public const string GUI_TEXT_MENU_BATCHBUILD = "Window/AssetBundleGraph/Build Current Graph Selections";
-		public const string GUI_TEXT_MENU_GENERATE = "Window/AssetBundleGraph/Create Node Script";
-		public const string GUI_TEXT_MENU_GENERATE_MODIFIER = GUI_TEXT_MENU_GENERATE + "/Modifier Script";
-        public const string GUI_TEXT_MENU_GENERATE_PREFABBUILDER = GUI_TEXT_MENU_GENERATE + "/PrefabBuilder Script";
-        public const string GUI_TEXT_MENU_GENERATE_ASSETGENERATOR = GUI_TEXT_MENU_GENERATE + "/AssetGenerator Script";
-		public const string GUI_TEXT_MENU_GENERATE_CUITOOL = "Window/AssetBundleGraph/Create CUI Tool";
+        //public const string GUI_TEXT_MENU_OPEN = "Window/AssetBundleGraph/Open Graph Editor";
+        //      public const string GUI_TEXT_MENU_BATCHWINDOW_OPEN = "Window/AssetBundleGraph/Open Batch Build Window";
+        //public const string GUI_TEXT_MENU_PROJECTWINDOW_OPEN = "Window/AssetBundleGraph/Open Project Window";
+        //public const string GUI_TEXT_MENU_BUILD = "Window/AssetBundleGraph/Build Bundles for Current Platform";
+        //public const string GUI_TEXT_MENU_BATCHBUILD = "Window/AssetBundleGraph/Build Current Graph Selections";
+        //public const string GUI_TEXT_MENU_GENERATE = "Window/AssetBundleGraph/Create Node Script";
+        //public const string GUI_TEXT_MENU_GENERATE_MODIFIER = GUI_TEXT_MENU_GENERATE + "/Modifier Script";
+        //      public const string GUI_TEXT_MENU_GENERATE_PREFABBUILDER = GUI_TEXT_MENU_GENERATE + "/PrefabBuilder Script";
+        //      public const string GUI_TEXT_MENU_GENERATE_ASSETGENERATOR = GUI_TEXT_MENU_GENERATE + "/AssetGenerator Script";
+        //public const string GUI_TEXT_MENU_GENERATE_CUITOOL = "Window/AssetBundleGraph/Create CUI Tool";
 
-		public const string GUI_TEXT_MENU_GENERATE_POSTPROCESS = GUI_TEXT_MENU_GENERATE + "/Postprocess Script";
-		public const string GUI_TEXT_MENU_GENERATE_FILTER = GUI_TEXT_MENU_GENERATE + "/Filter Script";
-		public const string GUI_TEXT_MENU_GENERATE_NODE = GUI_TEXT_MENU_GENERATE + "/Custom Node Script";
-		public const string GUI_TEXT_MENU_DELETE_CACHE = "Window/AssetBundleGraph/Clear Build Cache";
-		
-		public const string GUI_TEXT_MENU_DELETE_IMPORTSETTING_SETTINGS = "Window/AssetBundleGraph/Clear Saved ImportSettings";
+        //public const string GUI_TEXT_MENU_GENERATE_POSTPROCESS = GUI_TEXT_MENU_GENERATE + "/Postprocess Script";
+        //public const string GUI_TEXT_MENU_GENERATE_FILTER = GUI_TEXT_MENU_GENERATE + "/Filter Script";
+        //public const string GUI_TEXT_MENU_GENERATE_NODE = GUI_TEXT_MENU_GENERATE + "/Custom Node Script";
+        //public const string GUI_TEXT_MENU_DELETE_CACHE = "Window/AssetBundleGraph/Clear Build Cache";
 
-		public const string GRAPH_SEARCH_CONDITION = "t:UnityEngine.AssetBundles.GraphTool.DataModel.Version2.ConfigGraph";
+        //public const string GUI_TEXT_MENU_DELETE_IMPORTSETTING_SETTINGS = "Window/AssetBundleGraph/Clear Saved ImportSettings";
+
+        public const string GRAPH_SEARCH_CONDITION = "t:UnityEngine.AssetBundles.GraphTool.DataModel.Version2.ConfigGraph";
 
 		public const string GUI_TEXT_SETTINGTEMPLATE_MODEL	= "Model";
 		public const string GUI_TEXT_SETTINGTEMPLATE_AUDIO	= "Audio";

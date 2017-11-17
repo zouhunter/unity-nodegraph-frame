@@ -63,23 +63,23 @@ namespace UnityEngine.AssetBundles.GraphTool {
 
 		private static BatchBuildWindow s_window;
 
-		[MenuItem(Model.Settings.GUI_TEXT_MENU_BATCHWINDOW_OPEN, false, 2)]
-		public static void Open () {
-			GetWindow<BatchBuildWindow>();
-		}
+		//[MenuItem(Model.Settings.GUI_TEXT_MENU_BATCHWINDOW_OPEN, false, 2)]
+		//public static void Open () {
+		//	GetWindow<BatchBuildWindow>();
+		//}
 
-		[MenuItem(Model.Settings.GUI_TEXT_MENU_BATCHBUILD, false, 2+101)]
-		public static void BuildFromMenu() {
-			var w = GetWindow<BatchBuildWindow>() as BatchBuildWindow;
-			w.Build();
-		}
+		//[MenuItem(Model.Settings.GUI_TEXT_MENU_BATCHBUILD, false, 2+101)]
+		//public static void BuildFromMenu() {
+		//	var w = GetWindow<BatchBuildWindow>() as BatchBuildWindow;
+		//	w.Build();
+		//}
 
-		[MenuItem(Model.Settings.GUI_TEXT_MENU_BATCHBUILD, true, 2+101)]
-		public static bool BuildFromMenuValidator() {
-			var windows = Resources.FindObjectsOfTypeAll<BatchBuildWindow>();
+		//[MenuItem(Model.Settings.GUI_TEXT_MENU_BATCHBUILD, true, 2+101)]
+		//public static bool BuildFromMenuValidator() {
+		//	var windows = Resources.FindObjectsOfTypeAll<BatchBuildWindow>();
 
-			return windows.Length > 0;
-		}
+		//	return windows.Length > 0;
+		//}
 
 
 		private void Init() {

@@ -15,7 +15,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
 
         [SerializeField] private string m_cacheDir;
 
-        [MenuItem(Model.Settings.GUI_TEXT_MENU_PROJECTWINDOW_OPEN, false, 41)]
+        //[MenuItem(Model.Settings.GUI_TEXT_MENU_PROJECTWINDOW_OPEN, false, 41)]
 		public static void Open () {
             GetWindow<ProjectSettingsWindow>();
 		}
