@@ -1,9 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 	/*
 	 * ScriptableObject helper object to let NodeGUI edit from Inspector
 	 */

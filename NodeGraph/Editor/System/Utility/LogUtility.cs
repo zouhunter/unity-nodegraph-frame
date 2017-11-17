@@ -3,7 +3,7 @@ using UnityEditor;
 using System;
 using System.Collections;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 
 	public class LogUtility {
 

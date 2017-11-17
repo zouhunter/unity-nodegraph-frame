@@ -7,10 +7,10 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-using UnityEngine.AssetBundles.GraphTool;
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using NodeGraph;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
     [CustomNode("Assert/Assert Unwanted Assets In Bundle", 80)]
     public class AssertUnwantedAssetsInBundle : Node {
 

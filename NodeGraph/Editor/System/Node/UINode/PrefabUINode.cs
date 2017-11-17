@@ -7,14 +7,14 @@ using System.Collections.Generic;
 using UnityEditor;
 
 using V1=AssetBundleGraph;
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 [System.Serializable]
 public class PrefabUIInfo
 {
     public string panelName;
 }
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 
 	[CustomNode("UINode/PrefabUINode", 1)]
 	public class PrefabUINode : Node, Model.NodeDataImporter {

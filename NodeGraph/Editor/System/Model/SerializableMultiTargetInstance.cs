@@ -3,9 +3,9 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 
 	[Serializable] 
 	public class SerializableMultiTargetInstance {
@@ -110,7 +110,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
 					LogUtility.Logger.LogFormat(LogType.Warning, "Could not retrieve Type info from classname:{0}", m_className);
 					return default(T);
 				}
-				Assertions.Assert.IsTrue( typeof(T).IsAssignableFrom(t) );
+                UnityEngine.Assertions.Assert.IsTrue( typeof(T).IsAssignableFrom(t) );
 				return (T) JsonUtility.FromJson(CustomScriptUtility.DecodeString(m_values[i].value), t);
 			} else {
 				return GetDefaultValue<T>();
@@ -178,7 +178,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
 					LogUtility.Logger.LogFormat(LogType.Warning, "Could not retrieve Type info from classname:{0}", m_className);
 					return default(T);
 				}
-				Assertions.Assert.IsTrue( typeof(T).IsAssignableFrom(t) );
+                UnityEngine.Assertions.Assert.IsTrue( typeof(T).IsAssignableFrom(t) );
 				return (T) JsonUtility.FromJson(CustomScriptUtility.DecodeString(m_values[i].value), t);
 			} else {
 				return default(T);

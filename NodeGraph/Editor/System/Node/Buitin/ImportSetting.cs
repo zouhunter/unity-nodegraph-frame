@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 using V1=AssetBundleGraph;
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 	
 	[CustomNode("Modify Assets/Overwrite Import Setting", 60)]
 	public class ImportSetting : Node, Model.NodeDataImporter {
@@ -35,7 +35,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
         [SerializeField] private bool m_useCustomSettingAsset;
         [SerializeField] private string m_customSettingAssetGuid;
 
-        private Object m_customSettingAssetObject;
+        private UnityEngine.Object m_customSettingAssetObject;
 
 		private Editor m_importerEditor;
 
@@ -57,7 +57,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			}
 		}
 
-        private Object CustomSettingAsset {
+        private UnityEngine.Object CustomSettingAsset {
             get {
                 if (m_customSettingAssetObject == null) {
                     if (!string.IsNullOrEmpty (m_customSettingAssetGuid)) {

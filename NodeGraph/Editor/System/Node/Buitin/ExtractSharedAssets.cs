@@ -11,10 +11,10 @@
 //using UnityEngine.Profiling;
 //#endif
 
-//using UnityEngine.AssetBundles.GraphTool;
-//using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+//using NodeGraph;
+//using Model=NodeGraph.DataModel.Version2;
 
-//namespace UnityEngine.AssetBundles.GraphTool {
+//namespace NodeGraph {
 //    [CustomNode("Configure Bundle/Extract Shared Assets", 71)]
 //    public class ExtractSharedAssets : Node {
 

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Collections.Generic;
 
 using V1=AssetBundleGraph;
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 
 	[CustomNode("File/Mirror Directory", 110)]
 	public class MirrorDirectory : Node {

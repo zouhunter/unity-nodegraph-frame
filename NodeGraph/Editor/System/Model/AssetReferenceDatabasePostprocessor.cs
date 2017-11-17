@@ -1,9 +1,9 @@
 ﻿//using UnityEngine;
 //using UnityEditor;
 
-//using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+//using Model=NodeGraph.DataModel.Version2;
 
-//namespace UnityEngine.AssetBundles.GraphTool {
+//namespace NodeGraph {
 //	class AssetReferenceDatabasePostprocessor : AssetPostprocessor 
 //	{
 //		static void OnPostprocessAllAssets (string[] importedAssets, 

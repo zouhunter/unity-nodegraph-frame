@@ -8,9 +8,9 @@
 //using System.IO;
 
 //using V1=AssetBundleGraph;
-//using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+//using Model=NodeGraph.DataModel.Version2;
 
-//namespace UnityEngine.AssetBundles.GraphTool {
+//namespace NodeGraph {
 
 //	[CustomNode("Modify Assets/Modify Assets Directly", 61)]
 //	public class Modifier : Node, Model.NodeDataImporter {

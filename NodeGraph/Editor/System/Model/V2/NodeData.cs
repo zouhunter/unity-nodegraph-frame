@@ -8,10 +8,10 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
-using UnityEngine.AssetBundles.GraphTool;
+using NodeGraph;
 using V1=AssetBundleGraph;
 
-namespace UnityEngine.AssetBundles.GraphTool.DataModel.Version2 {
+namespace NodeGraph.DataModel.Version2 {
 
     /// <summary>
     /// Node data.
@@ -323,13 +323,13 @@ namespace UnityEngine.AssetBundles.GraphTool.DataModel.Version2 {
 					n   = v;
 				}
 				break;
-			case V1.NodeKind.BUNDLEBUILDER_GUI:
-				{
-					var v = new BundleBuilder();
-					imp = v;
-					n   = v;
-				}
-				break;
+			//case V1.NodeKind.BUNDLEBUILDER_GUI:
+			//	{
+			//		var v = new BundleBuilder();
+			//		imp = v;
+			//		n   = v;
+			//	}
+			//	break;
 			case V1.NodeKind.EXPORTER_GUI:
 				{
 					var v = new Exporter();

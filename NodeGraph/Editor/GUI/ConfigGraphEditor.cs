@@ -7,9 +7,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 
 	[CustomEditor(typeof(Model.ConfigGraph))]
 	public class ConfigGraphEditor : Editor {
@@ -29,7 +29,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
 				if (GUILayout.Button(Styles.kEDITBUTTON, GUILayout.Width(150f), GUILayout.ExpandWidth(false)))
 				{
 					// Get the target we are inspecting and open the graph
-					var window = EditorWindow.GetWindow<AssetBundleGraphEditorWindow>();
+					var window = EditorWindow.GetWindow<NodeGraphWindow>();
 					window.OpenGraph(graph);
 				}
 			}

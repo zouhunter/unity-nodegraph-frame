@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using System.IO;
 
-using UnityEngine.AssetBundles.GraphTool;
+using NodeGraph;
 
 namespace AssetBundleGraph {
 	public class Settings {
@@ -61,7 +61,7 @@ namespace AssetBundleGraph {
                         var fileInfo = new FileInfo(configGuiPath);
                         var baseDir = fileInfo.Directory.Parent.Parent.Parent.Parent;
 
-                        Assert.AreEqual ("UnityEngine.AssetBundleGraph", baseDir.Name);
+                        Assert.AreEqual ("NodeGraph", baseDir.Name);
 
                         s_basePath = baseDir.ToString().Replace( '\\', '/');
                     }

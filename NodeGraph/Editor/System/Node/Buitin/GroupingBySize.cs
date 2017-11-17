@@ -11,9 +11,9 @@ using UnityEngine.Profiling;
 #endif
 
 using V1=AssetBundleGraph;
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool
+namespace NodeGraph
 {
 	[CustomNode("Group Assets/Group By Size", 41)]
 	public class GroupingBySize : Node {

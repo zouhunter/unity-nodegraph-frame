@@ -8,15 +8,15 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 
-using Model = UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
-using UnityEngine.AssetBundles.GraphTool;
+using Model = NodeGraph.DataModel.Version2;
+using NodeGraph;
 
-///*namespace UnityEngine.AssetBundles.GraphTool */{
-public class UIBridgeWindow : EditorWindow
+///*namespace NodeGraph */{
+public class NodeGraphWindow : EditorWindow
 {
     public class Settings
     {
-        public const string GUI_TEXT_MENU_OPEN = "BridgeUI/ConfigWindow";
+        public const string GUI_TEXT_MENU_OPEN = "Window/NodeGraph";
     }
 
     [Serializable]
@@ -222,11 +222,11 @@ public class UIBridgeWindow : EditorWindow
      * An alternative way to get Window, becuase
      * GetWindow<AssetBundleGraphEditorWindow>() forces window to be active and present
      */
-    private static UIBridgeWindow Window
+    private static NodeGraphWindow Window
     {
         get
         {
-            UIBridgeWindow[] windows = Resources.FindObjectsOfTypeAll<UIBridgeWindow>();
+            NodeGraphWindow[] windows = Resources.FindObjectsOfTypeAll<NodeGraphWindow>();
             if (windows.Length > 0)
             {
                 return windows[0];
@@ -347,7 +347,7 @@ public class UIBridgeWindow : EditorWindow
     [MenuItem(Settings.GUI_TEXT_MENU_OPEN, false, 1)]
     public static void Open()
     {
-        GetWindow<UIBridgeWindow>();
+        GetWindow<NodeGraphWindow>();
     }
 
     //[MenuItem(Model.Settings.GUI_TEXT_MENU_DELETE_CACHE)]
@@ -522,7 +522,7 @@ public class UIBridgeWindow : EditorWindow
         var graph = EditorUtility.InstanceIDToObject(instanceID) as Model.ConfigGraph;
         if (graph != null)
         {
-            var window = GetWindow<AssetBundleGraphEditorWindow>();
+            var window = GetWindow<NodeGraphWindow>();
             window.OpenGraph(graph);
             return true;
         }
@@ -755,7 +755,6 @@ public class UIBridgeWindow : EditorWindow
     private void Run()
     {
         Debug.Log("Run __ forbided");
-        return;
         if (controller == null)
         {
             return;

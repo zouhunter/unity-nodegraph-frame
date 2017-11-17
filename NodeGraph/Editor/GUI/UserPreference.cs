@@ -8,13 +8,13 @@ using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 
 	public class UserPreference : MonoBehaviour {
 
-		static readonly string kKEY_USERPREF_GRID = "UnityEngine.AssetBundles.GraphTool.UserPref.GridSize";
+		static readonly string kKEY_USERPREF_GRID = "NodeGraph.UserPref.GridSize";
 
 		private static bool s_prefsLoaded = false;
 

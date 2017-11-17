@@ -6,9 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
     public class JSONGraphUtility {
 
         public static void ExportGraphToJSONFromDialog(Model.ConfigGraph graph) {

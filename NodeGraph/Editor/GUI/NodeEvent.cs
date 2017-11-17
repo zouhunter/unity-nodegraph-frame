@@ -1,8 +1,8 @@
 using UnityEngine;
 
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 	public class NodeEvent {
 		public enum EventType : int {
 			EVENT_NONE,

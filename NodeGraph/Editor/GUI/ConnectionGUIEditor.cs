@@ -6,9 +6,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 	[CustomEditor(typeof(ConnectionGUIInspectorHelper))]
 	public class ConnectionGUIEditor : Editor {
 		

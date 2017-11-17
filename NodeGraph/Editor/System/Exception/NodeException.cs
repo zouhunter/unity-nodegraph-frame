@@ -1,6 +1,6 @@
 using System;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 	public class NodeException : Exception {
 		public readonly string reason;
 		public readonly string Id;

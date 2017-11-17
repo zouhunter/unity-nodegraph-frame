@@ -6,9 +6,9 @@
 //using System.Collections.Generic;
 
 //using V1=AssetBundleGraph;
-//using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+//using Model=NodeGraph.DataModel.Version2;
 
-//namespace UnityEngine.AssetBundles.GraphTool {
+//namespace NodeGraph {
 
 //	[CustomNode("Split Assets/Split By Filter", 20)]
 //	public class Filter : Node, Model.NodeDataImporter {

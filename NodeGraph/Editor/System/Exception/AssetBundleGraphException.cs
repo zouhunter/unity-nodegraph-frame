@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 
 	public class AssetBundleGraphException : Exception {
 		public AssetBundleGraphException(string message) : base(message) {

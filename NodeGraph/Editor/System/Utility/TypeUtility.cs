@@ -7,9 +7,9 @@ using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 	public static class TypeUtility {
 		public static readonly List<string> KeyTypes = new List<string>{
 			// empty
@@ -41,7 +41,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			typeof(Shader).ToString(),
 			typeof(Scene).ToString(),
             typeof(GameObject).ToString(),
-            typeof(Audio.AudioMixer).ToString(),
+            typeof( UnityEngine.Audio.AudioMixer).ToString(),
 		};
 		
         private static readonly Dictionary<string, Type> FilterTypeBindingByExtension = new Dictionary<string, Type>{
@@ -68,7 +68,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
             {".shader", typeof(Shader)},
             {".cg", typeof(Shader)},
             {".cginc", typeof(Shader)},
-            {".mixer", typeof(Audio.AudioMixer)},
+            {".mixer", typeof( UnityEngine.Audio.AudioMixer)},
 			{".unity", typeof(Scene)},
 			{".txt", typeof(TextAsset)},
 			{".html", typeof(TextAsset)},
@@ -79,7 +79,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			{".csv", typeof(TextAsset)},
 			{".yaml", typeof(TextAsset)},
 			{".fnt", typeof(TextAsset)},
-			{".asset", typeof(Object)},
+			{".asset", typeof( UnityEngine.Object)},
 			{".prefab", typeof(UnityEngine.GameObject)}
 
 			// {"", typeof(Sprite)},

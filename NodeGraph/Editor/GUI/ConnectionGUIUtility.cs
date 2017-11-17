@@ -6,9 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool {
+namespace NodeGraph {
 	public class ConnectionGUIUtility {
 
 		public static Action<ConnectionEvent> ConnectionEventHandler {

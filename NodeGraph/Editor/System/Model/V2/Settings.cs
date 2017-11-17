@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using System.IO;
+using UnityEngine;
+using NodeGraph;
 
-using UnityEngine.AssetBundles.GraphTool;
-
-namespace UnityEngine.AssetBundles.GraphTool.DataModel.Version2 {
+namespace NodeGraph.DataModel.Version2 {
 	public class Settings {
 		/*
 			if true, ignore .meta files inside AssetBundleGraph.
@@ -30,7 +30,7 @@ namespace UnityEngine.AssetBundles.GraphTool.DataModel.Version2 {
 
         //public const string GUI_TEXT_MENU_DELETE_IMPORTSETTING_SETTINGS = "Window/AssetBundleGraph/Clear Saved ImportSettings";
 
-        public const string GRAPH_SEARCH_CONDITION = "t:UnityEngine.AssetBundles.GraphTool.DataModel.Version2.ConfigGraph";
+        public const string GRAPH_SEARCH_CONDITION = "t:NodeGraph.DataModel.Version2.ConfigGraph";
 
 		public const string GUI_TEXT_SETTINGTEMPLATE_MODEL	= "Model";
 		public const string GUI_TEXT_SETTINGTEMPLATE_AUDIO	= "Audio";
@@ -103,12 +103,12 @@ namespace UnityEngine.AssetBundles.GraphTool.DataModel.Version2 {
                         var fileInfo = new FileInfo(configGuiPath);
                         var baseDir = fileInfo.Directory.Parent.Parent.Parent.Parent;
 
-                        Assertions.Assert.AreEqual ("UnityEngine.AssetBundleGraph", baseDir.Name);
+                    UnityEngine.Assertions.Assert.AreEqual ("NodeGraph", baseDir.Name);
 
 						string baseDirPath = baseDir.ToString ().Replace( '\\', '/');
 
                         int index = baseDirPath.LastIndexOf (ASSETS_PATH);
-                        Assertions.Assert.IsTrue ( index >= 0 );
+                    UnityEngine.Assertions.Assert.IsTrue ( index >= 0 );
 
 						s_basePath = baseDirPath.Substring (index);
                     //}

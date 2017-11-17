@@ -7,9 +7,9 @@ using UnityEngine;
 using UnityEditor;
 
 using V1=AssetBundleGraph;
-using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
+using Model=NodeGraph.DataModel.Version2;
 
-namespace UnityEngine.AssetBundles.GraphTool
+namespace NodeGraph
 {
 	[CustomNode("Modify Assets/Label Assets", 62)]
 	public class Label : Node {
