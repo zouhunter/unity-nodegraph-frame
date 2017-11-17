@@ -1,1 +1,1 @@
-copy from AssetGraph add persist Graph Function
+copy from AssetGraph and just persist Graph Functions
