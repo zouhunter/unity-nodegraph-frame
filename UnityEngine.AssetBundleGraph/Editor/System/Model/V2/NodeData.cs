@@ -295,13 +295,13 @@ namespace UnityEngine.AssetBundles.GraphTool.DataModel.Version2 {
 					n   = v;
 				}
 				break;
-			case V1.NodeKind.MODIFIER_GUI:
-				{
-					var v = new Modifier();
-					imp = v;
-					n   = v;
-				}
-				break;
+			//case V1.NodeKind.MODIFIER_GUI:
+			//	{
+			//		var v = new Modifier();
+			//		imp = v;
+			//		n   = v;
+			//	}
+			//	break;
 			case V1.NodeKind.GROUPING_GUI:
 				{
 					var v = new Grouping();
