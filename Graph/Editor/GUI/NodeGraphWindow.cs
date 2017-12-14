@@ -156,15 +156,6 @@ namespace NodeGraph
             DRAGGING
         }
 
-        public enum ScriptType : int
-        {
-            SCRIPT_MODIFIER,
-            SCRIPT_PREFABBUILDER,
-            SCRIPT_POSTPROCESS,
-            SCRIPT_NODE,
-            SCRIPT_FILTER,
-            SCRIPT_ASSETGENERATOR
-        }
 
         [SerializeField]
         private List<NodeGUI> nodes = new List<NodeGUI>();
@@ -628,7 +619,7 @@ namespace NodeGraph
                     {
                         foreach (var ct in controllerTypes)
                         {
-                            menu.AddItem(new GUIContent("Create New " + ct), false, () =>
+                            menu.AddItem(new GUIContent(string.Format("Create New ({0})" , ct)), false, () =>
                             {
                                 CreateNewGraphFromDialog(ct);
                             });
@@ -1177,24 +1168,9 @@ namespace NodeGraph
                     {
                         switch (Event.current.commandName)
                         {
+                            case "SoftDelete":
                             case "Delete":
-                                {
-                                    if (isValidSelection)
-                                    {
-                                        Event.current.Use();
-                                    }
-                                    break;
-                                }
-
                             case "Copy":
-                                {
-                                    if (isValidSelection)
-                                    {
-                                        Event.current.Use();
-                                    }
-                                    break;
-                                }
-
                             case "Cut":
                                 {
                                     if (isValidSelection)
@@ -1227,6 +1203,7 @@ namespace NodeGraph
                         switch (Event.current.commandName)
                         {
                             // Delete active node or connection.
+                            case "SoftDelete":
                             case "Delete":
                                 {
                                     if (!isValidSelection)
@@ -1286,8 +1263,7 @@ namespace NodeGraph
 
                             case "Paste":
                                 {
-                                    if (!isValidCopy)
-                                    {
+                                    if (!isValidCopy){
                                         break;
                                     }
 
@@ -1310,12 +1286,10 @@ namespace NodeGraph
                                     copiedSelection.IncrementPasteOffset();
 
                                     Setup();
-                                    //InitializeGraph();
 
                                     Event.current.Use();
                                     break;
                                 }
-
                             case "SelectAll":
                                 {
                                     Undo.RecordObject(this, "Select All Objects");

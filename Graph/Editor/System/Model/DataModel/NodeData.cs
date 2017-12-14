@@ -140,8 +140,9 @@ namespace NodeGraph.DataModel {
 				m_nodeInstance = new NodeInstance(node.m_nodeInstance);
 			} else {
 				m_id = Guid.NewGuid().ToString();
-
-				Node n = node.m_nodeInstance.Object.Clone(this);
+                Debug.Log(node.m_nodeInstance);
+                Debug.Log(node.m_nodeInstance.Object);
+                Node n = node.m_nodeInstance.Object.Clone(this);
 				m_nodeInstance = new NodeInstance(n);
 			}
 		}

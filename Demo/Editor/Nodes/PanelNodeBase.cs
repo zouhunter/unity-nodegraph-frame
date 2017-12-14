@@ -10,7 +10,7 @@ using BridgeUI;
 public abstract class PanelNodeBase : Node/*, IPanelInfoHolder*/
 {
     protected const int lableWidth = 120;
-    protected GameObject prefab;
+    //protected GameObject prefab;
     //public NodeInfo nodeInfo = new NodeInfo();
     //public NodeInfo Info
     //{
@@ -34,18 +34,14 @@ public abstract class PanelNodeBase : Node/*, IPanelInfoHolder*/
         }
     }
     protected abstract string HeadInfo { get; }
-    public override Node Clone(Model.NodeData newData)
-    {
-        return Clone(newData);
-    }
-
+   
     public override void OnInspectorGUI(NodeGUI node, NodeGUIEditor editor, Action onValueChanged)
     {
         EditorGUILayout.HelpBox(HeadInfo, MessageType.Info);
         editor.UpdateNodeName(node);
         LoadRecordIfEmpty();
         DrawNodeInfo(node, onValueChanged);
-        if(prefab != null) node.Name = prefab.name;
+        //if(prefab != null) node.Name = prefab.name;
     }
 
     protected virtual void DrawNodeInfo(NodeGUI node, Action onValueChanged)
@@ -86,11 +82,11 @@ public abstract class PanelNodeBase : Node/*, IPanelInfoHolder*/
 
     private void RecordPrefabInfo(NodeGUI node)
     {
-        if (prefab != null)
-        {
-            //var path = AssetDatabase.GetAssetPath(prefab);
-            //nodeInfo.prefabGuid = AssetDatabase.AssetPathToGUID(path);
-        }
+        //if (prefab != null)
+        //{
+        //    //var path = AssetDatabase.GetAssetPath(prefab);
+        //    //nodeInfo.prefabGuid = AssetDatabase.AssetPathToGUID(path);
+        //}
     }
     protected abstract void DrawHeadField();
     protected abstract void DrawInforamtion();
@@ -99,7 +95,7 @@ public abstract class PanelNodeBase : Node/*, IPanelInfoHolder*/
         using (var hor = new EditorGUILayout.HorizontalScope())
         {
             EditorGUILayout.LabelField("【预制体】:", EditorStyles.largeLabel, GUILayout.Width(lableWidth));
-            prefab = EditorGUILayout.ObjectField(prefab, typeof(GameObject), false) as GameObject;
+            //prefab = EditorGUILayout.ObjectField(prefab, typeof(GameObject), false) as GameObject;
         }
     }
   

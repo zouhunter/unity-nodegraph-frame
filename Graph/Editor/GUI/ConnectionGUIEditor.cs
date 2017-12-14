@@ -30,7 +30,6 @@ namespace NodeGraph
             }
             EditorGUILayout.HelpBox("连接信息:", MessageType.Info);
 
-
             con.Data.Operation.Object.OnInspectorGUI(con, this, () =>
             {
                 con.Controller.Perform();

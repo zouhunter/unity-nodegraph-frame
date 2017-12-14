@@ -21,7 +21,7 @@ public class PanelNode : PanelNodeBase
 {
     public NodeType nodeType = NodeType.Destroy | NodeType.Fixed | NodeType.HideGO | NodeType.NoAnim | NodeType.ZeroLayer;
     public int style;
-    
+
     public override string ActiveStyle
     {
         get
@@ -45,7 +45,11 @@ public class PanelNode : PanelNodeBase
             return "panel";
         }
     }
-
+    public override Node Clone(Model.NodeData newData)
+    {
+        var newNode = new PanelNode();
+        return newNode;
+    }
     protected override string HeadInfo
     {
         get
@@ -74,7 +78,7 @@ public class PanelNode : PanelNodeBase
 
     protected override void DrawInforamtion()
     {
-       
+
     }
     private void DrawToggleFromNodeType(NodeType model)
     {
