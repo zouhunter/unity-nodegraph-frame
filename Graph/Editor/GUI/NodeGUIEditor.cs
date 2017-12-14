@@ -19,21 +19,22 @@ namespace NodeGraph {
 
 		public override void OnInspectorGUI () {
 			var currentTarget = (NodeGUIInspectorHelper)target;
-			var node = currentTarget.node;
-			var controller = currentTarget.controller;
-			if (node == null || controller == null) {
+			var node = currentTarget.Node;
+			//var controller = currentTarget.controller;
+			if (node == null/* || controller == null*/) {
 				return;
 			}
 
 			UnityEngine.Assertions.Assert.IsNotNull(node);
 
 			node.Data.Operation.Object.OnInspectorGUI(node, this, () => 
-				{ 
+				{
+                    node.Controller.Perform();
 					node.Data.Operation.Save(); 
 					node.ParentGraph.SetGraphDirty(); 
 				});
 
-			var errors = currentTarget.errors;
+			var errors = currentTarget.Errors;
 			if (errors != null && errors.Any()) {
 				foreach (var error in errors) {
 					EditorGUILayout.HelpBox(error, MessageType.Error);

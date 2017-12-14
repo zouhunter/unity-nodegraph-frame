@@ -10,5 +10,7 @@ using UnityEngine.Assertions.Must;
 using UnityEngine.Assertions.Comparers;
 using System.Collections;
 using System.Collections.Generic;
-using BridgeUI.Model;
 
+public static class KeyConst {
+    public const string BridgeName = "UIConnection";
+}

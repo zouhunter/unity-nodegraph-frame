@@ -8,17 +8,20 @@ namespace NodeGraph {
 	 * ScriptableObject helper object to let NodeGUI edit from Inspector
 	 */
     public class NodeGUIInspectorHelper : ScriptableObject {
-		public NodeGUI node;
-		public NodeGraphController controller;
-		public List<string> errors = new List<string>();
+	
+        public NodeGUI Node { get { return _node; } }
+        public List<string> Errors { get { return _errors; } }
 
-		public void UpdateNode (NodeGraphController c, NodeGUI node) {
-			this.controller = c;
-			this.node = node;
-		}
+        private NodeGUI _node;
+        private List<string> _errors = new List<string>();
+
+        public void UpdateNodeGUI(NodeGUI node)
+        {
+            this._node = node;
+        }
 
 		public void UpdateErrors (List<string> errorsSource) {
-			this.errors = errorsSource;
+			this._errors = errorsSource;
 		}
 	}
 }

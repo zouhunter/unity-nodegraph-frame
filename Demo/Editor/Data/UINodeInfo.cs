@@ -13,9 +13,9 @@ using System.Collections.Generic;
 namespace BridgeUI.Model
 {
 
-    [System.Serializable]
-    public class NodeInfo
-    {
-        public string prefabGuid;
-    }
+    //[System.Serializable]
+    //public class NodeInfo
+    //{
+    //    public string prefabGuid;
+    //}
 }

@@ -7,16 +7,30 @@ using UnityEditor;
 using BridgeUI.Model;
 using BridgeUI;
 
-public abstract class PanelNodeBase : Node, IPanelInfoHolder
+public abstract class PanelNodeBase : Node/*, IPanelInfoHolder*/
 {
     protected const int lableWidth = 120;
     protected GameObject prefab;
-    public NodeInfo nodeInfo = new NodeInfo();
-    public NodeInfo Info
+    //public NodeInfo nodeInfo = new NodeInfo();
+    //public NodeInfo Info
+    //{
+    //    get
+    //    {
+    //        return nodeInfo;
+    //    }
+    //}
+    public override string NodeInputType
     {
         get
         {
-            return nodeInfo;
+            return KeyConst.BridgeName;
+        }
+    }
+    public override string NodeOutputType
+    {
+        get
+        {
+            return KeyConst.BridgeName;
         }
     }
     protected abstract string HeadInfo { get; }
@@ -56,26 +70,26 @@ public abstract class PanelNodeBase : Node, IPanelInfoHolder
 
     protected virtual void LoadRecordIfEmpty()
     {
-        if (prefab == null && !string.IsNullOrEmpty(nodeInfo.prefabGuid))
-        {
-            var path = AssetDatabase.GUIDToAssetPath(nodeInfo.prefabGuid);
-            if (!string.IsNullOrEmpty(path))
-            {
-                prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            }
-            else
-            {
-                nodeInfo.prefabGuid = null;
-            }
-        }
+        //if (prefab == null && !string.IsNullOrEmpty(nodeInfo.prefabGuid))
+        //{
+        //    var path = AssetDatabase.GUIDToAssetPath(nodeInfo.prefabGuid);
+        //    if (!string.IsNullOrEmpty(path))
+        //    {
+        //        prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+        //    }
+        //    else
+        //    {
+        //        nodeInfo.prefabGuid = null;
+        //    }
+        //}
     }
 
     private void RecordPrefabInfo(NodeGUI node)
     {
         if (prefab != null)
         {
-            var path = AssetDatabase.GetAssetPath(prefab);
-            nodeInfo.prefabGuid = AssetDatabase.AssetPathToGUID(path);
+            //var path = AssetDatabase.GetAssetPath(prefab);
+            //nodeInfo.prefabGuid = AssetDatabase.AssetPathToGUID(path);
         }
     }
     protected abstract void DrawHeadField();

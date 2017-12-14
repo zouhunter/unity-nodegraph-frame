@@ -199,7 +199,8 @@ namespace NodeGraph
 
         private static readonly string kPREFKEY_LASTEDITEDGRAPH = "AssetBundles.GraphTool.LastEditedGraph";
         static readonly int kDragNodesControlID = "NodeGraph.DataModelTool.HandleDragNodes".GetHashCode();
-
+        private string[] controllerTypes;
+        private int selected;
         private GUIContent ReloadButtonTexture
         {
             get
@@ -325,6 +326,8 @@ namespace NodeGraph
                     OpenGraph(graph);
                 }
             }
+
+            controllerTypes = UserDefineUtility.CustomControllerTypes.ConvertAll<string>(x => x.Name).ToArray();
         }
 
         private void ShowErrorOnNodes()
@@ -376,8 +379,7 @@ namespace NodeGraph
         public void OpenGraph(string path)
         {
             Model.ConfigGraph graph = AssetDatabase.LoadAssetAtPath<Model.ConfigGraph>(path);
-            if (graph == null)
-            {
+            if (graph == null){
                 throw new NodeGraph.DataModelException("Could not open graph:" + path);
             }
             OpenGraph(graph);
@@ -398,7 +400,7 @@ namespace NodeGraph
             activeSelection = null;
             currentEventSource = null;
 
-            controller = new NodeGraph.NodeGraphController(graph);
+            controller = UserDefineUtility.CreateController(graph); //new NodeGraph.NodeGraphController(graph);
             ConstructGraphGUI();
             Setup();
 
@@ -409,6 +411,7 @@ namespace NodeGraph
 
             Selection.activeObject = graph;
         }
+        
 
         private void CloseGraph()
         {
@@ -424,19 +427,17 @@ namespace NodeGraph
             currentEventSource = null;
         }
 
-        private void CreateNewGraphFromDialog()
+        private void CreateNewGraphFromDialog(string controllerType)
         {
-            string path =
-            EditorUtility.SaveFilePanelInProject(
+            string path =  EditorUtility.SaveFilePanelInProject(
                 "Create New AssetBundle Graph",
                 "AssetBundle Graph", "asset",
                 "Create a new asset bundle graph:");
-            if (string.IsNullOrEmpty(path))
-            {
+            if (string.IsNullOrEmpty(path)){
                 return;
             }
 
-            Model.ConfigGraph graph = Model.ConfigGraph.CreateNewGraph(path);
+            Model.ConfigGraph graph = Model.ConfigGraph.CreateNewGraph(path, controllerType);
             OpenGraph(graph);
         }
 
@@ -504,7 +505,7 @@ namespace NodeGraph
                 var startPoint = startNode.Data.FindConnectionPoint(c.FromNodeConnectionPointId);
                 var endPoint = endNode.Data.FindConnectionPoint(c.ToNodeConnectionPointId);
 
-                currentConnections.Add(ConnectionGUI.LoadConnection(c, startPoint, endPoint));
+                currentConnections.Add(ConnectionGUI.LoadConnection(c, startPoint, endPoint, controller));
             }
 
             nodes = currentNodes;
@@ -517,9 +518,6 @@ namespace NodeGraph
             controller.TargetGraph.ApplyGraph(nodes, connections);
         }
 
-        /**
-         * Save Graph and update all nodes & connections
-         */
         private void Setup(bool forceVisitAll = false)
         {
 
@@ -586,134 +584,7 @@ namespace NodeGraph
                 Repaint();
             }
         }
-
-        /**
-         * Execute the build.
-         */
-        //private void Run()
-        //{
-        //    Debug.Log("Run __ forbided");
-        //    if (controller == null)
-        //    {
-        //        return;
-        //    }
-
-        //    try
-        //    {
-        //        AssetDatabase.SaveAssets();
-        //        //AssetBundleBuildMap.GetBuildMap().Clear();
-
-        //        float currentCount = 0f;
-        //        float totalCount = (float)controller.TargetGraph.Nodes.Count;
-        //        Model.NodeData lastNode = null;
-
-        //        Action<Model.NodeData, string, float> updateHandler = (node, message, progress) =>
-        //        {
-
-        //            if (lastNode != node)
-        //            {
-        //                // do not add count on first node visit to 
-        //                // calcurate percantage correctly
-        //                if (lastNode != null)
-        //                {
-        //                    ++currentCount;
-        //                }
-        //                lastNode = node;
-        //            }
-
-        //            float currentNodeProgress = progress * (1.0f / totalCount);
-        //            float currentTotalProgress = (currentCount / totalCount) + currentNodeProgress;
-
-        //            string title = string.Format("Processing AssetBundle Graph[{0}/{1}]", currentCount, totalCount);
-        //            string info = string.Format("{0}:{1}", node.Name, message);
-
-        //            EditorUtility.DisplayProgressBar(title, "Processing " + info, currentTotalProgress);
-        //        };
-
-        //        // perform setup. Fails if any exception raises.
-        //        controller.Perform(target, false, true, null);
-
-        //        // if there is not error reported, then run
-        //        if (!controller.IsAnyIssueFound)
-        //        {
-        //            controller.Perform(target, true, true, updateHandler);
-        //        }
-        //        RefreshInspector(controller.StreamManager);
-        //        AssetDatabase.Refresh();
-        //        ShowErrorOnNodes();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        LogUtility.Logger.LogError(LogUtility.kTag, e);
-        //    }
-        //    finally
-        //    {
-        //        EditorUtility.ClearProgressBar();
-        //    }
-        //}
-
-        //private static void RefreshInspector(AssetReferenceStreamManager streamManager)
-        //{
-        //    if (Selection.activeObject == null)
-        //    {
-        //        return;
-        //    }
-
-        //    switch (Selection.activeObject.GetType().ToString())
-        //    {
-        //        case "NodeGraph.DataModel.ConnectionGUIInspectorHelper":
-        //            {
-        //                var con = ((ConnectionGUIInspectorHelper)Selection.activeObject).connectionGUI;
-
-        //                // null when multiple connection deleted.
-        //                if (string.IsNullOrEmpty(con.Id))
-        //                {
-        //                    return;
-        //                }
-
-        //            ((ConnectionGUIInspectorHelper)Selection.activeObject).UpdateAssetGroups(streamManager.FindAssetGroup(con.Id));
-        //                break;
-        //            }
-        //        default:
-        //            {
-        //                // do nothing.
-        //                break;
-        //            }
-        //    }
-        //}
-
-        //private void OnAssetsReimported(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
-        //{
-        //    if (controller != null)
-        //    {
-        //        controller.OnAssetsReimported(importedAssets, deletedAssets, movedAssets, movedFromAssetPaths);
-        //    }
-
-        //    if (!string.IsNullOrEmpty(graphAssetPath))
-        //    {
-        //        if (deletedAssets.Contains(graphAssetPath))
-        //        {
-        //            CloseGraph();
-        //            return;
-        //        }
-
-        //        int moveIndex = Array.FindIndex(movedFromAssetPaths, p => p == graphAssetPath);
-        //        if (moveIndex >= 0)
-        //        {
-        //            SetGraphAssetPath(movedAssets[moveIndex]);
-        //        }
-        //    }
-        //}
-
-        //public static void NotifyAssetsReimportedToAllWindows(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
-        //{
-        //    var w = Window;
-        //    if (w != null)
-        //    {
-        //        w.OnAssetsReimported(importedAssets, deletedAssets, movedAssets, movedFromAssetPaths);
-        //    }
-        //}
-
+       
         private void DrawGUIToolBar()
         {
             using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
@@ -752,12 +623,21 @@ namespace NodeGraph
                     }
 
                     menu.AddSeparator("");
-                    menu.AddItem(new GUIContent("Create New..."), false, () =>
-                    {
-                        CreateNewGraphFromDialog();
-                    });
 
-                    menu.AddSeparator("");
+                    if(controllerTypes != null)
+                    {
+                        foreach (var ct in controllerTypes)
+                        {
+                            menu.AddItem(new GUIContent("Create New " + ct), false, () =>
+                            {
+                                CreateNewGraphFromDialog(ct);
+                            });
+                            menu.AddSeparator("");
+                        }
+                    }
+                 
+
+                    //menu.AddSeparator("");
                     menu.AddItem(new GUIContent("Import/Import JSON Graph to current graph..."), false, () =>
                     {
                         var graph = JSONGraphUtility.ImportJSONToGraphFromDialog(controller.TargetGraph);
@@ -842,7 +722,7 @@ namespace NodeGraph
                 {
                     if (GUILayout.Button("Build", EditorStyles.toolbarButton, GUILayout.Height(Model.Settings.GUI.TOOLBAR_HEIGHT)))
                     {
-                        EditorApplication.delayCall += controller.BuildToSelect;
+                        EditorApplication.delayCall += controller.Build;
                         //Debug.Log("Build Clicked");
                     }
                 }
@@ -864,29 +744,30 @@ namespace NodeGraph
                     GUILayout.FlexibleSpace();
                     var guideline = new GUIContent(kGUIDELINETEXT);
                     var size = GUI.skin.label.CalcSize(guideline);
-                    GUILayout.Label(kGUIDELINETEXT);
 
-                    using (new EditorGUILayout.HorizontalScope())
+                    if(controllerTypes != null && controllerTypes.Length > 0)
                     {
-
-                        //bool showImport = Model.ConfigGraph.IsImportableDataAvailableAtDisk();
-                        float spaceWidth = (size.x - 100f) / 2f;
-
-                        GUILayout.Space(spaceWidth);
-                        if (GUILayout.Button(kCREATEBUTTON, GUILayout.Width(100f), GUILayout.ExpandWidth(false)))
+                        GUILayout.Label(kGUIDELINETEXT);
+                        selected = EditorGUILayout.Popup(selected, controllerTypes);
+                        using (new EditorGUILayout.HorizontalScope())
                         {
-                            CreateNewGraphFromDialog();
-                        }
 
-                        //if (showImport)
-                        //{
-                        //    GUILayout.Space(20f);
-                        //    if (GUILayout.Button(kIMPORTBUTTON, GUILayout.Width(160f), GUILayout.ExpandWidth(false)))
-                        //    {
-                        //        CreateNewGraphFromImport();
-                        //    }
-                        //}
+                            //bool showImport = Model.ConfigGraph.IsImportableDataAvailableAtDisk();
+                            float spaceWidth = (size.x - 100f) / 2f;
+
+                            GUILayout.Space(spaceWidth);
+                            if (GUILayout.Button(kCREATEBUTTON, GUILayout.Width(100f), GUILayout.ExpandWidth(false)))
+                            {
+                                CreateNewGraphFromDialog(controllerTypes[selected]);
+                            }
+                        }
                     }
+                    else
+                    {
+                        var rect = GUILayoutUtility.GetRect(60, 60);
+                        EditorGUI.HelpBox(rect,"请自行定义控制器",MessageType.Error);
+                    }
+                   
                     GUILayout.FlexibleSpace();
                 }
                 GUILayout.FlexibleSpace();
@@ -1487,7 +1368,7 @@ namespace NodeGraph
         private void ShowNodeCreateContextMenu(Vector2 pos)
         {
             var menu = new GenericMenu();
-            var customNodes = NodeUtility.CustomNodeTypes;
+            var customNodes = NodeConnectionUtility.CustomNodeTypes;
             for (int i = 0; i < customNodes.Count; ++i)
             {
                 // workaround: avoiding compilier closure bug
@@ -1496,8 +1377,7 @@ namespace NodeGraph
                 menu.AddItem(
                     new GUIContent(name),
                     false,
-                    () =>
-                    {
+                    () =>{
                         AddNodeFromGUI(customNodes[index].CreateInstance(), GetNodeNameFromMenu(name), pos.x + scrollPos.x, pos.y + scrollPos.y);
                         Setup();
                         Repaint();
@@ -1595,14 +1475,14 @@ namespace NodeGraph
                                 var outputPoint = startConnectionPoint;
                                 var inputPoint = endConnectionPoint;
                                 var label = startConnectionPoint.Label;
+                                var type = Model.ConnectionData.GetConnectType(startNode.Data, endNode.Data);
 
                                 // if two nodes are not supposed to connect, dismiss
-                                if (!Model.ConnectionData.CanConnect(startNode.Data, endNode.Data))
-                                {
+                                if (type == null){
                                     break;
                                 }
 
-                                AddConnection(label, startNode, outputPoint, endNode, inputPoint);
+                                AddConnection(label,type, startNode, outputPoint, endNode, inputPoint);
                                 Setup();
                                 break;
                             }
@@ -1654,12 +1534,12 @@ namespace NodeGraph
                                 var label = startConnectionPoint.Label;
 
                                 // if two nodes are not supposed to connect, dismiss
-                                if (!Model.ConnectionData.CanConnect(startNode.Data, endNode.Data))
-                                {
+                                var type = Model.ConnectionData.GetConnectType(startNode.Data, endNode.Data);
+                                if (type == null){
                                     break;
                                 }
 
-                                AddConnection(label, startNode, outputPoint, endNode, inputPoint);
+                                AddConnection(label,type, startNode, outputPoint, endNode, inputPoint);
                                 Setup();
                                 break;
                             }
@@ -1872,7 +1752,7 @@ namespace NodeGraph
 
         public NodeGUI DuplicateNode(NodeGUI node, float offset)
         {
-            var newNode = node.Duplicate(
+               var newNode = node.Duplicate(
                 controller,
                 node.GetX() + offset,
                 node.GetY() + offset
@@ -1906,8 +1786,8 @@ namespace NodeGraph
             var dstTo = nodeLookup[srcTo];
             var dstFromPoint = dstFrom.Data.OutputPoints[fromPointIndex];
             var dstToPoint = dstTo.Data.InputPoints[inPointIndex];
-
-            AddConnection(con.Label, dstFrom, dstFromPoint, dstTo, dstToPoint);
+            var type = srcFrom.Data.Operation.Object.NodeOutputType;
+            AddConnection(con.Label,type, dstFrom, dstFromPoint, dstTo, dstToPoint);
         }
 
         private void AddNodeGUI(NodeGUI newNode)
@@ -2017,7 +1897,7 @@ namespace NodeGraph
         /**
             create new connection if same relationship is not exist yet.
         */
-        private void AddConnection(string label, NodeGUI startNode, Model.ConnectionPointData startPoint, NodeGUI endNode, Model.ConnectionPointData endPoint)
+        private void AddConnection(string label,string type, NodeGUI startNode, Model.ConnectionPointData startPoint, NodeGUI endNode, Model.ConnectionPointData endPoint)
         {
             Undo.RecordObject(this, "Add Connection");
 
@@ -2038,7 +1918,7 @@ namespace NodeGraph
 
             if (!connections.ContainsConnection(startPoint, endPoint))
             {
-                connections.Add(ConnectionGUI.CreateConnection(label, startPoint, endPoint));
+                connections.Add(ConnectionGUI.CreateConnection(label,type, startPoint, endPoint, controller));
             }
         }
 

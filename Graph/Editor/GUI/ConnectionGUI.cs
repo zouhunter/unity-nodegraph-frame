@@ -17,8 +17,8 @@ namespace NodeGraph {
 		[SerializeField] private Model.ConnectionPointData m_outputPoint;
 		[SerializeField] private Model.ConnectionPointData m_inputPoint;
 		[SerializeField] private ConnectionGUIInspectorHelper m_inspector;
-
-		[SerializeField] private string connectionButtonStyle;
+        [SerializeField] private NodeGraphController m_controller;
+        [SerializeField] private string connectionButtonStyle;
 
 		public string Label {
 			get {
@@ -35,7 +35,28 @@ namespace NodeGraph {
 			}
 		}
 
-		public string OutputNodeId {
+        public Model.ConfigGraph ParentGraph
+        {
+            get
+            {
+                return m_controller.TargetGraph;
+            }
+        }
+        public NodeGraphController Controller
+        {
+            get
+            {
+                return m_controller;
+            }
+        }
+
+        public Model.ConnectionData Data
+        {
+            get {
+                return m_data;
+            }
+        }
+        public string OutputNodeId {
 			get {
 				return m_outputPoint.NodeId;
 			}
@@ -59,11 +80,6 @@ namespace NodeGraph {
 			}
 		}
 
-		public Model.ConnectionData Data {
-			get {
-				return m_data;
-			}
-		}
 
 		public ConnectionGUIInspectorHelper Inspector {
 			get {
@@ -83,27 +99,29 @@ namespace NodeGraph {
 
 		private Rect m_buttonRect;
 
-		public static ConnectionGUI LoadConnection (Model.ConnectionData data, Model.ConnectionPointData output, Model.ConnectionPointData input) {
+		public static ConnectionGUI LoadConnection (Model.ConnectionData data, Model.ConnectionPointData output, Model.ConnectionPointData input,NodeGraphController controller) {
 			return new ConnectionGUI(
 				data,
 				output,
-				input
-			);
+				input, 
+                controller
+            );
 		}
 
-		public static ConnectionGUI CreateConnection (string label, Model.ConnectionPointData output, Model.ConnectionPointData input) {
+		public static ConnectionGUI CreateConnection (string label,string type, Model.ConnectionPointData output, Model.ConnectionPointData input, NodeGraphController controller) {
 			return new ConnectionGUI(
-				new Model.ConnectionData(label, output, input),
+				new Model.ConnectionData(label,type, output, input),
 				output,
-				input
+				input,
+                controller
 			);
 		}
 
-		private ConnectionGUI (Model.ConnectionData data, Model.ConnectionPointData output, Model.ConnectionPointData input) {
+		private ConnectionGUI (Model.ConnectionData data, Model.ConnectionPointData output, Model.ConnectionPointData input, NodeGraphController controller) {
 
 			UnityEngine.Assertions.Assert.IsTrue(output.IsOutput, "Given Output point is not output.");
 			UnityEngine.Assertions.Assert.IsTrue(input.IsInput,   "Given Input point is not input.");
-
+            m_controller = controller;
 			m_inspector = ScriptableObject.CreateInstance<ConnectionGUIInspectorHelper>();
 			m_inspector.hideFlags = HideFlags.DontSave;
 
@@ -146,12 +164,12 @@ namespace NodeGraph {
 
 
 			Color lineColor;
-            var lineWidth = 3;// (totalAssets > 0) ? 3f : 2f;
+            var lineWidth = Data.Operation.Object.LineWidth;// (totalAssets > 0) ? 3f : 2f;
 
 			if(IsSelected) {
 				lineColor = Model.Settings.GUI.COLOR_ENABLED;
 			} else {
-				lineColor = /*(totalAssets > 0) ? Model.Settings.GUI.COLOR_CONNECTED :*/ Model.Settings.GUI.COLOR_NOT_CONNECTED;
+                lineColor = Data.Operation.Object.LineColor;
 			}
 
 			ConnectionGUIUtility.HandleMaterial.SetPass(0);
@@ -182,12 +200,7 @@ namespace NodeGraph {
 				}
 			}
 
-            string connectionLabel = "0";// Utility.ShowModelToString(Data.Show);
-			//if(totalGroups > 1) {
-			//	connectionLabel = string.Format("{0}:{1}", totalAssets, totalGroups);
-			//} else {
-			//	connectionLabel = string.Format("{0}", totalAssets);
-			//}
+            string connectionLabel = Data.Operation.Object.Label ?? "";
 
 			var style = new GUIStyle(connectionButtonStyle);
 
@@ -218,6 +231,8 @@ namespace NodeGraph {
 				ConnectionGUIUtility.ConnectionEventHandler(new ConnectionEvent(ConnectionEvent.EventType.EVENT_CONNECTION_TAPPED, this));
 			}
 		}
+
+
 		public bool IsEqual (Model.ConnectionPointData from, Model.ConnectionPointData to) {
 			return (m_outputPoint == from && m_inputPoint == to);
 		}

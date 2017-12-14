@@ -15,7 +15,7 @@ namespace NodeGraph {
 		[SerializeField] private Rect m_baseRect;
 
 		[SerializeField] private Model.NodeData m_data;
-		[SerializeField] private Model.ConfigGraph m_graph;
+		[SerializeField] private NodeGraphController m_controller;
 
 		[SerializeField] private string m_nodeSyle;
 
@@ -43,7 +43,11 @@ namespace NodeGraph {
 				m_data.Name = value;
 			}
 		}
-
+        public NodeGraphController Controller {
+            get {
+                return m_controller;
+            }
+        }
 		public string Id {
 			get {
 				return m_data.Id;
@@ -64,7 +68,7 @@ namespace NodeGraph {
 
 		public Model.ConfigGraph ParentGraph {
 			get {
-				return m_graph;
+				return Controller.TargetGraph;
 			}
 		}
 
@@ -73,7 +77,7 @@ namespace NodeGraph {
 				if(m_nodeInsp == null) {
 					m_nodeInsp = ScriptableObject.CreateInstance<NodeGUIInspectorHelper>();
 					m_nodeInsp.hideFlags = HideFlags.DontSave;
-					m_nodeInsp.node = this;
+					m_nodeInsp.UpdateNodeGUI(this);
 				}
 				return m_nodeInsp;
 			}
@@ -101,13 +105,10 @@ namespace NodeGraph {
 
 		public NodeGUI (NodeGraphController controller, Model.NodeData data) {
 			m_nodeWindowId = 0;
-			m_graph = controller.TargetGraph;
+            m_controller = controller;
 			m_data = data;
-
 			m_baseRect = new Rect(m_data.X, m_data.Y, Model.Settings.GUI.NODE_BASE_WIDTH, Model.Settings.GUI.NODE_BASE_HEIGHT);
-
 			m_nodeSyle = data.Operation.Object.InactiveStyle;
-			Inspector.controller = controller;
 		}
 
 		public NodeGUI Duplicate (NodeGraphController controller, float newX, float newY) {
@@ -234,8 +235,9 @@ namespace NodeGraph {
 			var lastColor = GUI.color;
 
 			bool shouldDrawEnable = 
-				!( eventSource != null && eventSource.eventSourceNode != null && 
-					!Model.ConnectionData.CanConnect(eventSource.eventSourceNode.Data, m_data)
+				!(eventSource != null && 
+                    eventSource.eventSourceNode != null && 
+					Model.ConnectionData.GetConnectType(eventSource.eventSourceNode.Data, m_data) == null
 				);
 
 			bool shouldDrawWithEnabledColor = 
@@ -264,7 +266,7 @@ namespace NodeGraph {
 
 			bool shouldDrawEnable = 
 				!( eventSource != null && eventSource.eventSourceNode != null && 
-					!Model.ConnectionData.CanConnect(m_data, eventSource.eventSourceNode.Data)
+					Model.ConnectionData.GetConnectType(m_data, eventSource.eventSourceNode.Data) == null
 				);
 
 			bool shouldDrawWithEnabledColor = 
@@ -523,45 +525,45 @@ namespace NodeGraph {
 			return null;
 		}
 
-		public static void ShowTypeNamesMenu (string current, List<string> contents, Action<string> ExistSelected) {
-			var menu = new GenericMenu();
+		//public static void ShowTypeNamesMenu (string current, List<string> contents, Action<string> ExistSelected) {
+		//	var menu = new GenericMenu();
 
-			for (var i = 0; i < contents.Count; i++) {
-				var type = contents[i];
-				var selected = false;
-				if (type == current) selected = true;
+		//	for (var i = 0; i < contents.Count; i++) {
+		//		var type = contents[i];
+		//		var selected = false;
+		//		if (type == current) selected = true;
 
-				menu.AddItem(
-					new GUIContent(type),
-					selected,
-					() => {
-						ExistSelected(type);
-					}
-				);
-			}
-			menu.ShowAsContext();
-		}
+		//		menu.AddItem(
+		//			new GUIContent(type),
+		//			selected,
+		//			() => {
+		//				ExistSelected(type);
+		//			}
+		//		);
+		//	}
+		//	menu.ShowAsContext();
+		//}
 
-		public static void ShowFilterKeyTypeMenu (string current, Action<string> Selected) {
-			var menu = new GenericMenu();
+		//public static void ShowFilterKeyTypeMenu (string current, Action<string> Selected) {
+		//	var menu = new GenericMenu();
 
-			menu.AddDisabledItem(new GUIContent(current));
+		//	menu.AddDisabledItem(new GUIContent(current));
 
-			menu.AddSeparator(string.Empty);
+		//	menu.AddSeparator(string.Empty);
 
-			for (var i = 0; i < TypeUtility.KeyTypes.Count; i++) {
-				var type = TypeUtility.KeyTypes[i];
-				if (type == current) continue;
+		//	for (var i = 0; i < TypeUtility.KeyTypes.Count; i++) {
+		//		var type = TypeUtility.KeyTypes[i];
+		//		if (type == current) continue;
 
-				menu.AddItem(
-					new GUIContent(type),
-					false,
-					() => {
-						Selected(type);
-					}
-				);
-			}
-			menu.ShowAsContext();
-		}
+		//		menu.AddItem(
+		//			new GUIContent(type),
+		//			false,
+		//			() => {
+		//				Selected(type);
+		//			}
+		//		);
+		//	}
+		//	menu.ShowAsContext();
+		//}
 	}
 }

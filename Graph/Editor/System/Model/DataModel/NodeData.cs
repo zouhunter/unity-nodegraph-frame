@@ -146,29 +146,6 @@ namespace NodeGraph.DataModel {
 			}
 		}
 
-		public NodeData(V1.NodeData v1) {
-			//TODO:
-			m_id = v1.Id;
-			m_name = v1.Name;
-			m_x = v1.X;
-			m_y = v1.Y;
-			m_nodeNeedsRevisit = false;
-
-			m_inputPoints  = new List<ConnectionPointData>();
-			m_outputPoints = new List<ConnectionPointData>();
-
-			foreach(var input in v1.InputPoints) {
-				m_inputPoints.Add(new ConnectionPointData(input));
-			}
-
-			foreach(var output in v1.OutputPoints) {
-				m_outputPoints.Add(new ConnectionPointData(output));
-			}
-
-			Node n = CreateNodeFromV1NodeData(v1, this);
-			m_nodeInstance = new NodeInstance(n);
-		}
-
 		public NodeData Duplicate (bool keepId = false) {
 			return new NodeData(this, keepId);
 		}
@@ -270,7 +247,7 @@ namespace NodeGraph.DataModel {
 
 		public static Node CreateNodeFromV1NodeData(V1.NodeData v1, NodeData data) {
 
-			NodeDataImporter imp = null;
+			INodeDataImporter imp = null;
 			Node n = null;
 
 			//switch(v1.Kind) {

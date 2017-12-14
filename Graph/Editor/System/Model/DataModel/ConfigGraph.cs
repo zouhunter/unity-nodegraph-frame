@@ -29,6 +29,7 @@ namespace NodeGraph.DataModel {
 		[SerializeField] private int m_version;
 		[SerializeField] private string m_graphDescription;
 		[SerializeField] private bool m_useAsAssetPostprocessor;
+        [SerializeField] private string m_controllerType;
 
 		void OnEnable() {
 			Initialize();
@@ -60,6 +61,16 @@ namespace NodeGraph.DataModel {
 			}
 		}
 
+        public string ControllerType
+        {
+            get {
+                return m_controllerType;
+            }
+            set
+            {
+                m_controllerType = value;
+            }
+        }
 		public DateTime LastModified {
 			get {
 				long utcFileTime = long.Parse(m_lastModified);
@@ -154,8 +165,9 @@ namespace NodeGraph.DataModel {
 		}
 
 
-		public static ConfigGraph CreateNewGraph(string pathToSave) {
+		public static ConfigGraph CreateNewGraph(string pathToSave,string controllerType) {
 			var data = ScriptableObject.CreateInstance<ConfigGraph>();
+            data.m_controllerType = controllerType;
 			AssetDatabase.CreateAsset(data, pathToSave);
 			return data;
 		}

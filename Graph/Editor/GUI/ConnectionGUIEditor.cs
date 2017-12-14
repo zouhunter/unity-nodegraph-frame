@@ -14,7 +14,6 @@ namespace NodeGraph
     [CustomEditor(typeof(ConnectionGUIInspectorHelper))]
     public class ConnectionGUIEditor : Editor
     {
-
         public override bool RequiresConstantRepaint()
         {
             return true;
@@ -26,17 +25,18 @@ namespace NodeGraph
 
             var con = helper.connectionGUI;
 
-            if (con == null)
-            {
+            if (con == null) {
                 return;
             }
-            EditorGUILayout.HelpBox("界面切换规则:", MessageType.Info);
+            EditorGUILayout.HelpBox("连接信息:", MessageType.Info);
 
-            //con.Data._show.auto = DrawToggle(con.Data._show.auto, "自动打开");
-            //con.Data._show.mutex =(MutexRule) DrawEnum(con.Data._show.mutex,"同级互斥");
-            //con.Data._show.cover = DrawToggle( con.Data._show.cover, "界面遮罩");
-            //con.Data._show.baseShow = (BaseShow)DrawEnum(con.Data._show.baseShow, "父级演示");
-            //con.Data._show.single = DrawToggle( con.Data._show.single, "独立显示");
+
+            con.Data.Operation.Object.OnInspectorGUI(con, this, () =>
+            {
+                con.Controller.Perform();
+                con.Data.Operation.Save();
+                con.ParentGraph.SetGraphDirty();
+            });
         }
 
         private bool DrawToggle(bool on, string tip)

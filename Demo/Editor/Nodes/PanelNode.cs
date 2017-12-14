@@ -21,6 +21,7 @@ public class PanelNode : PanelNodeBase
 {
     public NodeType nodeType = NodeType.Destroy | NodeType.Fixed | NodeType.HideGO | NodeType.NoAnim | NodeType.ZeroLayer;
     public int style;
+    
     public override string ActiveStyle
     {
         get
@@ -58,7 +59,7 @@ public class PanelNode : PanelNodeBase
     }
     public PanelNode(string prefabPath)
     {
-        Info.prefabGuid = AssetDatabase.AssetPathToGUID(prefabPath);
+        //Info.prefabGuid = AssetDatabase.AssetPathToGUID(prefabPath);
     }
     public override void Initialize(Model.NodeData data)
     {

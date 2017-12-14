@@ -15,70 +15,42 @@ using BridgeUI;
 namespace NodeGraph.DataModel {
 
     /// <summary>
-    /// Node output semantics.
-    /// </summary>
-	public enum NodeOutputSemantics : uint {
-        /// <summary>
-        /// The none.
-        /// </summary>
-		None 						= 0,
-
-        /// <summary>
-        /// Any.
-        /// </summary>
-		Any  						= 0xFFFFFFFF,
-
-        /// <summary>
-        /// The assets.
-        /// </summary>
-		Assets						= 1,
-
-        /// <summary>
-        /// The asset bundle configurations.
-        /// </summary>
-		AssetBundleConfigurations 	= 2,
-
-        /// <summary>
-        /// The asset bundles.
-        /// </summary>
-		AssetBundles 				= 4
-	}
-
-    /// <summary>
     /// Connection data.
     /// </summary>
 	[Serializable]
 	public class ConnectionData
     {
+        [System.Serializable]
+        public class ConnectionInstance : SerializedInstance<Connection>
+        {
+            public ConnectionInstance() : base() { }
+            public ConnectionInstance(ConnectionInstance instance) : base(instance) { }
+            public ConnectionInstance(Connection obj) : base(obj) { }
+        }
 
-		[SerializeField] private string m_id;
+        [SerializeField] private string m_id;
 		[SerializeField] private string m_fromNodeId;
 		[SerializeField] private string m_fromNodeConnectionPointId;
 		[SerializeField] private string m_toNodeId;
 		[SerializeField] private string m_toNodeConnectionPoiontId;
 		[SerializeField] private string m_label;
-
+        [SerializeField] private ConnectionInstance m_connectionInstance;
+        
         private ConnectionData() {
 			m_id = Guid.NewGuid().ToString();
 		}
 
-		public ConnectionData(string label, ConnectionPointData output, ConnectionPointData input) {
+		public ConnectionData(string label,string type, ConnectionPointData output, ConnectionPointData input) {
 			m_id = Guid.NewGuid().ToString();
 			m_label = label;
-			m_fromNodeId = output.NodeId;
+            m_fromNodeId = output.NodeId;
 			m_fromNodeConnectionPointId = output.Id;
 			m_toNodeId = input.NodeId;
 			m_toNodeConnectionPoiontId = input.Id;
-		}
 
-		public ConnectionData(V1.ConnectionData v1) {
-			m_id = v1.Id;
-			m_fromNodeId = v1.FromNodeId;
-			m_fromNodeConnectionPointId = v1.FromNodeConnectionPointId;
-			m_toNodeId = v1.ToNodeId;
-			m_toNodeConnectionPoiontId = v1.ToNodeConnectionPointId;
-			m_label = v1.Label;
-		}
+            var connection = NodeConnectionUtility.CustomConnectionTypes.Find(x => x.connection.Name == type).CreateInstance();
+            m_connectionInstance = new ConnectionInstance(connection);
+        }
 
         /// <summary>
         /// Gets the identifier.
@@ -113,6 +85,18 @@ namespace NodeGraph.DataModel {
 				return m_fromNodeId;
 			}
 		}
+
+        public ConnectionInstance Operation
+        {
+            get
+            {
+                return m_connectionInstance;
+            }
+        }
+        public bool Validate()
+        {
+            return m_connectionInstance.Object != null;
+        }
 
         /// <summary>
         /// Gets from node connection point identifier.
@@ -154,8 +138,9 @@ namespace NodeGraph.DataModel {
 			newData.m_fromNodeConnectionPointId = m_fromNodeConnectionPointId;
 			newData.m_toNodeId = m_toNodeId;
 			newData.m_toNodeConnectionPoiontId = m_toNodeConnectionPoiontId;
+            newData.m_connectionInstance = new ConnectionInstance(m_connectionInstance);
 
-			return newData;
+            return newData;
 		}
 
 		public bool Validate (List<NodeData> allNodes, List<ConnectionData> allConnections) {
@@ -196,12 +181,18 @@ namespace NodeGraph.DataModel {
         /// <returns><c>true</c> if can connect the specified from to; otherwise, <c>false</c>.</returns>
         /// <param name="from">From.</param>
         /// <param name="to">To.</param>
-		public static bool CanConnect (NodeData from, NodeData to) {
+		public static string GetConnectType(NodeData from, NodeData to) {
 
-			var inType  = (uint)to.Operation.Object.NodeInputType;
-			var outType = (uint)from.Operation.Object.NodeOutputType;
+            var inType = to.Operation.Object.NodeInputType;
+            var outType = from.Operation.Object.NodeOutputType;
 
-			return (inType & outType) > 0;
+            if (string.Equals(inType, outType)){
+                return to.Operation.Object.NodeInputType;
+            }
+            else
+            {
+                return null;
+            }
 		}
 	}
 }

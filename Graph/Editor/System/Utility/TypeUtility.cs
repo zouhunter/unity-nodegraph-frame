@@ -103,39 +103,39 @@ namespace NodeGraph {
 			#endif
 		};
 
-		private static readonly List<Type> IgnoreTypes = new List<Type> {
-			typeof(MonoScript),
-			typeof(AssetBundleReference),
-            typeof(Model.ConfigGraph)
-		};
+		//private static readonly List<Type> IgnoreTypes = new List<Type> {
+		//	typeof(MonoScript),
+		//	typeof(AssetBundleReference),
+  //          typeof(Model.ConfigGraph)
+		//};
 
-        private static readonly List<Type> GraphToolAssetType = new List<Type> {
-            typeof(AssetBundleReference),
-            typeof(Model.ConfigGraph),
-            typeof(Model.ConnectionData),
-            typeof(Model.ConnectionPointData),
-            typeof(Model.NodeData),
-            typeof(AssetReferenceDatabase),
-            //typeof(AssetBundleBuildMap)
-        };
+        //private static readonly List<Type> GraphToolAssetType = new List<Type> {
+        //    typeof(AssetBundleReference),
+        //    typeof(Model.ConfigGraph),
+        //    typeof(Model.ConnectionData),
+        //    typeof(Model.ConnectionPointData),
+        //    typeof(Model.NodeData),
+        //    //typeof(AssetReferenceDatabase),
+        //    //typeof(AssetBundleBuildMap)
+        //};
 
-        public static bool IsGraphToolSystemAssetType(Type t) {
-            if (t == null) {
-                return  false;
-            }
-            return GraphToolAssetType.Contains (t);
-        }
+        //public static bool IsGraphToolSystemAssetType(Type t) {
+        //    if (t == null) {
+        //        return  false;
+        //    }
+        //    return GraphToolAssetType.Contains (t);
+        //}
 
-        public static bool IsGraphToolSystemAsset(string assetPath) {
-            return 
-                assetPath.Contains (Model.Settings.Path.BasePath) || 
-                IsGraphToolSystemAssetType (GetTypeOfAsset(assetPath));
-        }
+        //public static bool IsGraphToolSystemAsset(string assetPath) {
+        //    return 
+        //        assetPath.Contains (Model.Settings.Path.BasePath) || 
+        //        IsGraphToolSystemAssetType (GetTypeOfAsset(assetPath));
+        //}
 
-		public static bool IsLoadingAsset (AssetReference r) {
-			Type t = r.assetType;
-			return t != null && !IgnoreTypes.Contains(t);
-		}
+		//public static bool IsLoadingAsset (AssetReference r) {
+		//	Type t = r.assetType;
+		//	return t != null && !IgnoreTypes.Contains(t);
+		//}
 
 		/**
 		 * Get type of asset from give path.
@@ -216,14 +216,14 @@ namespace NodeGraph {
 			return typeof(object);
 		}			
 
-		public static Type FindFirstIncomingAssetType(List<AssetReference> assets) {
+		//public static Type FindFirstIncomingAssetType(List<AssetReference> assets) {
 
-			if(assets.Any()) {
-				return assets.First().filterType;
-			}
+		//	if(assets.Any()) {
+		//		return assets.First().filterType;
+		//	}
 
-			return null;
-		}
+		//	return null;
+		//}
 
 		//public static Type FindFirstIncomingAssetType(Model.ConnectionPointData inputPoint) {
 		//	var assetGroupEnum = mgr.EnumurateIncomingAssetGroups(inputPoint);

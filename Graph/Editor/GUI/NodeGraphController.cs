@@ -15,9 +15,8 @@ using BridgeUI;
 
 namespace NodeGraph
 {
-    public class NodeGraphController
+    public abstract class NodeGraphController
     {
-
         private List<NodeException> m_nodeExceptions;
         private Model.ConfigGraph m_targetGraph;
 
@@ -67,26 +66,17 @@ namespace NodeGraph
             }
 
             m_nodeExceptions.Clear();
-
-            foreach (var item in TargetGraph.Nodes)
-            {
-                if (item.Operation.Object is IPanelInfoHolder)
-                {
-                    var nodeItem = item.Operation.Object as IPanelInfoHolder;
-                    var guid = nodeItem.Info.prefabGuid;
-                    if (string.IsNullOrEmpty(guid) || string.IsNullOrEmpty(AssetDatabase.GUIDToAssetPath(guid)))
-                    {
-                        m_nodeExceptions.Add(new NodeException("prefab is null", item.Id));
-                    }
-                }
-            }
-
+            JudgeNodeExceptions(m_targetGraph, m_nodeExceptions);
             LogUtility.Logger.Log(LogType.Log, "---Setup END---");
         }
-
-        internal void BuildToSelect()
+        public void Build()
         {
-            LogUtility.Logger.Log(LogType.Log, "---On Build Clicked---");
+            if(m_nodeExceptions == null || m_nodeExceptions.Count == 0)
+            {
+                BuildFromGraph(m_targetGraph);
+            }
         }
+        protected abstract void JudgeNodeExceptions(Model.ConfigGraph m_targetGraph, List<NodeException> m_nodeExceptions);
+        protected abstract void BuildFromGraph(Model.ConfigGraph m_targetGraph);
     }
 }

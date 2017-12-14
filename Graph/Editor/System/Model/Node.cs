@@ -21,9 +21,9 @@ namespace NodeGraph {
         /// Gets the valid type of the node input.
         /// </summary>
         /// <value>The type of the node input.</value>
-		public virtual Model.NodeOutputSemantics NodeInputType {
+		public virtual string NodeInputType {
 			get {
-				return Model.NodeOutputSemantics.Assets;
+				return null;
 			}
 		}
 
@@ -31,9 +31,9 @@ namespace NodeGraph {
         /// Gets the valid type of the node output.
         /// </summary>
         /// <value>The type of the node output.</value>
-		public virtual Model.NodeOutputSemantics NodeOutputType {
+		public virtual string NodeOutputType {
 			get {
-				return Model.NodeOutputSemantics.Assets;
+				return null;
 			}
 		}
 		#endregion
@@ -103,157 +103,4 @@ namespace NodeGraph {
 		#endregion
 	}
 
-    /// <summary>
-    /// Custom node attribute for custom nodes.
-    /// </summary>
-	[AttributeUsage(AttributeTargets.Class)] 
-	public class CustomNode : Attribute {
-
-		private string m_name;
-		private int m_orderPriority;
-
-		public static readonly int kDEFAULT_PRIORITY = 1000;
-
-        /// <summary>
-        /// Gets the name.
-        /// </summary>
-        /// <value>The name.</value>
-		public string Name {
-			get {
-				return m_name;
-			}
-		}
-
-        /// <summary>
-        /// Gets the order priority.
-        /// </summary>
-        /// <value>The order priority.</value>
-		public int OrderPriority {
-			get {
-				return m_orderPriority;
-			}
-		}
-
-		public CustomNode (string name) {
-			m_name = name;
-			m_orderPriority = kDEFAULT_PRIORITY;
-		}
-
-		public CustomNode (string name, int orderPriority) {
-			m_name = name;
-			m_orderPriority = orderPriority;
-		}
-	}
-
-	public struct CustomNodeInfo : IComparable {
-		public CustomNode node;
-		public Type type;
-
-		public CustomNodeInfo(Type t, CustomNode n) {
-			node = n;
-			type = t;
-		}
-
-		public Node CreateInstance() {
-            object o = type.Assembly.CreateInstance(type.FullName);
-			return (Node) o;
-		}
-
-		public int CompareTo(object obj) {
-			if (obj == null) {
-				return 1;
-			}
-
-			CustomNodeInfo rhs = (CustomNodeInfo)obj;
-			return node.OrderPriority - rhs.node.OrderPriority;
-		}
-	}
-
-	public class NodeUtility {
-
-		private static List<CustomNodeInfo> s_customNodes;
-
-		public static List<CustomNodeInfo> CustomNodeTypes {
-			get {
-				if(s_customNodes == null) {
-					s_customNodes = BuildCustomNodeList();
-				}
-				return s_customNodes;
-			}
-		}
-
-		private static List<CustomNodeInfo> BuildCustomNodeList() {
-			var list = new List<CustomNodeInfo>();
-
-            var allNodes = new List<Type>();
-
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()) {
-                var nodes = assembly.GetTypes()
-                    .Where(t => t != typeof(Node))
-                    .Where(t => typeof(Node).IsAssignableFrom(t));
-                allNodes.AddRange (nodes);
-            }
-
-            foreach (var type in allNodes) {
-				CustomNode attr = 
-					type.GetCustomAttributes(typeof(CustomNode), false).FirstOrDefault() as CustomNode;
-
-				if (attr != null) {
-					list.Add(new CustomNodeInfo(type, attr));
-				}
-			}
-
-			list.Sort();
-
-			return list;
-		}
-
-		public static bool HasValidCustomNodeAttribute(Type t) {
-			CustomNode attr = 
-				t.GetCustomAttributes(typeof(CustomNode), false).FirstOrDefault() as CustomNode;
-			return attr != null && !string.IsNullOrEmpty(attr.Name);
-		}
-
-		public static string GetNodeGUIName(Node node) {
-			CustomNode attr = 
-				node.GetType().GetCustomAttributes(typeof(CustomNode), false).FirstOrDefault() as CustomNode;
-			if(attr != null) {
-				return attr.Name;
-			}
-			return string.Empty;
-		}
-
-		public static string GetNodeGUIName(string className) {
-			var type = Type.GetType(className);
-			if(type != null) {
-				CustomNode attr = 
-                    type.GetCustomAttributes(typeof(CustomNode), false).FirstOrDefault() as CustomNode;
-				if(attr != null) {
-					return attr.Name;
-				}
-			}
-			return string.Empty;
-		}
-
-		public static int GetNodeOrderPriority(string className) {
-			var type = Type.GetType(className);
-			if(type != null) {
-				CustomNode attr = 
-                    type.GetCustomAttributes(typeof(CustomNode), false).FirstOrDefault() as CustomNode;
-				if(attr != null) {
-					return attr.OrderPriority;
-				}
-			}
-			return CustomNode.kDEFAULT_PRIORITY;
-		}
-
-		public static Node CreateNodeInstance(string assemblyQualifiedName) {
-			if(assemblyQualifiedName != null) {
-                var type = Type.GetType(assemblyQualifiedName);
-
-                return (Node) type.Assembly.CreateInstance(type.FullName);
-			}
-			return null;
-		}
-	}
 }

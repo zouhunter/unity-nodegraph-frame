@@ -13,7 +13,6 @@ namespace NodeGraph {
 
 	[CustomEditor(typeof(Model.ConfigGraph))]
 	public class ConfigGraphEditor : Editor {
-
 		private class Styles {
 			public static readonly string kEDITBUTTON_LABEL		= "Open in Graph Editor";
 			public static readonly string kEDITBUTTON_DESCRIPTION	= "Opens in the AssetBundle Graph Editor, which will allow you to configure the graph";
@@ -23,8 +22,14 @@ namespace NodeGraph {
 		public override void OnInspectorGUI()
 		{
 			Model.ConfigGraph graph = target as Model.ConfigGraph;
+            
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                GUILayout.Label("NodeGraphController", "BoldLabel");
+                GUILayout.Label(graph.ControllerType);
+            }
 
-			using(new EditorGUILayout.HorizontalScope()) {
+            using (new EditorGUILayout.HorizontalScope()) {
 				GUILayout.Label(graph.name, "BoldLabel");
 				if (GUILayout.Button(Styles.kEDITBUTTON, GUILayout.Width(150f), GUILayout.ExpandWidth(false)))
 				{

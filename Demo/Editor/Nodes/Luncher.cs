@@ -34,6 +34,13 @@ public class Luncher : Node
             return "empty";
         }
     }
+    public override string NodeOutputType
+    {
+        get
+        {
+            return KeyConst.BridgeName;
+        }
+    }
     public override void Initialize(Model.NodeData data)
     {
         data.AddDefaultOutputPoint();

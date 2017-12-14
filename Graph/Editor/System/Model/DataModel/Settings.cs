@@ -11,25 +11,7 @@ namespace NodeGraph.DataModel {
 			if true, ignore .meta files inside NodeGraph.DataModel.
 		*/
 		public const bool IGNORE_META = true;
-
-        //public const string GUI_TEXT_MENU_OPEN = "Window/NodeGraph.DataModel/Open Graph Editor";
-        //      public const string GUI_TEXT_MENU_BATCHWINDOW_OPEN = "Window/NodeGraph.DataModel/Open Batch Build Window";
-        //public const string GUI_TEXT_MENU_PROJECTWINDOW_OPEN = "Window/NodeGraph.DataModel/Open Project Window";
-        //public const string GUI_TEXT_MENU_BUILD = "Window/NodeGraph.DataModel/Build Bundles for Current Platform";
-        //public const string GUI_TEXT_MENU_BATCHBUILD = "Window/NodeGraph.DataModel/Build Current Graph Selections";
-        //public const string GUI_TEXT_MENU_GENERATE = "Window/NodeGraph.DataModel/Create Node Script";
-        //public const string GUI_TEXT_MENU_GENERATE_MODIFIER = GUI_TEXT_MENU_GENERATE + "/Modifier Script";
-        //      public const string GUI_TEXT_MENU_GENERATE_PREFABBUILDER = GUI_TEXT_MENU_GENERATE + "/PrefabBuilder Script";
-        //      public const string GUI_TEXT_MENU_GENERATE_ASSETGENERATOR = GUI_TEXT_MENU_GENERATE + "/AssetGenerator Script";
-        //public const string GUI_TEXT_MENU_GENERATE_CUITOOL = "Window/NodeGraph.DataModel/Create CUI Tool";
-
-        //public const string GUI_TEXT_MENU_GENERATE_POSTPROCESS = GUI_TEXT_MENU_GENERATE + "/Postprocess Script";
-        //public const string GUI_TEXT_MENU_GENERATE_FILTER = GUI_TEXT_MENU_GENERATE + "/Filter Script";
-        //public const string GUI_TEXT_MENU_GENERATE_NODE = GUI_TEXT_MENU_GENERATE + "/Custom Node Script";
-        //public const string GUI_TEXT_MENU_DELETE_CACHE = "Window/NodeGraph.DataModel/Clear Build Cache";
-
-        //public const string GUI_TEXT_MENU_DELETE_IMPORTSETTING_SETTINGS = "Window/NodeGraph.DataModel/Clear Saved ImportSettings";
-
+        
         public const string GRAPH_SEARCH_CONDITION = "t:NodeGraph.DataModel.ConfigGraph";
 
 		public const string GUI_TEXT_SETTINGTEMPLATE_MODEL	= "Model";

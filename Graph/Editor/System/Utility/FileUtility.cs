@@ -157,29 +157,29 @@ namespace NodeGraph {
 			return false;
 		}
 
-		public static string EnsurePrefabBuilderCacheDirExists(BuildTarget t, Model.NodeData node) {
-            var cacheDir = FileUtility.PathCombine(Model.Settings.Path.PrefabBuilderCachePath, node.Id, SystemDataUtility.GetPathSafeTargetName(t));
+		//public static string EnsurePrefabBuilderCacheDirExists(BuildTarget t, Model.NodeData node) {
+  //          var cacheDir = FileUtility.PathCombine(Model.Settings.Path.PrefabBuilderCachePath, node.Id, SystemDataUtility.GetPathSafeTargetName(t));
 
-			if (!Directory.Exists(cacheDir)) {
-				Directory.CreateDirectory(cacheDir);
-			}
-			if (!cacheDir.EndsWith(Model.Settings.UNITY_FOLDER_SEPARATOR.ToString())) {
-				cacheDir = cacheDir + Model.Settings.UNITY_FOLDER_SEPARATOR.ToString();
-			}
-			return cacheDir;
-		}
+		//	if (!Directory.Exists(cacheDir)) {
+		//		Directory.CreateDirectory(cacheDir);
+		//	}
+		//	if (!cacheDir.EndsWith(Model.Settings.UNITY_FOLDER_SEPARATOR.ToString())) {
+		//		cacheDir = cacheDir + Model.Settings.UNITY_FOLDER_SEPARATOR.ToString();
+		//	}
+		//	return cacheDir;
+		//}
 
-        public static string EnsureAssetGeneratorCacheDirExists(BuildTarget t, Model.NodeData node) {
-            var cacheDir = FileUtility.PathCombine(Model.Settings.Path.AssetGeneratorCachePath, node.Id, SystemDataUtility.GetPathSafeTargetName(t));
+  //      public static string EnsureAssetGeneratorCacheDirExists(BuildTarget t, Model.NodeData node) {
+  //          var cacheDir = FileUtility.PathCombine(Model.Settings.Path.AssetGeneratorCachePath, node.Id, SystemDataUtility.GetPathSafeTargetName(t));
 
-            if (!Directory.Exists(cacheDir)) {
-                Directory.CreateDirectory(cacheDir);
-            }
-            if (!cacheDir.EndsWith(Model.Settings.UNITY_FOLDER_SEPARATOR.ToString())) {
-                cacheDir = cacheDir + Model.Settings.UNITY_FOLDER_SEPARATOR.ToString();
-            }
-            return cacheDir;
-        }
+  //          if (!Directory.Exists(cacheDir)) {
+  //              Directory.CreateDirectory(cacheDir);
+  //          }
+  //          if (!cacheDir.EndsWith(Model.Settings.UNITY_FOLDER_SEPARATOR.ToString())) {
+  //              cacheDir = cacheDir + Model.Settings.UNITY_FOLDER_SEPARATOR.ToString();
+  //          }
+  //          return cacheDir;
+  //      }
 
 
 		public static string EnsureAssetBundleCacheDirExists(BuildTarget t, Model.NodeData node, bool remake = false) {
@@ -213,23 +213,23 @@ namespace NodeGraph {
 			return null;
 		}
 
-		public static string GetImportSettingTemplateFilePath(AssetReference a) {
-			if(a.filterType == typeof(ModelImporter)) {
-                return Model.Settings.Path.SettingTemplateModel;
-			}
-			if(a.filterType == typeof(AudioImporter)) {
-                return Model.Settings.Path.SettingTemplateAudio;
-			}
-			if(a.filterType == typeof(TextureImporter)) {
-                return Model.Settings.Path.SettingTemplateTexture;
-			}
-			#if UNITY_5_6 || UNITY_5_6_OR_NEWER
-			if(a.filterType == typeof(VideoClipImporter)) {
-                return Model.Settings.Path.SettingTemplateVideo;
-			}
-			#endif
-			return null;
-		}
+		//public static string GetImportSettingTemplateFilePath(AssetReference a) {
+		//	if(a.filterType == typeof(ModelImporter)) {
+  //              return Model.Settings.Path.SettingTemplateModel;
+		//	}
+		//	if(a.filterType == typeof(AudioImporter)) {
+  //              return Model.Settings.Path.SettingTemplateAudio;
+		//	}
+		//	if(a.filterType == typeof(TextureImporter)) {
+  //              return Model.Settings.Path.SettingTemplateTexture;
+		//	}
+		//	#if UNITY_5_6 || UNITY_5_6_OR_NEWER
+		//	if(a.filterType == typeof(VideoClipImporter)) {
+  //              return Model.Settings.Path.SettingTemplateVideo;
+		//	}
+		//	#endif
+		//	return null;
+		//}
 		public static void DeleteDirectory(string dirPath, bool isRecursive, bool forceDelete = true)
         {
 			if (forceDelete) {
