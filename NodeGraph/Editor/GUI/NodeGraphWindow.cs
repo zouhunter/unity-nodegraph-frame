@@ -607,7 +607,7 @@ namespace NodeGraph
                     {
                         foreach (var ct in controllerTypes)
                         {
-                            menu.AddItem(new GUIContent(string.Format("Create New ({0})" , ct)), false, () =>
+                            menu.AddItem(new GUIContent(string.Format("Create New/({0})Graph" , ct)), false, () =>
                             {
                                 CreateNewGraphFromDialog(ct);
                             });

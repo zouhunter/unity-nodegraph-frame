@@ -143,7 +143,7 @@ namespace NodeGraph
             nodeDataDrawer = UserDefineUtility.GetUserDrawer(data.Operation.Object.GetType()) as NodeDrawer;
             if (nodeDataDrawer == null) nodeDataDrawer = new NodeDrawer();
             nodeDataDrawer.target = data.Operation.Object;
-            m_baseRect = new Rect(m_data.X, m_data.Y, NGEditorSettings.GUI.NODE_BASE_WIDTH, NGEditorSettings.GUI.NODE_BASE_HEIGHT);
+            m_baseRect = new Rect(m_data.X, m_data.Y , NGEditorSettings.GUI.NODE_BASE_WIDTH, NGEditorSettings.GUI.NODE_BASE_HEIGHT + nodeDataDrawer.CustomNodeHeight);
             m_nodeSyle = nodeDataDrawer == null ? "node 0" : nodeDataDrawer.InactiveStyle;
         }
 
@@ -449,6 +449,12 @@ namespace NodeGraph
             m_data.InputPoints.ForEach(drawConnectionPoint);
             m_data.OutputPoints.ForEach(drawConnectionPoint);
 
+            if(nodeDataDrawer.CustomNodeHeight > 0)
+            {
+                var customRect = new Rect(2f, m_baseRect.height - nodeDataDrawer.CustomNodeHeight - 8f, m_baseRect.width - 4, nodeDataDrawer.CustomNodeHeight);//
+                nodeDataDrawer.OnNodeGUI(customRect);
+            }
+
             GUIStyle catStyle = new GUIStyle("WhiteMiniLabel");
             catStyle.alignment = TextAnchor.LowerRight;
             var categoryRect = new Rect(2f, m_baseRect.height - 14f, m_baseRect.width - 4f, 16f);
@@ -493,7 +499,7 @@ namespace NodeGraph
 
             var newWidth = Mathf.Max(NGEditorSettings.GUI.NODE_BASE_WIDTH, outputLabelWidth + inputLabelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
             newWidth = Mathf.Max(newWidth, labelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
-            m_baseRect = new Rect(m_baseRect.x, m_baseRect.y, newWidth, m_baseRect.height);
+            m_baseRect = new Rect(m_baseRect.x, m_baseRect.y, newWidth, m_baseRect.height + nodeDataDrawer.CustomNodeHeight + EditorGUIUtility.singleLineHeight);
 
             RefreshConnectionPos(titleHeight);
         }

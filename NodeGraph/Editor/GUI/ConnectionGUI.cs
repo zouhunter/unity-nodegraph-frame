@@ -298,7 +298,7 @@ namespace NodeGraph
         public void DrawObject()
         {
             EditorGUI.BeginChangeCheck();
-            connectionDrawer.OnInspectorGUI();
+            if(connectionDrawer != null) connectionDrawer.OnInspectorGUI();
             if (EditorGUI.EndChangeCheck())
             {
                 Controller.Perform();

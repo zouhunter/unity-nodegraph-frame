@@ -21,9 +21,8 @@ namespace NodeGraph {
             if(string.IsNullOrEmpty(path)) {
                 return;
             }
-
-            string jsonString = EditorJsonUtility.ToJson (graph, true);
-
+            //string jsonString = EditorJsonUtility.ToJson (graph, true);
+            string jsonString = JsonUtility.ToJson(graph);
             File.WriteAllText (path, jsonString, System.Text.Encoding.UTF8);
 		}
 
@@ -63,10 +62,11 @@ namespace NodeGraph {
 
             if (graph != null) {
                 Undo.RecordObject(graph, "Import");
-                EditorJsonUtility.FromJsonOverwrite (jsonContent, graph);
+                JsonUtility.FromJsonOverwrite(jsonContent, graph);
+                //EditorJsonUtility.FromJsonOverwrite (jsonContent, graph);
             } else {
                 graph = ScriptableObject.CreateInstance<Model.ConfigGraph>();
-                EditorJsonUtility.FromJsonOverwrite (jsonContent, graph);
+                JsonUtility.FromJsonOverwrite (jsonContent, graph);
                 var newAssetFolder = CreateFolderForImportedAssets ();
                 var graphPath = FileUtility.PathCombine(newAssetFolder, string.Format("{0}.asset", name));
                 AssetDatabase.CreateAsset (graph, graphPath);

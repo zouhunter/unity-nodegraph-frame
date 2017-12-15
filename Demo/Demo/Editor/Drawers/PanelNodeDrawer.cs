@@ -33,12 +33,29 @@ public class PanelNodeDrawer : NodeDrawer
             return "panel";
         }
     }
-
+    public override float CustomNodeHeight
+    {
+        get
+        {
+            return EditorGUIUtility.singleLineHeight * 2;
+        }
+    }
+    public override void OnNodeGUI(Rect position)
+    {
+        base.OnNodeGUI(position);
+        var rect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
+        GUI.backgroundColor = Color.red;
+        EditorGUI.ColorField(rect, Color.red);
+        GUI.backgroundColor = Color.white;
+        rect.y += EditorGUIUtility.singleLineHeight;
+        EditorGUI.LabelField(rect,"PanelNodeDrawer");
+    }
     public override void OnInspectorGUI()
     {
         EditorGUILayout.HelpBox("Any Lunch: Lunch SubPanels From Any State", MessageType.Info);
         (target as PanelNode).key =  EditorGUILayout.TextField((target as PanelNode).key);
     }
+
     public override void OnContextMenuGUI(GenericMenu menu)
     {
         base.OnContextMenuGUI(menu);

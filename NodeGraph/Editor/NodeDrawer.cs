@@ -15,7 +15,8 @@ namespace NodeGraph
 		public virtual string InactiveStyle { get { return "node 0"; } }
         public virtual string Category { get { return "empty"; } }
         public virtual void OnContextMenuGUI(GenericMenu menu) { }
-
+        public virtual float CustomNodeHeight { get { return 0; } }
+        public virtual void OnNodeGUI(Rect position) { }
         public virtual void OnInspectorGUI()
         {
             base.OnInspectorGUI(target);

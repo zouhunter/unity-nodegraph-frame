@@ -34,6 +34,7 @@ public class PanelNode : Node {
     public override void Initialize(NodeData data)
     {
         data.AddDefaultInputPoint();
+        if(data.InputPoints.Find(x=>x.Label == "aaaaaaaaaaaaaaaaaaaaaaaaa") == null) data.AddInputPoint("aaaaaaaaaaaaaaaaaaaaaaaaa");
         data.AddDefaultOutputPoint();
     }
 }
