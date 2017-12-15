@@ -16,7 +16,6 @@ using System;
 [CustomNode("Luncher", 0)]
 public class Luncher : Node
 {
-    [Serializable]
     public class Clas
     {
         public double testdb;

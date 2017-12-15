@@ -14,7 +14,7 @@ namespace NodeGraph
 {
     public abstract class NodeGraphController
     {
-        private List<NodeException> m_nodeExceptions;
+        private List<NodeException> m_nodeExceptions = new List<NodeException>();
         private Model.ConfigGraph m_targetGraph;
 
         public bool IsAnyIssueFound
@@ -39,12 +39,10 @@ namespace NodeGraph
             {
                 return m_targetGraph;
             }
-        }
-
-        public NodeGraphController(Model.ConfigGraph graph)
-        {
-            m_targetGraph = graph;
-            m_nodeExceptions = new List<NodeException>();
+            set
+            {
+                m_targetGraph = value;
+            }
         }
 
         public void Perform()

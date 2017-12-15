@@ -15,13 +15,16 @@ using System;
 
 namespace NodeGraph
 {
-    public abstract class ConnectionDrawer
+    public class ConnectionDrawer: DefultDrawer
     {
         public DataModel.Connection target;
         internal virtual int LineWidth { get { return 3; } }
         internal virtual Color LineColor { get { return Color.white; } }
         internal virtual string Label { get { return ""; } }
-        internal abstract void OnInspectorGUI(ConnectionGUI con, ConnectionGUIEditor connectionGUIEditor, Action onChanged);
+        internal virtual void OnInspectorGUI()
+        {
+            base.OnInspectorGUI(target);
+        }
     }
 
 }

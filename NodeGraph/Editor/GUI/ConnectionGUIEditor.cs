@@ -21,7 +21,7 @@ namespace NodeGraph
             }
 
             EditorGUILayout.HelpBox("连接信息:", MessageType.Info);
-            con.DrawObject(this);
+            con.DrawObject();
         }
 
         private bool DrawToggle(bool on, string tip)

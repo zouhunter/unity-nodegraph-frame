@@ -13,10 +13,6 @@ using NodeGraph.DataModel;
 
 public class UIGraphController : NodeGraphController
 {
-    public UIGraphController(ConfigGraph graph) : base(graph)
-    {
-    }
-
     protected override void JudgeNodeExceptions(ConfigGraph m_targetGraph, List<NodeException> m_nodeExceptions)
     {
         Debug.Log("JudgeNodeExceptions");

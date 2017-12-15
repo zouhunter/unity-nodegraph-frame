@@ -645,22 +645,16 @@ namespace NodeGraph
 
         internal void DrawNodeGUI(NodeGUIEditor nodeGUIEditor)
         {
+            EditorGUI.BeginChangeCheck();
             nodeGUIEditor.UpdateNodeName(this);
+            nodeDataDrawer.OnInspectorGUI();
 
-            if (nodeDataDrawer == null)
+            if (EditorGUI.EndChangeCheck())
             {
-
+                Controller.Perform();
+                Data.Operation.Save();
+                ParentGraph.SetGraphDirty();
             }
-            else
-            {
-                nodeDataDrawer.OnInspectorGUI(Data, () =>
-                 {
-                     Controller.Perform();
-                     Data.Operation.Save();
-                     ParentGraph.SetGraphDirty();
-                 });
-            }
-
         }
 
         public static void ShowTypeNamesMenu(string current, List<string> contents, Action<string> ExistSelected)

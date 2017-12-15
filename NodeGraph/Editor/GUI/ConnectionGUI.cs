@@ -158,7 +158,8 @@ namespace NodeGraph
             this.m_outputPoint = output;
             this.m_inputPoint = input;
             connectionDrawer = UserDefineUtility.GetUserDrawer(data.Operation.Object.GetType()) as ConnectionDrawer;
-            if (connectionDrawer != null) connectionDrawer.target = data.Operation.Object;
+            if (connectionDrawer == null) connectionDrawer = new ConnectionDrawer();
+            connectionDrawer.target = data.Operation.Object;
             connectionButtonStyle = "sv_label_0";
         }
 
@@ -294,22 +295,16 @@ namespace NodeGraph
                 connectionButtonStyle = "sv_label_0";
             }
         }
-        public void DrawObject(ConnectionGUIEditor editor)
+        public void DrawObject()
         {
-            if(connectionDrawer == null)
+            EditorGUI.BeginChangeCheck();
+            connectionDrawer.OnInspectorGUI();
+            if (EditorGUI.EndChangeCheck())
             {
-
+                Controller.Perform();
+                Data.Operation.Save();
+                ParentGraph.SetGraphDirty();
             }
-            else
-            {
-                connectionDrawer.OnInspectorGUI(this, editor, () =>
-                {
-                    Controller.Perform();
-                    Data.Operation.Save();
-                    ParentGraph.SetGraphDirty();
-                });
-            }
-            
         }
         public void Delete()
         {

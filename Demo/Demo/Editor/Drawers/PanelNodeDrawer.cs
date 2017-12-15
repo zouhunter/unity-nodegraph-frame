@@ -34,7 +34,7 @@ public class PanelNodeDrawer : NodeDrawer
         }
     }
 
-    public override void OnInspectorGUI(NodeData data,Action onValueChanged)
+    public override void OnInspectorGUI()
     {
         EditorGUILayout.HelpBox("Any Lunch: Lunch SubPanels From Any State", MessageType.Info);
         (target as PanelNode).key =  EditorGUILayout.TextField((target as PanelNode).key);
