@@ -10,14 +10,14 @@ public class BridgeConnectionDrawer : ConnectionDrawer
     {
         get
         {
-            return Color.red;
+            return Color.yellow;
         }
     }
     internal override int LineWidth
     {
         get
         {
-            return 8;
+            return 2;
         }
     }
     internal override string Label

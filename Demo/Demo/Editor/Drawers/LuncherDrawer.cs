@@ -33,15 +33,10 @@ public class LuncherDrawer : NodeDrawer
             return "empty";
         }
     }
-    public override void Initialize(NodeData data)
-    {
-        data.AddDefaultOutputPoint();
-        Debug.Log("Initialize");
-    }
-    public override void OnInspectorGUI(NodeGUI node, NodeGUIEditor editor, Action onValueChanged)
+   
+    public override void OnInspectorGUI(NodeData data,Action onValueChanged)
     {
         EditorGUILayout.HelpBox("Any Lunch: Lunch SubPanels From Any State", MessageType.Info);
-        editor.UpdateNodeName(node);
     }
     public override void OnContextMenuGUI(GenericMenu menu)
     {

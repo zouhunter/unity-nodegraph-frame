@@ -6,8 +6,8 @@ using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 
-using Model=NodeGraph.DataModel;
-
+using NodeGraph.DataModel;
+using NodeGraph;
 namespace NodeGraph {
 	public class FileUtility {
 		public static void RemakeDirectory (string localFolderPath) {
@@ -37,17 +37,17 @@ namespace NodeGraph {
 
 		public static void DeleteFileThenDeleteFolderIfEmpty (string localTargetFilePath) {			
 			File.Delete(localTargetFilePath);
-			File.Delete(localTargetFilePath + Settings.UNITY_METAFILE_EXTENSION);
+			File.Delete(localTargetFilePath + NGSettings.UNITY_METAFILE_EXTENSION);
 			var directoryPath = Directory.GetParent(localTargetFilePath).FullName;
 			var restFiles = GetFilePathsInFolder(directoryPath);
 			if (!restFiles.Any()) {
                 FileUtility.DeleteDirectory(directoryPath, true);
-				File.Delete(directoryPath + Settings.UNITY_METAFILE_EXTENSION);
+				File.Delete(directoryPath + NGSettings.UNITY_METAFILE_EXTENSION);
 			}
 		}
 
 		// Get all files under given path, including files in child folders
-		public static List<string> GetAllFilePathsInFolder (string localFolderPath, bool includeHidden=false, bool includeMeta=!Settings.IGNORE_META) 
+		public static List<string> GetAllFilePathsInFolder (string localFolderPath, bool includeHidden=false, bool includeMeta=!NGSettings.IGNORE_META) 
 		{
 			var filePaths = new List<string>();
 			
@@ -64,25 +64,25 @@ namespace NodeGraph {
 		}
 
 		// Get files under given path
-		public static List<string> GetFilePathsInFolder (string folderPath, bool includeHidden=false, bool includeMeta=!Settings.IGNORE_META) {
+		public static List<string> GetFilePathsInFolder (string folderPath, bool includeHidden=false, bool includeMeta=!NGSettings.IGNORE_META) {
 			var filePaths = Directory.GetFiles(folderPath).Select(p=>p);
 
 			if(!includeHidden) {
-				filePaths = filePaths.Where(path => !(Path.GetFileName(path).StartsWith(Settings.DOTSTART_HIDDEN_FILE_HEADSTRING)));
+				filePaths = filePaths.Where(path => !(Path.GetFileName(path).StartsWith(NGSettings.DOTSTART_HIDDEN_FILE_HEADSTRING)));
 			}
 			if (!includeMeta) {
 				filePaths = filePaths.Where(path => !FileUtility.IsMetaFile(path));
 			}
 
 			// Directory.GetFiles() returns platform dependent delimiter, so make sure replace with "/"
-			if( Path.DirectorySeparatorChar != Settings.UNITY_FOLDER_SEPARATOR ) {
-				filePaths =	filePaths.Select(filePath => filePath.Replace(Path.DirectorySeparatorChar.ToString(), Settings.UNITY_FOLDER_SEPARATOR.ToString()));
+			if( Path.DirectorySeparatorChar != NGSettings.UNITY_FOLDER_SEPARATOR ) {
+				filePaths =	filePaths.Select(filePath => filePath.Replace(Path.DirectorySeparatorChar.ToString(), NGSettings.UNITY_FOLDER_SEPARATOR.ToString()));
 			}
 
 			return filePaths.ToList();
 		}
 
-		private static void GetFilePathsRecursively (string localFolderPath, List<string> filePaths, bool includeHidden=false, bool includeMeta=!Settings.IGNORE_META) {
+		private static void GetFilePathsRecursively (string localFolderPath, List<string> filePaths, bool includeHidden=false, bool includeMeta=!NGSettings.IGNORE_META) {
 			var folders = Directory.GetDirectories(localFolderPath);
 
 			foreach (var folder in folders) {
@@ -113,15 +113,15 @@ namespace NodeGraph {
 		}
 
 		private static string _PathCombine (string head, string tail) {
-			if (!head.EndsWith(Settings.UNITY_FOLDER_SEPARATOR.ToString())) {
-				head = head + Settings.UNITY_FOLDER_SEPARATOR;
+			if (!head.EndsWith(NGSettings.UNITY_FOLDER_SEPARATOR.ToString())) {
+				head = head + NGSettings.UNITY_FOLDER_SEPARATOR;
 			}
 			
 			if (string.IsNullOrEmpty(tail)) {
 				return head;
 			}
 
-			if (tail.StartsWith(Settings.UNITY_FOLDER_SEPARATOR.ToString())) {
+			if (tail.StartsWith(NGSettings.UNITY_FOLDER_SEPARATOR.ToString())) {
 				tail = tail.Substring(1);
 			}
 
@@ -141,49 +141,49 @@ namespace NodeGraph {
 
 		public static string ProjectPathWithSlash () {
 			var assetPath = Application.dataPath;
-			return Directory.GetParent(assetPath).ToString() + Settings.UNITY_FOLDER_SEPARATOR;
+			return Directory.GetParent(assetPath).ToString() + NGSettings.UNITY_FOLDER_SEPARATOR;
 		}
 
 		public static bool IsMetaFile (string filePath) {
-			if (filePath.EndsWith(Settings.UNITY_METAFILE_EXTENSION)) return true;
+			if (filePath.EndsWith(NGSettings.UNITY_METAFILE_EXTENSION)) return true;
 			return false;
 		}
 
 		public static bool ContainsHiddenFiles (string filePath) {
-			var pathComponents = filePath.Split(Settings.UNITY_FOLDER_SEPARATOR);
+			var pathComponents = filePath.Split(NGSettings.UNITY_FOLDER_SEPARATOR);
 			foreach (var path in pathComponents) {
-				if (path.StartsWith(Settings.DOTSTART_HIDDEN_FILE_HEADSTRING)) return true;
+				if (path.StartsWith(NGSettings.DOTSTART_HIDDEN_FILE_HEADSTRING)) return true;
 			}
 			return false;
 		}
 
 		//public static string EnsurePrefabBuilderCacheDirExists(BuildTarget t, Model.NodeData node) {
-  //          var cacheDir = FileUtility.PathCombine(Settings.Path.PrefabBuilderCachePath, node.Id, SystemDataUtility.GetPathSafeTargetName(t));
+  //          var cacheDir = FileUtility.PathCombine(NGSettings.Path.PrefabBuilderCachePath, node.Id, SystemDataUtility.GetPathSafeTargetName(t));
 
 		//	if (!Directory.Exists(cacheDir)) {
 		//		Directory.CreateDirectory(cacheDir);
 		//	}
-		//	if (!cacheDir.EndsWith(Settings.UNITY_FOLDER_SEPARATOR.ToString())) {
-		//		cacheDir = cacheDir + Settings.UNITY_FOLDER_SEPARATOR.ToString();
+		//	if (!cacheDir.EndsWith(NGSettings.UNITY_FOLDER_SEPARATOR.ToString())) {
+		//		cacheDir = cacheDir + NGSettings.UNITY_FOLDER_SEPARATOR.ToString();
 		//	}
 		//	return cacheDir;
 		//}
 
   //      public static string EnsureAssetGeneratorCacheDirExists(BuildTarget t, Model.NodeData node) {
-  //          var cacheDir = FileUtility.PathCombine(Settings.Path.AssetGeneratorCachePath, node.Id, SystemDataUtility.GetPathSafeTargetName(t));
+  //          var cacheDir = FileUtility.PathCombine(NGSettings.Path.AssetGeneratorCachePath, node.Id, SystemDataUtility.GetPathSafeTargetName(t));
 
   //          if (!Directory.Exists(cacheDir)) {
   //              Directory.CreateDirectory(cacheDir);
   //          }
-  //          if (!cacheDir.EndsWith(Settings.UNITY_FOLDER_SEPARATOR.ToString())) {
-  //              cacheDir = cacheDir + Settings.UNITY_FOLDER_SEPARATOR.ToString();
+  //          if (!cacheDir.EndsWith(NGSettings.UNITY_FOLDER_SEPARATOR.ToString())) {
+  //              cacheDir = cacheDir + NGSettings.UNITY_FOLDER_SEPARATOR.ToString();
   //          }
   //          return cacheDir;
   //      }
 
 
 		//public static string EnsureAssetBundleCacheDirExists(BuildTarget t, Model.NodeData node, bool remake = false) {
-  //          var cacheDir = FileUtility.PathCombine(Settings.Path.BundleBuilderCachePath, node.Id, BuildTargetUtility.TargetToAssetBundlePlatformName(t));
+  //          var cacheDir = FileUtility.PathCombine(NGSettings.Path.BundleBuilderCachePath, node.Id, BuildTargetUtility.TargetToAssetBundlePlatformName(t));
 
 		//	if (!Directory.Exists(cacheDir)) {
 		//		Directory.CreateDirectory(cacheDir);
@@ -196,18 +196,18 @@ namespace NodeGraph {
 		//}
 
 		//public static string GetImportSettingTemplateFilePath(string name) {
-		//	if(name == Settings.GUI_TEXT_SETTINGTEMPLATE_MODEL) {
-  //              return Settings.Path.SettingTemplateModel;
+		//	if(name == NGSettings.GUI_TEXT_SETTINGTEMPLATE_MODEL) {
+  //              return NGSettings.Path.SettingTemplateModel;
 		//	}
-		//	if(name == Settings.GUI_TEXT_SETTINGTEMPLATE_AUDIO) {
-  //              return Settings.Path.SettingTemplateAudio;
+		//	if(name == NGSettings.GUI_TEXT_SETTINGTEMPLATE_AUDIO) {
+  //              return NGSettings.Path.SettingTemplateAudio;
 		//	}
-		//	if(name == Settings.GUI_TEXT_SETTINGTEMPLATE_TEXTURE) {
-  //              return Settings.Path.SettingTemplateTexture;
+		//	if(name == NGSettings.GUI_TEXT_SETTINGTEMPLATE_TEXTURE) {
+  //              return NGSettings.Path.SettingTemplateTexture;
 		//	}
 		//	#if UNITY_5_6 || UNITY_5_6_OR_NEWER
-		//	if(name == Settings.GUI_TEXT_SETTINGTEMPLATE_VIDEO) {
-  //              return Settings.Path.SettingTemplateVideo;
+		//	if(name == NGSettings.GUI_TEXT_SETTINGTEMPLATE_VIDEO) {
+  //              return NGSettings.Path.SettingTemplateVideo;
 		//	}
 		//	#endif
 		//	return null;
@@ -215,17 +215,17 @@ namespace NodeGraph {
 
 		//public static string GetImportSettingTemplateFilePath(AssetReference a) {
 		//	if(a.filterType == typeof(ModelImporter)) {
-  //              return Settings.Path.SettingTemplateModel;
+  //              return NGSettings.Path.SettingTemplateModel;
 		//	}
 		//	if(a.filterType == typeof(AudioImporter)) {
-  //              return Settings.Path.SettingTemplateAudio;
+  //              return NGSettings.Path.SettingTemplateAudio;
 		//	}
 		//	if(a.filterType == typeof(TextureImporter)) {
-  //              return Settings.Path.SettingTemplateTexture;
+  //              return NGSettings.Path.SettingTemplateTexture;
 		//	}
 		//	#if UNITY_5_6 || UNITY_5_6_OR_NEWER
 		//	if(a.filterType == typeof(VideoClipImporter)) {
-  //              return Settings.Path.SettingTemplateVideo;
+  //              return NGSettings.Path.SettingTemplateVideo;
 		//	}
 		//	#endif
 		//	return null;

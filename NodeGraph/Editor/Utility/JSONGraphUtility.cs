@@ -35,7 +35,7 @@ namespace NodeGraph {
                 return;
             }
 
-            var guids = AssetDatabase.FindAssets(Settings.GRAPH_SEARCH_CONDITION);
+            var guids = AssetDatabase.FindAssets(NGSettings.GRAPH_SEARCH_CONDITION);
 
             foreach(var guid in guids) {
                 string graphPath = AssetDatabase.GUIDToAssetPath(guid);

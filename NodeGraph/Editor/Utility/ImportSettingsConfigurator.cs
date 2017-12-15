@@ -9,12 +9,12 @@ using Model = NodeGraph.DataModel;
 
 namespace NodeGraph
 {
-    public class ImportSettingsConfigurator
+    public class ImportNGSettingsConfigurator
     {
 
         private readonly AssetImporter referenceImporter;
 
-        public ImportSettingsConfigurator(AssetImporter referenceImporter)
+        public ImportNGSettingsConfigurator(AssetImporter referenceImporter)
         {
             this.referenceImporter = referenceImporter;
         }
@@ -51,7 +51,7 @@ namespace NodeGraph
             }
         }
 
-        public void OverwriteImportSettings(AssetImporter importer)
+        public void OverwriteImportNGSettings(AssetImporter importer)
         {
 
             // avoid touching asset if there is no need to.
@@ -67,20 +67,20 @@ namespace NodeGraph
 
             if (importer.GetType() == typeof(UnityEditor.TextureImporter))
             {
-                OverwriteImportSettings(importer as UnityEditor.TextureImporter);
+                OverwriteImportNGSettings(importer as UnityEditor.TextureImporter);
             }
             else if (importer.GetType() == typeof(UnityEditor.AudioImporter))
             {
-                OverwriteImportSettings(importer as UnityEditor.AudioImporter);
+                OverwriteImportNGSettings(importer as UnityEditor.AudioImporter);
             }
             else if (importer.GetType() == typeof(UnityEditor.ModelImporter))
             {
-                OverwriteImportSettings(importer as UnityEditor.ModelImporter);
+                OverwriteImportNGSettings(importer as UnityEditor.ModelImporter);
             }
 #if UNITY_5_6 || UNITY_5_6_OR_NEWER
             else if (importer.GetType() == typeof(UnityEditor.VideoClipImporter))
             {
-                OverwriteImportSettings(importer as UnityEditor.VideoClipImporter);
+                OverwriteImportNGSettings(importer as UnityEditor.VideoClipImporter);
             }
 #endif
             else
@@ -91,19 +91,19 @@ namespace NodeGraph
 
         #region TextureImporter
 
-        private void OverwriteImportSettings(TextureImporter importer)
+        private void OverwriteImportNGSettings(TextureImporter importer)
         {
             var reference = referenceImporter as TextureImporter;
             UnityEngine.Assertions.Assert.IsNotNull(reference);
 
             importer.textureType = reference.textureType;
 
-            TextureImporterSettings settings = new TextureImporterSettings ();
+            TextureImporterSettings NGSettings = new TextureImporterSettings ();
 
-            reference.ReadTextureSettings (settings);
-            importer.SetTextureSettings (settings);
+            reference.ReadTextureSettings (NGSettings);
+            importer.SetTextureSettings (NGSettings);
 
-            // some unity version do not properly copy properties via TextureSettings,
+            // some unity version do not properly copy properties via TextureNGSettings,
             // so also perform manual copy
 
             importer.anisoLevel = reference.anisoLevel;
@@ -305,7 +305,7 @@ namespace NodeGraph
 
                 var impSet = reference.GetPlatformTextureSettings(platformName);
                 var targetImpSet = target.GetPlatformTextureSettings(platformName);
-                if (!CompareImporterPlatformSettings(impSet, targetImpSet)) return false;
+                if (!CompareImporterPlatformNGSettings(impSet, targetImpSet)) return false;
             }
 #endif
 
@@ -320,7 +320,7 @@ namespace NodeGraph
         }
 
 #if UNITY_5_5_OR_NEWER
-        bool CompareImporterPlatformSettings(TextureImporterPlatformSettings c1, TextureImporterPlatformSettings c2)
+        bool CompareImporterPlatformNGSettings(TextureImporterPlatformNGSettings c1, TextureImporterPlatformNGSettings c2)
         {
             if (c1.allowsAlphaSplitting != c2.allowsAlphaSplitting) return false;
             if (c1.compressionQuality != c2.compressionQuality) return false;
@@ -338,7 +338,7 @@ namespace NodeGraph
 
         #region AudioImporter
 
-        private void OverwriteImportSettings(AudioImporter importer)
+        private void OverwriteImportNGSettings(AudioImporter importer)
         {
             var reference = referenceImporter as AudioImporter;
             UnityEngine.Assertions.Assert.IsNotNull(reference);
@@ -443,7 +443,7 @@ namespace NodeGraph
 
 #region ModelImporter
 
-        private void OverwriteImportSettings(ModelImporter importer)
+        private void OverwriteImportNGSettings(ModelImporter importer)
         {
             var reference = referenceImporter as ModelImporter;
             UnityEngine.Assertions.Assert.IsNotNull(reference);
@@ -520,10 +520,10 @@ namespace NodeGraph
 
         /// <summary>
         /// Test if reference importer setting has the equal setting as given target.
-        /// ImportSettingsConfigurator will not test read only properties.
+        /// ImportNGSettingsConfigurator will not test read only properties.
         /// 
         /// </summary>
-        /// <returns><c>true</c>, if both settings are the equal, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c>, if both NGSettings are the equal, <c>false</c> otherwise.</returns>
         /// <param name="target">Target importer to test equality.</param>
         public bool IsEqual(ModelImporter target)
         {
@@ -671,7 +671,7 @@ namespace NodeGraph
 
 #region VideoClipImporter
 #if UNITY_5_6 || UNITY_5_6_OR_NEWER
-        public bool IsEqual (VideoImporterTargetSettings t, VideoImporterTargetSettings r) {
+        public bool IsEqual (VideoImporterTargetNGSettings t, VideoImporterTargetNGSettings r) {
 
             if(r == null) {
                 if(t != r) {
@@ -695,7 +695,7 @@ namespace NodeGraph
             VideoClipImporter reference = referenceImporter as VideoClipImporter;
             UnityEngine.Assertions.Assert.IsNotNull(reference);
 
-            if (!IsEqual(target.defaultTargetSettings, reference.defaultTargetSettings))
+            if (!IsEqual(target.defaultTargetNGSettings, reference.defaultTargetNGSettings))
                 return false;
 
             /* read only properties. ImportSettingConfigurator will not use these properties for diff. */
@@ -729,8 +729,8 @@ namespace NodeGraph
                     BuildTargetUtility.PlatformNameType.VideoClipImporter);
 
                 try {
-                    var r = reference.GetTargetSettings (platformName);
-                    var t = target.GetTargetSettings (platformName);
+                    var r = reference.GetTargetNGSettings (platformName);
+                    var t = target.GetTargetNGSettings (platformName);
 
                     if(!IsEqual(r, t)) {
                         return false;
@@ -746,12 +746,12 @@ namespace NodeGraph
 			return true;
 		}
 
-		private void OverwriteImportSettings (VideoClipImporter importer) {
+		private void OverwriteImportNGSettings (VideoClipImporter importer) {
 			var reference = referenceImporter as VideoClipImporter;
 			UnityEngine.Assertions.Assert.IsNotNull(reference);
 
 			/*
-			defaultTargetSettings	Default values for the platform-specific import settings.
+			defaultTargetNGSettings	Default values for the platform-specific import NGSettings.
 			deinterlaceMode			Images are deinterlaced during transcode. This tells the importer how to interpret fields in the source, if any.
 			flipHorizontal			Apply a horizontal flip during import.
 			flipVertical			Apply a vertical flip during import.
@@ -769,7 +769,7 @@ namespace NodeGraph
 			useLegacyImporter		Whether to import a MovieTexture (legacy) or a VideoClip.
 			*/
 
-			importer.defaultTargetSettings	= reference.defaultTargetSettings;
+			importer.defaultTargetNGSettings	= reference.defaultTargetNGSettings;
 			importer.deinterlaceMode		= reference.deinterlaceMode;
 			importer.flipHorizontal			= reference.flipHorizontal;
 			importer.flipVertical			= reference.flipVertical;
@@ -790,11 +790,11 @@ namespace NodeGraph
                     BuildTargetUtility.PlatformNameType.VideoClipImporter);
 
                 try {
-                    var setting = reference.GetTargetSettings (platformName);
+                    var setting = reference.GetTargetNGSettings (platformName);
                     if(setting != null) {
-                        importer.SetTargetSettings(platformName, setting);
+                        importer.SetTargetNGSettings(platformName, setting);
                     } else {
-                        importer.ClearTargetSettings(platformName);
+                        importer.ClearTargetNGSettings(platformName);
                     }
                 } catch (Exception e) {
                     LogUtility.Logger.LogWarning ("VideoClipImporter", 

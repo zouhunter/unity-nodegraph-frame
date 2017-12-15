@@ -15,7 +15,7 @@ namespace NodeGraph {
 	public class ConfigGraphEditor : Editor {
 		private class Styles {
 			public static readonly string kEDITBUTTON_LABEL		= "Open in Graph Editor";
-			public static readonly string kEDITBUTTON_DESCRIPTION	= "Opens in the AssetBundle Graph Editor, which will allow you to configure the graph";
+			public static readonly string kEDITBUTTON_DESCRIPTION	= "Opens in the Node Graph Editor, which will allow you to configure the graph";
 			public static readonly GUIContent kEDITBUTTON = new GUIContent(kEDITBUTTON_LABEL, kEDITBUTTON_DESCRIPTION);
 		}
 

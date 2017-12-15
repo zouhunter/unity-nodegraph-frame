@@ -44,13 +44,6 @@ namespace NodeGraph
                 return m_data.Id;
             }
         }
-        public ConnectionDrawer InstactorDrawer
-        {
-            get
-            {
-                return connectionDrawer;
-            }
-        }
 
         public ConfigGraph ParentGraph
         {
@@ -196,7 +189,7 @@ namespace NodeGraph
             var centerPoint = startPoint + ((endPoint - startPoint) / 2);
             var centerPointV3 = new Vector3(centerPoint.x, centerPoint.y, 0f);
 
-            var pointDistanceX = Settings.GUI.CONNECTION_CURVE_LENGTH;
+            var pointDistanceX = NGEditorSettings.GUI.CONNECTION_CURVE_LENGTH;
 
             var startTan = new Vector3(startPoint.x + pointDistanceX, centerPoint.y, 0f);
             var endTan = new Vector3(endPoint.x - pointDistanceX, centerPoint.y, 0f);
@@ -206,7 +199,7 @@ namespace NodeGraph
 
             if (IsSelected)
             {
-                lineColor = Settings.GUI.COLOR_ENABLED;
+                lineColor = NGEditorSettings.GUI.COLOR_ENABLED;
             }
             else
             {
@@ -222,17 +215,17 @@ namespace NodeGraph
 
             switch (Label)
             {
-                case Settings.DEFAULT_OUTPUTPOINT_LABEL:
+                case NGSettings.DEFAULT_OUTPUTPOINT_LABEL:
                     {
                         // show nothing
                         break;
                     }
 
-                case Settings.BUNDLECONFIG_BUNDLE_OUTPUTPOINT_LABEL:
+                case NGSettings.BUNDLECONFIG_BUNDLE_OUTPUTPOINT_LABEL:
                     {
-                        var labelWidth = labelStyle.CalcSize(new GUIContent(Settings.BUNDLECONFIG_BUNDLE_OUTPUTPOINT_LABEL));
+                        var labelWidth = labelStyle.CalcSize(new GUIContent(NGSettings.BUNDLECONFIG_BUNDLE_OUTPUTPOINT_LABEL));
                         var labelPointV3 = new Vector3(centerPointV3.x - (labelWidth.x / 2), centerPointV3.y - 24f, 0f);
-                        Handles.Label(labelPointV3, Settings.BUNDLECONFIG_BUNDLE_OUTPUTPOINT_LABEL, labelStyle);
+                        Handles.Label(labelPointV3, NGSettings.BUNDLECONFIG_BUNDLE_OUTPUTPOINT_LABEL, labelStyle);
                         break;
                     }
 
@@ -300,7 +293,23 @@ namespace NodeGraph
                 connectionButtonStyle = "sv_label_0";
             }
         }
+        public void DrawObject(ConnectionGUIEditor editor)
+        {
+            if(connectionDrawer == null)
+            {
 
+            }
+            else
+            {
+                connectionDrawer.OnInspectorGUI(this, editor, () =>
+                {
+                    Controller.Perform();
+                    Data.Operation.Save();
+                    ParentGraph.SetGraphDirty();
+                });
+            }
+            
+        }
         public void Delete()
         {
             ConnectionGUIUtility.ConnectionEventHandler(new ConnectionEvent(ConnectionEvent.EventType.EVENT_CONNECTION_DELETED, this));

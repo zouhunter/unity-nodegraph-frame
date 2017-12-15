@@ -19,17 +19,9 @@ namespace NodeGraph
             if (con == null) {
                 return;
             }
+
             EditorGUILayout.HelpBox("连接信息:", MessageType.Info);
-            DrawDataObject(con);
-        }
-        private void DrawDataObject(ConnectionGUI connection)
-        {
-            //.OnInspectorGUI(con, this, () =>
-            // {
-            //     con.Controller.Perform();
-            //     con.Data.Operation.Save();
-            //     con.ParentGraph.SetGraphDirty();
-            // });
+            con.DrawObject(this);
         }
 
         private bool DrawToggle(bool on, string tip)

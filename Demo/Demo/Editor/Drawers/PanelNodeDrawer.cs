@@ -33,16 +33,11 @@ public class PanelNodeDrawer : NodeDrawer
             return "panel";
         }
     }
-    public override void Initialize(NodeData data)
-    {
-        data.AddDefaultInputPoint();
-        data.AddDefaultOutputPoint();
-    }
 
-    public override void OnInspectorGUI(NodeGUI node, NodeGUIEditor editor, Action onValueChanged)
+    public override void OnInspectorGUI(NodeData data,Action onValueChanged)
     {
         EditorGUILayout.HelpBox("Any Lunch: Lunch SubPanels From Any State", MessageType.Info);
-        editor.UpdateNodeName(node);
+        (target as PanelNode).key =  EditorGUILayout.TextField((target as PanelNode).key);
     }
     public override void OnContextMenuGUI(GenericMenu menu)
     {

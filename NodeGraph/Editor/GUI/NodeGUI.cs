@@ -26,11 +26,11 @@ namespace NodeGraph {
 			show error on node functions.
 		*/
 		private bool m_hasErrors = false;
-		/*
-					show progress on node functions(unused. due to mainthread synchronization problem.)
-			can not update any visual on Editor while building AssetBundles through NodeGraph.DataModel.
-		*/
-		private float m_progress;
+        /*
+    show progress on node functions(unused. due to mainthread synchronization problem.)
+    can not update any visual on Editor while building AssetBundles through NodeGraph.DataModel.
+*/
+        private float m_progress;
 		private bool m_running;
 
 		/*
@@ -66,10 +66,7 @@ namespace NodeGraph {
 				return m_baseRect;
 			}
 		}
-        public NodeDrawer InspactorDrawer
-        {
-            get { return nodeDataDrawer; }
-        }
+      
 		public Model.ConfigGraph ParentGraph {
 			get {
 				return Controller.TargetGraph;
@@ -111,9 +108,9 @@ namespace NodeGraph {
 			m_nodeWindowId = 0;
             m_controller = controller;
 			m_data = data;
+            m_data.Operation.Object.Initialize(m_data);
             nodeDataDrawer = UserDefineUtility.GetCustomDrawer(data.Operation.Object);
-            if(nodeDataDrawer != null) nodeDataDrawer.Initialize(m_data);
-            m_baseRect = new Rect(m_data.X, m_data.Y, Settings.GUI.NODE_BASE_WIDTH, Settings.GUI.NODE_BASE_HEIGHT);
+            m_baseRect = new Rect(m_data.X, m_data.Y, NGEditorSettings.GUI.NODE_BASE_WIDTH, NGEditorSettings.GUI.NODE_BASE_HEIGHT);
 			m_nodeSyle = nodeDataDrawer == null?"node 0": nodeDataDrawer.InactiveStyle;
 		}
 
@@ -224,7 +221,7 @@ namespace NodeGraph {
 			{
 				var menu = new GenericMenu();
 
-                DrawContextMenu();
+                DrawContextMenu(menu);
 
                 menu.AddItem(
 					new GUIContent("Delete"),
@@ -238,9 +235,9 @@ namespace NodeGraph {
 			}
 		}
 
-        private void DrawContextMenu()
+        private void DrawContextMenu(GenericMenu menu)
         {
-				//Data.Operation.Object.OnContextMenuGUI(menu);
+		     if(nodeDataDrawer != null) nodeDataDrawer.OnContextMenuGUI(menu);
         }
 
         public void DrawConnectionInputPointMark (NodeEvent eventSource, bool justConnecting) {
@@ -262,9 +259,9 @@ namespace NodeGraph {
 			foreach (var point in m_data.InputPoints) {
 				if(IsValidInputConnectionPoint(point)) {
 					if(shouldDrawWithEnabledColor) {
-						GUI.color = Settings.GUI.COLOR_CAN_CONNECT;
+						GUI.color = NGEditorSettings.GUI.COLOR_CAN_CONNECT;
 					} else {
-						GUI.color = (justConnecting) ? Settings.GUI.COLOR_CAN_NOT_CONNECT : Settings.GUI.COLOR_CONNECTED;
+						GUI.color = (justConnecting) ? NGEditorSettings.GUI.COLOR_CAN_NOT_CONNECT : NGEditorSettings.GUI.COLOR_CONNECTED;
 					}
                     var rect = ConnectionPointDataUtility.GetGlobalPointRegion(point.IsInput, point.Region, this);
 					GUI.DrawTexture(rect, defaultPointTex);
@@ -295,9 +292,9 @@ namespace NodeGraph {
                 //var pointRegion = point.GetGlobalPointRegion(this);
 
 				if(shouldDrawWithEnabledColor) {
-					GUI.color = Settings.GUI.COLOR_CAN_CONNECT;
+					GUI.color = NGEditorSettings.GUI.COLOR_CAN_CONNECT;
 				} else {
-					GUI.color = (justConnecting) ? Settings.GUI.COLOR_CAN_NOT_CONNECT : Settings.GUI.COLOR_CONNECTED;
+					GUI.color = (justConnecting) ? NGEditorSettings.GUI.COLOR_CAN_NOT_CONNECT : NGEditorSettings.GUI.COLOR_CONNECTED;
 				}
 				GUI.DrawTexture(
 					pointRegion, 
@@ -338,7 +335,7 @@ namespace NodeGraph {
 			var connectionNodeStyleInput = new GUIStyle(EditorStyles.label);
 			connectionNodeStyleInput.alignment = TextAnchor.MiddleLeft;
 
-			var titleHeight = style.CalcSize(new GUIContent(Name)).y + Settings.GUI.NODE_TITLE_HEIGHT_MARGIN;
+			var titleHeight = style.CalcSize(new GUIContent(Name)).y + NGEditorSettings.GUI.NODE_TITLE_HEIGHT_MARGIN;
 			var nodeTitleRect = new Rect(0, 0, m_baseRect.width, titleHeight);
 			GUI.color = textColor;
 			GUI.Label(nodeTitleRect, Name, style);
@@ -358,12 +355,12 @@ namespace NodeGraph {
 			Action<Model.ConnectionPointData> drawConnectionPoint = (Model.ConnectionPointData point) => 
 			{
 				var label = point.Label;
-				if( label != Settings.DEFAULT_INPUTPOINT_LABEL &&
-					label != Settings.DEFAULT_OUTPUTPOINT_LABEL) 
+				if( label != NGSettings.DEFAULT_INPUTPOINT_LABEL &&
+					label != NGSettings.DEFAULT_OUTPUTPOINT_LABEL) 
 				{
 					var region = point.Region;
 					// if point is output node, then label position offset is minus. otherwise plus.
-					var xOffset = (point.IsOutput) ? - m_baseRect.width : Settings.GUI.INPUT_POINT_WIDTH;
+					var xOffset = (point.IsOutput) ? - m_baseRect.width : NGEditorSettings.GUI.INPUT_POINT_WIDTH;
 					var labelStyle = (point.IsOutput) ? connectionNodeStyleOutput : connectionNodeStyleInput;
 					var labelRect = new Rect(region.x + xOffset, region.y - (region.height/2), m_baseRect.width, region.height*2);
 
@@ -406,17 +403,17 @@ namespace NodeGraph {
 				}
 			}
 
-			var titleHeight = GUI.skin.label.CalcSize(new GUIContent(Name)).y + Settings.GUI.NODE_TITLE_HEIGHT_MARGIN;
+			var titleHeight = GUI.skin.label.CalcSize(new GUIContent(Name)).y + NGEditorSettings.GUI.NODE_TITLE_HEIGHT_MARGIN;
 
 			// update node height by number of output connectionPoint.
 			var nPoints = Mathf.Max(m_data.OutputPoints.Count, m_data.InputPoints.Count);
 			this.m_baseRect = new Rect(m_baseRect.x, m_baseRect.y, 
-				m_baseRect.width, 
-				Settings.GUI.NODE_BASE_HEIGHT + titleHeight + (Settings.GUI.FILTER_OUTPUT_SPAN * Mathf.Max(0, (nPoints - 1)))
+				m_baseRect.width,
+                NGEditorSettings.GUI.NODE_BASE_HEIGHT + titleHeight + (NGEditorSettings.GUI.FILTER_OUTPUT_SPAN * Mathf.Max(0, (nPoints - 1)))
 			);
 
-			var newWidth = Mathf.Max(Settings.GUI.NODE_BASE_WIDTH, outputLabelWidth + inputLabelWidth + Settings.GUI.NODE_WIDTH_MARGIN);
-			newWidth = Mathf.Max(newWidth, labelWidth + Settings.GUI.NODE_WIDTH_MARGIN);
+			var newWidth = Mathf.Max(NGEditorSettings.GUI.NODE_BASE_WIDTH, outputLabelWidth + inputLabelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
+			newWidth = Mathf.Max(newWidth, labelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
 			m_baseRect = new Rect(m_baseRect.x, m_baseRect.y, newWidth, m_baseRect.height);
 
 			RefreshConnectionPos(titleHeight);
@@ -542,45 +539,71 @@ namespace NodeGraph {
 			return null;
 		}
 
-		//public static void ShowTypeNamesMenu (string current, List<string> contents, Action<string> ExistSelected) {
-		//	var menu = new GenericMenu();
+        internal void DrawNodeGUI(NodeGUIEditor nodeGUIEditor)
+        {
+            nodeGUIEditor.UpdateNodeName(this);
 
-		//	for (var i = 0; i < contents.Count; i++) {
-		//		var type = contents[i];
-		//		var selected = false;
-		//		if (type == current) selected = true;
+            if (nodeDataDrawer == null)
+            {
 
-		//		menu.AddItem(
-		//			new GUIContent(type),
-		//			selected,
-		//			() => {
-		//				ExistSelected(type);
-		//			}
-		//		);
-		//	}
-		//	menu.ShowAsContext();
-		//}
+            }
+            else
+            {
+                nodeDataDrawer.OnInspectorGUI(Data,() =>
+                {
+                    Controller.Perform();
+                    Data.Operation.Save();
+                    ParentGraph.SetGraphDirty();
+                });
+            }
+          
+        }
 
-		//public static void ShowFilterKeyTypeMenu (string current, Action<string> Selected) {
-		//	var menu = new GenericMenu();
+        public static void ShowTypeNamesMenu(string current, List<string> contents, Action<string> ExistSelected)
+        {
+            var menu = new GenericMenu();
 
-		//	menu.AddDisabledItem(new GUIContent(current));
+            for (var i = 0; i < contents.Count; i++)
+            {
+                var type = contents[i];
+                var selected = false;
+                if (type == current) selected = true;
 
-		//	menu.AddSeparator(string.Empty);
+                menu.AddItem(
+                    new GUIContent(type),
+                    selected,
+                    () =>
+                    {
+                        ExistSelected(type);
+                    }
+                );
+            }
+            menu.ShowAsContext();
+        }
 
-		//	for (var i = 0; i < TypeUtility.KeyTypes.Count; i++) {
-		//		var type = TypeUtility.KeyTypes[i];
-		//		if (type == current) continue;
+        public static void ShowFilterKeyTypeMenu(string current, Action<string> Selected)
+        {
+            var menu = new GenericMenu();
 
-		//		menu.AddItem(
-		//			new GUIContent(type),
-		//			false,
-		//			() => {
-		//				Selected(type);
-		//			}
-		//		);
-		//	}
-		//	menu.ShowAsContext();
-		//}
-	}
+            menu.AddDisabledItem(new GUIContent(current));
+
+            menu.AddSeparator(string.Empty);
+
+            for (var i = 0; i < TypeUtility.KeyTypes.Count; i++)
+            {
+                var type = TypeUtility.KeyTypes[i];
+                if (type == current) continue;
+
+                menu.AddItem(
+                    new GUIContent(type),
+                    false,
+                    () =>
+                    {
+                        Selected(type);
+                    }
+                );
+            }
+            menu.ShowAsContext();
+        }
+    }
 }

@@ -40,7 +40,7 @@ namespace NodeGraph {
 		public static GUISkin nodeSkin {
 			get {
 				if(NodeSingleton.s.nodeSkin == null) {
-                    NodeSingleton.s.nodeSkin = AssetDatabase.LoadAssetAtPath<GUISkin>(Settings.GUI.Skin);
+                    NodeSingleton.s.nodeSkin = AssetDatabase.LoadAssetAtPath<GUISkin>(NGEditorSettings.GUI.Skin);
 				}
 				return NodeSingleton.s.nodeSkin;
 			}
@@ -49,7 +49,7 @@ namespace NodeGraph {
 		public static Texture2D inputPointBG {
 			get {
 				if(NodeSingleton.s.inputPointBG == null) {
-                    NodeSingleton.s.inputPointBG = LoadTextureFromFile(Settings.GUI.InputBG);
+                    NodeSingleton.s.inputPointBG = LoadTextureFromFile(NGEditorSettings.GUI.InputBG);
 				}
 				return NodeSingleton.s.inputPointBG;
 			}
@@ -58,7 +58,7 @@ namespace NodeGraph {
 		public static Texture2D outputPointBG {
 			get {
 				if(NodeSingleton.s.outputPointBG == null) {
-                    NodeSingleton.s.outputPointBG = LoadTextureFromFile(Settings.GUI.OutputBG);
+                    NodeSingleton.s.outputPointBG = LoadTextureFromFile(NGEditorSettings.GUI.OutputBG);
 				}
 				return NodeSingleton.s.outputPointBG;
 			}
@@ -67,7 +67,7 @@ namespace NodeGraph {
 		public static Texture2D pointMark {
 			get {
 				if(NodeSingleton.s.pointMark == null) {
-                    NodeSingleton.s.pointMark = LoadTextureFromFile(Settings.GUI.ConnectionPoint);
+                    NodeSingleton.s.pointMark = LoadTextureFromFile(NGEditorSettings.GUI.ConnectionPoint);
 				}
 				return NodeSingleton.s.pointMark;
 			}
@@ -162,38 +162,38 @@ namespace NodeGraph {
 				var buttons = new List<PlatformButton>();
 
 				Dictionary<BuildTargetGroup, string> icons = new Dictionary<BuildTargetGroup, string> {
-					{BuildTargetGroup.Android, 		"BuildSettings.Android.Small"},
-					{BuildTargetGroup.iOS, 			"BuildSettings.iPhone.Small"},
-					{BuildTargetGroup.PS4, 			"BuildSettings.PS4.Small"},
-					{BuildTargetGroup.PSM, 			"BuildSettings.PSM.Small"},
-					{BuildTargetGroup.PSP2, 		"BuildSettings.PSP2.Small"},
-					{BuildTargetGroup.SamsungTV, 	"BuildSettings.Android.Small"},
-					{BuildTargetGroup.Standalone, 	"BuildSettings.Standalone.Small"},
-					{BuildTargetGroup.Tizen, 		"BuildSettings.Tizen.Small"},
-					{BuildTargetGroup.tvOS, 		"BuildSettings.tvOS.Small"},
-					{BuildTargetGroup.Unknown, 		"BuildSettings.Standalone.Small"},
-					{BuildTargetGroup.WebGL, 		"BuildSettings.WebGL.Small"},
-					{BuildTargetGroup.WiiU, 		"BuildSettings.WiiU.Small"},
-					{BuildTargetGroup.WSA, 			"BuildSettings.WP8.Small"},
-					{BuildTargetGroup.XboxOne, 		"BuildSettings.XboxOne.Small"}
+					{BuildTargetGroup.Android, 		"BuildNGSettings.Android.Small"},
+					{BuildTargetGroup.iOS, 			"BuildNGSettings.iPhone.Small"},
+					{BuildTargetGroup.PS4, 			"BuildNGSettings.PS4.Small"},
+					{BuildTargetGroup.PSM, 			"BuildNGSettings.PSM.Small"},
+					{BuildTargetGroup.PSP2, 		"BuildNGSettings.PSP2.Small"},
+					{BuildTargetGroup.SamsungTV, 	"BuildNGSettings.Android.Small"},
+					{BuildTargetGroup.Standalone, 	"BuildNGSettings.Standalone.Small"},
+					{BuildTargetGroup.Tizen, 		"BuildNGSettings.Tizen.Small"},
+					{BuildTargetGroup.tvOS, 		"BuildNGSettings.tvOS.Small"},
+					{BuildTargetGroup.Unknown, 		"BuildNGSettings.Standalone.Small"},
+					{BuildTargetGroup.WebGL, 		"BuildNGSettings.WebGL.Small"},
+					{BuildTargetGroup.WiiU, 		"BuildNGSettings.WiiU.Small"},
+					{BuildTargetGroup.WSA, 			"BuildNGSettings.WP8.Small"},
+					{BuildTargetGroup.XboxOne, 		"BuildNGSettings.XboxOne.Small"}
 					#if !UNITY_5_5_OR_NEWER
 					,
-					{BuildTargetGroup.XBOX360, 		"BuildSettings.Xbox360.Small"},
-					{BuildTargetGroup.Nintendo3DS, 	"BuildSettings.N3DS.Small"},
-					{BuildTargetGroup.PS3,			"BuildSettings.PS3.Small"}
+					{BuildTargetGroup.XBOX360, 		"BuildNGSettings.Xbox360.Small"},
+					{BuildTargetGroup.Nintendo3DS, 	"BuildNGSettings.N3DS.Small"},
+					{BuildTargetGroup.PS3,			"BuildNGSettings.PS3.Small"}
 					#endif
 					#if UNITY_5_5_OR_NEWER
 					,
-					{BuildTargetGroup.N3DS, 		"BuildSettings.N3DS.Small"}
+					{BuildTargetGroup.N3DS, 		"BuildNGSettings.N3DS.Small"}
 					#endif
 					#if UNITY_5_6 || UNITY_5_6_OR_NEWER
 					,
-					{BuildTargetGroup.Facebook, 	"BuildSettings.Facebook.Small"},
-					{BuildTargetGroup.Switch, 		"BuildSettings.Switch.Small"}
+					{BuildTargetGroup.Facebook, 	"BuildNGSettings.Facebook.Small"},
+					{BuildTargetGroup.Switch, 		"BuildNGSettings.Switch.Small"}
 					#endif
 				};
 
-				buttons.Add(new PlatformButton(new GUIContent("Default", "Default settings"), BuildTargetGroup.Unknown));
+				buttons.Add(new PlatformButton(new GUIContent("Default", "Default NGSettings"), BuildTargetGroup.Unknown));
 
 				foreach(var g in supportedBuildTargetGroups) {
 					buttons.Add(new PlatformButton(new GUIContent(GetPlatformIcon(icons[g]), BuildTargetUtility.GroupToHumaneString(g)), g));

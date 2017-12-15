@@ -13,7 +13,7 @@ namespace NodeGraph {
 	public static class TypeUtility {
 		public static readonly List<string> KeyTypes = new List<string>{
 			// empty
-			Settings.DEFAULT_FILTER_KEYTYPE,
+			NGSettings.DEFAULT_FILTER_KEYTYPE,
 			
 			// importers
 			typeof(TextureImporter).ToString(),
@@ -54,7 +54,7 @@ namespace NodeGraph {
 			{".mask", typeof(AvatarMask)},
 			{".cubemap", typeof(Cubemap)},
 			{".flare", typeof(Flare)},
-            {".fontsettings", typeof(Font)},
+            {".fontNGSettings", typeof(Font)},
             {".ttf", typeof(Font)},
             {".otf", typeof(Font)},
             {".compute", typeof(ComputeShader)},
@@ -128,7 +128,7 @@ namespace NodeGraph {
 
         //public static bool IsGraphToolSystemAsset(string assetPath) {
         //    return 
-        //        assetPath.Contains (Settings.Path.BasePath) || 
+        //        assetPath.Contains (NGSettings.Path.BasePath) || 
         //        IsGraphToolSystemAssetType (GetTypeOfAsset(assetPath));
         //}
 
@@ -141,7 +141,7 @@ namespace NodeGraph {
 		 * Get type of asset from give path.
 		 */
 		public static Type GetTypeOfAsset (string assetPath) {
-			if (assetPath.EndsWith(Settings.UNITY_METAFILE_EXTENSION)) {
+			if (assetPath.EndsWith(NGSettings.UNITY_METAFILE_EXTENSION)) {
 				return typeof(string);
 			}
 

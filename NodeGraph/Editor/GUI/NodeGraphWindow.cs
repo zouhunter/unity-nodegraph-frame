@@ -341,9 +341,9 @@ namespace NodeGraph
             {
                 graphAssetPath = newPath;
                 graphAssetName = Path.GetFileNameWithoutExtension(graphAssetPath);
-                if (graphAssetName.Length > Settings.GUI.TOOLBAR_GRAPHNAMEMENU_CHAR_LENGTH)
+                if (graphAssetName.Length > NGEditorSettings.GUI.TOOLBAR_GRAPHNAMEMENU_CHAR_LENGTH)
                 {
-                    graphAssetName = graphAssetName.Substring(0, Settings.GUI.TOOLBAR_GRAPHNAMEMENU_CHAR_LENGTH) + "...";
+                    graphAssetName = graphAssetName.Substring(0, NGEditorSettings.GUI.TOOLBAR_GRAPHNAMEMENU_CHAR_LENGTH) + "...";
                 }
 
                 EditorPrefs.SetString(kPREFKEY_LASTEDITEDGRAPH, graphAssetPath);
@@ -417,9 +417,9 @@ namespace NodeGraph
         private void CreateNewGraphFromDialog(string controllerType)
         {
             string path =  EditorUtility.SaveFilePanelInProject(
-                "Create New AssetBundle Graph",
-                "AssetBundle Graph", "asset",
-                "Create a new asset bundle graph:");
+                "Create New Node Graph",
+                "Node Graph", "asset",
+                "Create a new node graph:");
             if (string.IsNullOrEmpty(path)){
                 return;
             }
@@ -429,17 +429,6 @@ namespace NodeGraph
             OpenGraph(graph);
         }
 
-        private void CreateNewGraphFromImport()
-        {
-            string path =
-                EditorUtility.SaveFilePanelInProject(
-                    "Import AssetBundle Graph",
-                    "AssetBundle Graph", "asset",
-                    "Create a new asset bundle graph from previous version data:");
-            if (string.IsNullOrEmpty(path)){
-                return;
-            }
-        }
 
         /**
          * Get WindowId does not collide with other nodeGUIs
@@ -580,11 +569,11 @@ namespace NodeGraph
             using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
             {
 
-                if (GUILayout.Button(new GUIContent(graphAssetName, "Select graph"), EditorStyles.toolbarPopup, GUILayout.Width(Settings.GUI.TOOLBAR_GRAPHNAMEMENU_WIDTH), GUILayout.Height(Settings.GUI.TOOLBAR_HEIGHT)))
+                if (GUILayout.Button(new GUIContent(graphAssetName, "Select graph"), EditorStyles.toolbarPopup, GUILayout.Width(NGEditorSettings.GUI.TOOLBAR_GRAPHNAMEMENU_WIDTH), GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT)))
                 {
                     GenericMenu menu = new GenericMenu();
 
-                    var guids = AssetDatabase.FindAssets(Settings.GRAPH_SEARCH_CONDITION);
+                    var guids = AssetDatabase.FindAssets(NGSettings.GRAPH_SEARCH_CONDITION);
                     var nameList = new List<string>();
 
                     foreach (var guid in guids)
@@ -672,18 +661,18 @@ namespace NodeGraph
 
                 GUILayout.Space(4);
 
-                if (GUILayout.Button(new GUIContent("Refresh", ReloadButtonTexture.image, "Refresh and reload"), EditorStyles.toolbarButton, GUILayout.Width(80), GUILayout.Height(Settings.GUI.TOOLBAR_HEIGHT)))
+                if (GUILayout.Button(new GUIContent("Refresh", ReloadButtonTexture.image, "Refresh and reload"), EditorStyles.toolbarButton, GUILayout.Width(80), GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT)))
                 {
                     Setup();
                 }
-                showErrors = GUILayout.Toggle(showErrors, "Show Error", EditorStyles.toolbarButton, GUILayout.Height(Settings.GUI.TOOLBAR_HEIGHT));
+                showErrors = GUILayout.Toggle(showErrors, "Show Error", EditorStyles.toolbarButton, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
 
                 GUILayout.Space(4);
 
-                showVerboseLog = GUILayout.Toggle(showVerboseLog, "Show Verbose Log", EditorStyles.toolbarButton, GUILayout.Height(Settings.GUI.TOOLBAR_HEIGHT));
+                showVerboseLog = GUILayout.Toggle(showVerboseLog, "Show Verbose Log", EditorStyles.toolbarButton, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
                 LogUtility.Logger.filterLogType = (showVerboseLog) ? LogType.Log : LogType.Warning;
 
-                //controller.TargetGraph.UseAsAssetPostprocessor = GUILayout.Toggle(controller.TargetGraph.UseAsAssetPostprocessor, "Use As Postprocessor", EditorStyles.toolbarButton, GUILayout.Height(Settings.GUI.TOOLBAR_HEIGHT));
+                //controller.TargetGraph.UseAsAssetPostprocessor = GUILayout.Toggle(controller.TargetGraph.UseAsAssetPostprocessor, "Use As Postprocessor", EditorStyles.toolbarButton, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
 
                 GUILayout.FlexibleSpace();
 
@@ -694,13 +683,13 @@ namespace NodeGraph
                 GUIStyle tbLabelTarget = new GUIStyle(tbLabel);
                 tbLabelTarget.fontStyle = FontStyle.Bold;
 
-                //GUILayout.Label("Platform:", tbLabel, GUILayout.Height(Settings.GUI.TOOLBAR_HEIGHT));
+                //GUILayout.Label("Platform:", tbLabel, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
 
                 //var supportedTargets = NodeGUIUtility.SupportedBuildTargets;
                 //int currentIndex = Mathf.Max(0, supportedTargets.FindIndex(t => t == target));
 
                 //int newIndex = EditorGUILayout.Popup(currentIndex, NodeGUIUtility.supportedBuildTargetNames,
-                //    EditorStyles.toolbarPopup, GUILayout.Width(150), GUILayout.Height(Settings.GUI.TOOLBAR_HEIGHT));
+                //    EditorStyles.toolbarPopup, GUILayout.Width(150), GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
 
                 //if (newIndex != currentIndex)
                 //{
@@ -710,7 +699,7 @@ namespace NodeGraph
                 EditorGUI.BeginDisabledGroup(controller.IsAnyIssueFound);
                 //using (new EditorGUI.DisabledScope(controller.IsAnyIssueFound))
                 {
-                    if (GUILayout.Button("Build", EditorStyles.toolbarButton, GUILayout.Height(Settings.GUI.TOOLBAR_HEIGHT)))
+                    if (GUILayout.Button("Build", EditorStyles.toolbarButton, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT)))
                     {
                         EditorApplication.delayCall += controller.Build;
                         //Debug.Log("Build Clicked");
@@ -720,7 +709,7 @@ namespace NodeGraph
             }
         }
 
-        static readonly string kGUIDELINETEXT = "To configure asset bundle workflow, create an AssetBundle Graph.";
+        static readonly string kGUIDELINETEXT = "To configure node workflow, create an Node Graph.";
         static readonly string kCREATEBUTTON = "Create";
         //static readonly string kIMPORTBUTTON = "Import previous version";
 
@@ -1690,8 +1679,8 @@ namespace NodeGraph
 
         private void UpdateSpacerRect()
         {
-            var rightPoint = nodes.OrderByDescending(node => node.GetRightPos()).First().GetRightPos() + Settings.WINDOW_SPAN;
-            var bottomPoint = nodes.OrderByDescending(node => node.GetBottomPos()).First().GetBottomPos() + Settings.WINDOW_SPAN;
+            var rightPoint = nodes.OrderByDescending(node => node.GetRightPos()).First().GetRightPos() + NGSettings.WINDOW_SPAN;
+            var bottomPoint = nodes.OrderByDescending(node => node.GetBottomPos()).First().GetBottomPos() + NGSettings.WINDOW_SPAN;
 
             spacerRectRightBottom = new Vector2(rightPoint, bottomPoint);
         }

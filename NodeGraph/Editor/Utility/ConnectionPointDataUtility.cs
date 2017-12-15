@@ -22,26 +22,26 @@ namespace NodeGraph
             if (IsInput)
             {
 
-                var initialY = yOffset + (Settings.GUI.NODE_BASE_HEIGHT - Settings.GUI.INPUT_POINT_HEIGHT) / 2f;
-                var marginY = initialY + Settings.GUI.FILTER_OUTPUT_SPAN * (index);
+                var initialY = yOffset + (NGEditorSettings.GUI.NODE_BASE_HEIGHT - NGEditorSettings.GUI.INPUT_POINT_HEIGHT) / 2f;
+                var marginY = initialY + NGEditorSettings.GUI.FILTER_OUTPUT_SPAN * (index);
 
                 buttonRect = new Rect(
                     0,
                     marginY,
-                    Settings.GUI.INPUT_POINT_WIDTH,
-                    Settings.GUI.INPUT_POINT_HEIGHT);
+                    NGEditorSettings.GUI.INPUT_POINT_WIDTH,
+                    NGEditorSettings.GUI.INPUT_POINT_HEIGHT);
             }
             else
             {
 
-                var initialY = yOffset + (Settings.GUI.NODE_BASE_HEIGHT - Settings.GUI.OUTPUT_POINT_HEIGHT) / 2f;
-                var marginY = initialY + Settings.GUI.FILTER_OUTPUT_SPAN * (index);
+                var initialY = yOffset + (NGEditorSettings.GUI.NODE_BASE_HEIGHT - NGEditorSettings.GUI.OUTPUT_POINT_HEIGHT) / 2f;
+                var marginY = initialY + NGEditorSettings.GUI.FILTER_OUTPUT_SPAN * (index);
 
                 buttonRect = new Rect(
-                    parentRegion.width - Settings.GUI.OUTPUT_POINT_WIDTH + 1f,
+                    parentRegion.width - NGEditorSettings.GUI.OUTPUT_POINT_WIDTH + 1f,
                     marginY,
-                    Settings.GUI.OUTPUT_POINT_WIDTH,
-                    Settings.GUI.OUTPUT_POINT_HEIGHT);
+                    NGEditorSettings.GUI.OUTPUT_POINT_WIDTH,
+                    NGEditorSettings.GUI.OUTPUT_POINT_HEIGHT);
             }
             return buttonRect;
         }
@@ -60,10 +60,10 @@ namespace NodeGraph
         {
             var baseRect = node.Region;
             return new Rect(
-                baseRect.x + baseRect.width - (Settings.GUI.CONNECTION_POINT_MARK_SIZE) / 2f,
+                baseRect.x + baseRect.width - (NGEditorSettings.GUI.CONNECTION_POINT_MARK_SIZE) / 2f,
                 baseRect.y + buttonRect.y + 1f,
-                Settings.GUI.CONNECTION_POINT_MARK_SIZE,
-                Settings.GUI.CONNECTION_POINT_MARK_SIZE
+                NGEditorSettings.GUI.CONNECTION_POINT_MARK_SIZE,
+                NGEditorSettings.GUI.CONNECTION_POINT_MARK_SIZE
             );
         }
 
@@ -73,8 +73,8 @@ namespace NodeGraph
             return new Rect(
                 baseRect.x - 2f,
                 baseRect.y + buttonRect.y + 3f,
-                Settings.GUI.CONNECTION_POINT_MARK_SIZE + 3f,
-                Settings.GUI.CONNECTION_POINT_MARK_SIZE + 3f
+                NGEditorSettings.GUI.CONNECTION_POINT_MARK_SIZE + 3f,
+                NGEditorSettings.GUI.CONNECTION_POINT_MARK_SIZE + 3f
             );
         }
     }

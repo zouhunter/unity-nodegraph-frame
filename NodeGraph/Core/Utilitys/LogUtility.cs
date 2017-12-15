@@ -20,7 +20,7 @@ namespace NodeGraph {
 //			}
 //		}
 
-		public static readonly string kTag = "AssetBundle";
+		public static readonly string kTag = "Node";
 
 		private static Logger s_logger;
 

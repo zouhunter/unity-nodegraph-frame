@@ -19,10 +19,10 @@
 //		private static readonly string kCommandName = 
 //			"buildassetbundle.{0}";
 
-//		//[MenuItem(Settings.GUI_TEXT_MENU_GENERATE_CUITOOL)]
+//		//[MenuItem(NGSettings.GUI_TEXT_MENU_GENERATE_CUITOOL)]
 //		private static void CreateCUITool() {
 
-//			var appPath = EditorApplication.applicationPath.Replace(Settings.UNITY_FOLDER_SEPARATOR, Path.DirectorySeparatorChar);
+//			var appPath = EditorApplication.applicationPath.Replace(NGSettings.UNITY_FOLDER_SEPARATOR, Path.DirectorySeparatorChar);
 
 //            var appCmd = string.Format("{0}{1}", appPath, (Application.platform == RuntimePlatform.WindowsEditor) ? "" : "/Contents/MacOS/Unity");
 //			var argPass = (Application.platform == RuntimePlatform.WindowsEditor)? "%1 %2 %3 %4 %5 %6 %7 %8 %9" : "$*";
@@ -30,9 +30,9 @@
 //			var ext = (Application.platform == RuntimePlatform.WindowsEditor)? "bat" : "sh";
 //			var cmdFile = string.Format(kCommandName, ext );
 
-//            var destinationPath = FileUtility.PathCombine(Settings.Path.CUISpacePath, cmdFile);
+//            var destinationPath = FileUtility.PathCombine(NGSettings.Path.CUISpacePath, cmdFile);
 
-//            Directory.CreateDirectory(Settings.Path.CUISpacePath);
+//            Directory.CreateDirectory(NGSettings.Path.CUISpacePath);
 //			File.WriteAllText(destinationPath, cmd);
 
 //			AssetDatabase.Refresh();

@@ -11,9 +11,9 @@ using V1=NodeGraph.DataModel;
 namespace NodeGraph.DataModel {
 
 	/*
-	 * Save data which holds all NodeGraph.DataModel settings and configurations.
+	 * Save data which holds all NodeGraph.DataModel NGSettings and configurations.
 	 */ 
-	[CreateAssetMenu( fileName = "NodeGraph.DataModel", menuName = "AssetBundle Graph", order = 650 )]
+	[CreateAssetMenu(fileName = "NodeGraph", menuName = "ConfigGraph", order = 650 )]
 	public class ConfigGraph : ScriptableObject {
 
 		/*

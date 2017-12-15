@@ -16,8 +16,24 @@ using System;
 
 [CustomNode("PanelNode", 1)]
 public class PanelNode : Node {
-    public override Node Clone(NodeData newData)
+    public string key;
+    public override string NodeInputType
     {
-      return  new PanelNode();
+        get
+        {
+            return KeyConst.BridgeName;
+        }
+    }
+    public override string NodeOutputType
+    {
+        get
+        {
+            return KeyConst.BridgeName;
+        }
+    }
+    public override void Initialize(NodeData data)
+    {
+        data.AddDefaultInputPoint();
+        data.AddDefaultOutputPoint();
     }
 }

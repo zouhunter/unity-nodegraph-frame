@@ -11,6 +11,7 @@ using UnityEngine.Assertions.Comparers;
 using System.Collections;
 using NodeGraph;
 using NodeGraph.DataModel;
+using System;
 
 [CustomNode("Luncher", 0)]
 public class Luncher : Node
@@ -22,12 +23,9 @@ public class Luncher : Node
             return KeyConst.BridgeName;
         }
     }
-    
-    public override Node Clone(NodeData newData)
+    public override void Initialize(NodeData data)
     {
-        var newNode = new Luncher();
-        Debug.Log("Clone");
-        return newNode;
+        data.AddDefaultOutputPoint();
+        Debug.Log("Initialize");
     }
-
 }
