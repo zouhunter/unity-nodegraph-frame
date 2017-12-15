@@ -5,9 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using NodeGraph;
-using V1=NodeGraph.DataModel;
-
 namespace NodeGraph.DataModel {
 
 	/*

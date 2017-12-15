@@ -157,7 +157,8 @@ namespace NodeGraph
             this.m_data = data;
             this.m_outputPoint = output;
             this.m_inputPoint = input;
-            connectionDrawer = UserDefineUtility.GetCustomConnectionDrawer(data.Operation.Object);
+            connectionDrawer = UserDefineUtility.GetUserDrawer(data.Operation.Object.GetType()) as ConnectionDrawer;
+            if (connectionDrawer != null) connectionDrawer.target = data.Operation.Object;
             connectionButtonStyle = "sv_label_0";
         }
 

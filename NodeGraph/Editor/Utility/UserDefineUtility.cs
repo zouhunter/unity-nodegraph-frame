@@ -1,6 +1,10 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System;
+using System.Reflection;
+using UnityEngine;
+using UnityEditor;
+
 namespace NodeGraph
 {
 
@@ -45,37 +49,22 @@ namespace NodeGraph
                 return null;
             }
         }
-        private static Dictionary<Type,Type> customDrawer;
-        internal static NodeDrawer GetCustomDrawer(Node @object)
+        private static Dictionary<Type,Type> userDrawer;
+        internal static object GetUserDrawer(Type type)
         {
             InitDrawerTypes();
-            if(customDrawer.ContainsKey(@object.GetType()))
+            if(userDrawer.ContainsKey(type))
             {
-                var drawer = Activator.CreateInstance(customDrawer[@object.GetType()]);
-                var obj = drawer as NodeDrawer;
-                obj.target = @object;
-                return obj;
+                var drawer = Activator.CreateInstance(userDrawer[type]);
+                return drawer;
             }
             return null;
-        }
-        internal static ConnectionDrawer GetCustomConnectionDrawer(Connection @object)
-        {
-            InitDrawerTypes();
-            if (customDrawer.ContainsKey(@object.GetType()))
-            {
-                var drawer = Activator.CreateInstance(customDrawer[@object.GetType()]);
-                var obj = drawer as ConnectionDrawer;
-                obj.target = @object;
-                return obj;
-            }
-            return null;
-
         }
         private static void InitDrawerTypes()
         {
-            if (customDrawer == null)
+            if (userDrawer == null)
             {
-                customDrawer = new Dictionary<Type, Type>();
+                userDrawer = new Dictionary<Type, Type>();
                 var allDrawer = new List<Type>();
                 foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
@@ -90,12 +79,149 @@ namespace NodeGraph
 
                     if (attr != null)
                     {
-                        customDrawer.Add(attr.targetType, type);
+                        userDrawer.Add(attr.targetType, type);
                     }
                 }
             }
         }
-     
+        
+        public static object DrawProperty(object data)
+        {
+            if (data is int)
+            {
+                data = EditorGUILayout.IntField(Convert.ToInt32(data));
+            }
+            else if (data is bool)
+            {
+                data = EditorGUILayout.Toggle(Convert.ToBoolean(data));
+            }
+            else if (data is float || data is double)
+            {
+                data = EditorGUILayout.FloatField(float.Parse(data.ToString()));
+            }
+            else if (data is string)
+            {
+                data = EditorGUILayout.TextField(data.ToString());
+            }
+            else if(data is Color)
+            {
+                data = EditorGUILayout.ColorField((Color)data);
+            }
+            else if(data is Enum)
+            {
+                data = EditorGUILayout.EnumPopup((Enum)data);
+            }
+            else if(data is Vector2)
+            {
+                data = EditorGUILayout.Vector2Field("",(Vector2)data);
+            }
+            else if (data is Vector3)
+            {
+                data = EditorGUILayout.Vector3Field("", (Vector3)data);
+            }
+            else if (data is Vector4)
+            {
+                data = EditorGUILayout.Vector4Field("", (Vector4)data);
+            }
+            else if(data is Rect)
+            {
+                data = EditorGUILayout.RectField("", (Rect)data);
+            }
+            return data;
+        }
+        /// <summary>
+        /// 分析类中的参数
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="fieldInfos"></param>
+        public static void GetNeedSerializeField(object instence, List<FieldInfo> fieldInfos)
+        {
+            var type = instence.GetType();
+            FieldInfo[] fields = type.GetFields(BindingFlags.GetField | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public);
+            foreach (var item in fields)
+            {
+                if (!IsFieldNeed(item)) continue;
+
+                if (item.FieldType.IsValueType || item.FieldType.IsEnum || item.FieldType.IsClass)
+                {
+                    fieldInfos.Add(item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 判断寡字段能否序列化
+        /// </summary>
+        /// <param name="fieldInfo"></param>
+        /// <returns></returns>
+        public static bool IsFieldNeed(FieldInfo fieldInfo)
+        {
+            var type = fieldInfo.FieldType;
+
+            //排除字典
+            if (type.IsGenericType && type.Name.Contains("Dictionary`"))
+            {
+                return false;
+            }
+
+            //排除非公有变量
+            if (fieldInfo.Attributes != FieldAttributes.Public)
+            {
+                var attrs = fieldInfo.GetCustomAttributes(false);
+                if (attrs.Length == 0 || (attrs.Length > 0 && Array.Find(attrs, x => x is SerializeField) == null))
+                {
+                    return false;
+                }
+            }
+
+            //排出接口
+            if (type.IsInterface)
+            {
+                return false;
+            }
+
+            //修正type
+            if (type.IsArray || type.IsGenericType)
+            {
+                if (type.IsGenericType)
+                {
+                    type = type.GetGenericArguments()[0];
+                }
+                else
+                {
+                    type = type.GetElementType();
+                }
+            }
+
+            //排出修正后的接口
+            if (type.IsInterface)
+            {
+                return false;
+            }
+
+            //排除不能序列化的类
+            if (type.IsClass)
+            {
+                if (!type.IsSubclassOf(typeof(UnityEngine.Object)))
+                {
+                    var atts = type.GetCustomAttributes(false);
+                    var seri = Array.Find(atts, x => x is System.SerializableAttribute);
+                    if (seri == null)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            //排除内置变量
+            if (fieldInfo.Name.Contains("k__BackingField"))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
     }
 
 }

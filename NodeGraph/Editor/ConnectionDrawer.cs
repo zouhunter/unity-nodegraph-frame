@@ -17,7 +17,7 @@ namespace NodeGraph
 {
     public abstract class ConnectionDrawer
     {
-        public Connection target;
+        public DataModel.Connection target;
         internal virtual int LineWidth { get { return 3; } }
         internal virtual Color LineColor { get { return Color.white; } }
         internal virtual string Label { get { return ""; } }

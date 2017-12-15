@@ -1,6 +1,7 @@
-﻿using NodeGraph.DataModel;
+﻿
 
-namespace NodeGraph {
+namespace NodeGraph.DataModel
+{
     /// <summary>
     /// Node.
     /// </summary>

@@ -1332,7 +1332,7 @@ namespace NodeGraph
             return nodeMenuName.Substring(slashIndex + 1);
         }
 
-        private void AddNodeFromGUI(Node n, string guiName, float x, float y)
+        private void AddNodeFromGUI(DataModel.Node n, string guiName, float x, float y)
         {
             string nodeName = guiName;
             NodeGUI newNode = new NodeGUI(controller, new Model.NodeData(nodeName, n, x, y));

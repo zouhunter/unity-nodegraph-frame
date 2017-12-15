@@ -8,14 +8,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 
-using Model = NodeGraph.DataModel;
-
 namespace NodeGraph
 {
     public class NodeConnectionUtility
     {
-        private static List<CustomConnectionInfo> _customConnectionTypes;
-        public static List<CustomConnectionInfo> CustomConnectionTypes
+        private static List<DataModel.CustomConnectionInfo> _customConnectionTypes;
+        public static List<DataModel.CustomConnectionInfo> CustomConnectionTypes
         {
             get
             {
@@ -26,17 +24,17 @@ namespace NodeGraph
                 return _customConnectionTypes;
             }
         }
-        private static List<CustomConnectionInfo> BuildCustomConnectionList()
+        private static List<DataModel.CustomConnectionInfo> BuildCustomConnectionList()
         {
-            var list = new List<CustomConnectionInfo>();
+            var list = new List<DataModel.CustomConnectionInfo>();
 
             var allNodes = new List<Type>();
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 var nodes = assembly.GetTypes()
-                    .Where(t => t != typeof(Connection))
-                    .Where(t => typeof(Connection).IsAssignableFrom(t));
+                    .Where(t => t != typeof(DataModel.Connection))
+                    .Where(t => typeof(DataModel.Connection).IsAssignableFrom(t));
                 allNodes.AddRange(nodes);
             }
 
@@ -47,14 +45,14 @@ namespace NodeGraph
 
                 if (attr != null)
                 {
-                    list.Add(new CustomConnectionInfo(type, attr));
+                    list.Add(new DataModel.CustomConnectionInfo(type, attr));
                 }
             }
 
             return list;
         }
-        private static List<CustomNodeInfo> s_customNodes;
-        public static List<CustomNodeInfo> CustomNodeTypes
+        private static List<DataModel.CustomNodeInfo> s_customNodes;
+        public static List<DataModel.CustomNodeInfo> CustomNodeTypes
         {
             get
             {
@@ -65,17 +63,17 @@ namespace NodeGraph
                 return s_customNodes;
             }
         }
-        private static List<CustomNodeInfo> BuildCustomNodeList()
+        private static List<DataModel.CustomNodeInfo> BuildCustomNodeList()
         {
-            var list = new List<CustomNodeInfo>();
+            var list = new List<DataModel.CustomNodeInfo>();
 
             var allNodes = new List<Type>();
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 var nodes = assembly.GetTypes()
-                    .Where(t => t != typeof(Node))
-                    .Where(t => typeof(Node).IsAssignableFrom(t));
+                    .Where(t => t != typeof(DataModel.Node))
+                    .Where(t => typeof(DataModel.Node).IsAssignableFrom(t));
                 allNodes.AddRange(nodes);
             }
 
@@ -85,7 +83,7 @@ namespace NodeGraph
 
                 if (attr != null)
                 {
-                    list.Add(new CustomNodeInfo(type, attr));
+                    list.Add(new DataModel.CustomNodeInfo(type, attr));
                 }
             }
 
@@ -99,7 +97,7 @@ namespace NodeGraph
                 t.GetCustomAttributes(typeof(CustomNode), false).FirstOrDefault() as CustomNode;
             return attr != null && !string.IsNullOrEmpty(attr.Name);
         }
-        public static string GetNodeGUIName(Node node)
+        public static string GetNodeGUIName(DataModel.Node node)
         {
             CustomNode attr =
                 node.GetType().GetCustomAttributes(typeof(CustomNode), false).FirstOrDefault() as CustomNode;
@@ -137,13 +135,13 @@ namespace NodeGraph
             }
             return CustomNode.kDEFAULT_PRIORITY;
         }
-        public static Node CreateNodeInstance(string assemblyQualifiedName)
+        public static DataModel.Node CreateNodeInstance(string assemblyQualifiedName)
         {
             if (assemblyQualifiedName != null)
             {
                 var type = Type.GetType(assemblyQualifiedName);
 
-                return (Node)type.Assembly.CreateInstance(type.FullName);
+                return (DataModel.Node)type.Assembly.CreateInstance(type.FullName);
             }
             return null;
         }

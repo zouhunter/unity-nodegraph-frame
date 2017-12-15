@@ -16,6 +16,15 @@ using System;
 [CustomNode("Luncher", 0)]
 public class Luncher : Node
 {
+    [Serializable]
+    public class Clas
+    {
+        public double testdb;
+    }
+    public string teststr;
+    public int testint;
+    public Clas testclass;
+
     public override string NodeOutputType
     {
         get

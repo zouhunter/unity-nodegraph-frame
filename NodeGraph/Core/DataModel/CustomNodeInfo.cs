@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NodeGraph
+namespace NodeGraph.DataModel
 {
     public struct CustomNodeInfo : IComparable
     {

@@ -2,7 +2,8 @@
 using System;
 using System.Collections;
 
-namespace NodeGraph {
+namespace NodeGraph.DataModel
+{
 	[System.Serializable]
 	public class SerializedInstance<T> where T: class {
 
