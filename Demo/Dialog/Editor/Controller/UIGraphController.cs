@@ -22,7 +22,14 @@ public class UIGraphController : NodeGraphController
         Debug.Log("BuildFromGraph");
     }
 
-    internal override void OnDragAccept(UnityEngine.Object[] objectReferences)
+    internal override List<KeyValuePair<string, Node>> OnDragAccept(UnityEngine.Object[] objectReferences)
     {
+        Debug.Log("OnDragAccept");
+        return new List<KeyValuePair<string, Node>>();
+    }
+
+    internal override void Validate(NodeGUI node)
+    {
+        Debug.Log("Validate");
     }
 }

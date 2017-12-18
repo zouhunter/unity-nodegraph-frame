@@ -17,9 +17,17 @@ namespace NodeGraph
         public virtual void OnContextMenuGUI(GenericMenu menu) { }
         public virtual float CustomNodeHeight { get { return 0; } }
         public virtual void OnNodeGUI(Rect position) { }
-        public virtual void OnInspectorGUI()
+        public virtual void OnInspectorGUI(NodeGUI gui)
         {
             base.OnInspectorGUI(target);
+        }
+        public virtual void OnClickNodeGUI(NodeGUI nodeGUI, Vector2 mousePosition, ConnectionPointData result) { }
+        protected void RecordUnDo(string message,NodeGUI node,bool saveOnScopeEnd,UnityAction action)
+        {
+            using (new RecordUndoScope("Change Node Name", node, saveOnScopeEnd))
+            {
+                action.Invoke();
+            }
         }
     }
 }

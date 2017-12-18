@@ -35,11 +35,16 @@ public class RunTime : MonoBehaviour {
 
         foreach (var item in graph.Nodes)
         {
-            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            created.Enqueue(go);
-            go.name = item.Name;
-            go.transform.position = Random.insideUnitSphere * 5;
-            nodeDic.Add(item.Id, go);
+            if(item.Operation.Object is ObjectNode)
+            {
+                var node = item.Operation.Object as ObjectNode;
+                var go = GameObject.CreatePrimitive(node.type);
+                created.Enqueue(go);
+                go.name = item.Name;
+                go.transform.position = Random.insideUnitSphere * 5;
+                nodeDic.Add(item.Id, go);
+            }
+           
         }
 
         foreach (var item in graph.Connections)

@@ -220,6 +220,10 @@ namespace NodeGraph
                         if (result != null)
                         {
                             NodeGUIUtility.NodeEventHandler(new NodeEvent(NodeEvent.EventType.EVENT_CONNECTING_BEGIN, this, Event.current.mousePosition, result));
+
+                            if(nodeDataDrawer != null){
+                                nodeDataDrawer.OnClickNodeGUI(this, Event.current.mousePosition, result);
+                            }
                             break;
                         }
                         else
@@ -445,6 +449,7 @@ namespace NodeGraph
                 GUI.backgroundColor = Color.clear;
                 Texture2D tex = (point.IsInput) ? NodeGUIUtility.inputPointBG : NodeGUIUtility.outputPointBG;
                 GUI.Button(point.Region, tex, "AnimationKeyframeBackground");
+                GUI.backgroundColor = Color.white;
             };
             m_data.InputPoints.ForEach(drawConnectionPoint);
             m_data.OutputPoints.ForEach(drawConnectionPoint);
@@ -499,7 +504,8 @@ namespace NodeGraph
 
             var newWidth = Mathf.Max(NGEditorSettings.GUI.NODE_BASE_WIDTH, outputLabelWidth + inputLabelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
             newWidth = Mathf.Max(newWidth, labelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
-            m_baseRect = new Rect(m_baseRect.x, m_baseRect.y, newWidth, m_baseRect.height + nodeDataDrawer.CustomNodeHeight + EditorGUIUtility.singleLineHeight);
+            var customHeight = nodeDataDrawer.CustomNodeHeight + EditorGUIUtility.singleLineHeight ;
+            m_baseRect = new Rect(m_baseRect.x, m_baseRect.y, newWidth, m_baseRect.height + customHeight);
 
             RefreshConnectionPos(titleHeight);
         }
@@ -651,15 +657,31 @@ namespace NodeGraph
 
         internal void DrawNodeGUI(NodeGUIEditor nodeGUIEditor)
         {
+            JudgeName();
             EditorGUI.BeginChangeCheck();
-            nodeGUIEditor.UpdateNodeName(this);
-            nodeDataDrawer.OnInspectorGUI();
-
+            Name = EditorGUILayout.TextField("Node Name", Name);
+            if (nodeDataDrawer != null) {
+                nodeDataDrawer.OnInspectorGUI(this);
+            }
             if (EditorGUI.EndChangeCheck())
             {
-                Controller.Perform();
+                Controller.Validate(this);
                 Data.Operation.Save();
                 ParentGraph.SetGraphDirty();
+            }
+        }
+
+        private void JudgeName()
+        {
+            if (NodeGUIUtility.allNodeNames != null)
+            {
+                var overlapping = NodeGUIUtility.allNodeNames.GroupBy(x => x)
+                    .Where(group => group.Count() > 1)
+                    .Select(group => group.Key);
+                if (overlapping.Any() && overlapping.Contains(Name))
+                {
+                    EditorGUILayout.HelpBox("There are node with the same name. You may want to rename to avoid confusion:" + Name, MessageType.Info);
+                }
             }
         }
 

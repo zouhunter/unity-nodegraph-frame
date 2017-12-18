@@ -28,7 +28,7 @@ public class Luncher : Node
     {
         get
         {
-            return KeyConst.BridgeName;
+            return Line_connection.type;
         }
     }
     public override void Initialize(NodeData data)

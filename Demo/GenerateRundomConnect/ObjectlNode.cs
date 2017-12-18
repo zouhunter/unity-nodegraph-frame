@@ -14,27 +14,26 @@ using NodeGraph;
 using NodeGraph.DataModel;
 using System;
 
-[CustomNode("PanelNode", 1)]
-public class PanelNode : Node {
-    public string key;
+[CustomNode("RundomConnect/Node", 1)]
+public class ObjectNode : Node {
+    public PrimitiveType type;
     public override string NodeInputType
     {
         get
         {
-            return KeyConst.BridgeName;
+            return Line_connection.type;
         }
     }
     public override string NodeOutputType
     {
         get
         {
-            return KeyConst.BridgeName;
+            return Line_connection.type;
         }
     }
     public override void Initialize(NodeData data)
     {
-        data.AddDefaultInputPoint();
-        if(data.InputPoints.Find(x=>x.Label == "aaaaaaaaaaaaaaaaaaaaaaaaa") == null) data.AddInputPoint("aaaaaaaaaaaaaaaaaaaaaaaaa");
-        data.AddDefaultOutputPoint();
+        if (data.InputPoints.Find(x => x.Label == "a") == null) data.AddInputPoint("a");
+        if (data.OutputPoints.Find(x => x.Label == "b") == null) data.AddOutputPoint("b");
     }
 }
