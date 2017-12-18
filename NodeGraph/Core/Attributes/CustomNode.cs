@@ -11,51 +11,67 @@ using UnityEngine.Assertions.Comparers;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-/// <summary>
-/// Custom node attribute for custom nodes.
-/// </summary>
-[AttributeUsage(AttributeTargets.Class)]
-public class CustomNode : Attribute
-{
-
-    private string m_name;
-    private int m_orderPriority;
-
-    public static readonly int kDEFAULT_PRIORITY = 1000;
-
+namespace NodeGraph {
     /// <summary>
-    /// Gets the name.
+    /// Custom node attribute for custom nodes.
     /// </summary>
-    /// <value>The name.</value>
-    public string Name
+    [AttributeUsage(AttributeTargets.Class)]
+    public class CustomNode : Attribute
     {
-        get
+        private string m_name;
+        private string m_group;
+        private int m_orderPriority;
+
+        public static readonly int kDEFAULT_PRIORITY = 1000;
+        public static readonly string kDEFAULT_GROUP = "Empty";
+        /// <summary>
+        /// Gets the name.
+        /// </summary>
+        /// <value>The name.</value>
+        public string Name
         {
-            return m_name;
+            get
+            {
+                return m_name;
+            }
         }
-    }
-
-    /// <summary>
-    /// Gets the order priority.
-    /// </summary>
-    /// <value>The order priority.</value>
-    public int OrderPriority
-    {
-        get
+        public string Group
         {
-            return m_orderPriority;
+            get
+            {
+                return m_group;
+            }
         }
-    }
 
-    public CustomNode(string name)
-    {
-        m_name = name;
-        m_orderPriority = kDEFAULT_PRIORITY;
-    }
+        /// <summary>
+        /// Gets the order priority.
+        /// </summary>
+        /// <value>The order priority.</value>
+        public int OrderPriority
+        {
+            get
+            {
+                return m_orderPriority;
+            }
+        }
 
-    public CustomNode(string name, int orderPriority)
-    {
-        m_name = name;
-        m_orderPriority = orderPriority;
-    }
-}
+        public CustomNode(string name)
+        {
+            m_name = name;
+            m_orderPriority = kDEFAULT_PRIORITY;
+            m_group = kDEFAULT_GROUP;
+        }
+
+        public CustomNode(string name, int orderPriority)
+        {
+            m_name = name;
+            m_orderPriority = orderPriority;
+            m_group = kDEFAULT_GROUP;
+        }
+        public CustomNode(string name, int orderPriority, string group)
+        {
+            m_name = name;
+            m_orderPriority = orderPriority;
+            m_group = group;
+        }
+    } }

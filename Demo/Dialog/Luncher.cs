@@ -13,7 +13,7 @@ using NodeGraph;
 using NodeGraph.DataModel;
 using System;
 
-[CustomNode("Luncher", 0)]
+[CustomNode("Luncher", 0, "Dialog")]
 public class Luncher : Node
 {
     public class Clas
