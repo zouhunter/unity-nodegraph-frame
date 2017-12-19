@@ -8,7 +8,7 @@ using NodeGraph.DataModel;
 using NodeGraph;
 
 [CustomNodeGraphDrawer(typeof(ObjectNode))]
-public class PanelNodeDrawer : NodeDrawer
+public class ObjectNodeDrawer : NodeDrawer
 {
     public override string ActiveStyle
     {
