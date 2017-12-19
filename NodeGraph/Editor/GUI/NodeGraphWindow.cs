@@ -1421,7 +1421,7 @@ namespace NodeGraph
                                 var outputPoint = startConnectionPoint;
                                 var inputPoint = endConnectionPoint;
                                 var label = startConnectionPoint.Label;
-                                var type = Model.ConnectionData.GetConnectType(startNode.Data, endNode.Data);
+                                var type = controller.GetConnectType(startNode.Data, endNode.Data);
 
                                 // if two nodes are not supposed to connect, dismiss
                                 if (type == null){
@@ -1480,7 +1480,7 @@ namespace NodeGraph
                                 var label = startConnectionPoint.Label;
 
                                 // if two nodes are not supposed to connect, dismiss
-                                var type = Model.ConnectionData.GetConnectType(startNode.Data, endNode.Data);
+                                var type = controller.GetConnectType(startNode.Data, endNode.Data);
                                 if (type == null){
                                     break;
                                 }

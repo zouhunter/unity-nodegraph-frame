@@ -164,24 +164,6 @@ namespace NodeGraph.DataModel {
 			return true;
 		}
 
-        /// <summary>
-        /// Determines if can connect the specified from to.
-        /// </summary>
-        /// <returns><c>true</c> if can connect the specified from to; otherwise, <c>false</c>.</returns>
-        /// <param name="from">From.</param>
-        /// <param name="to">To.</param>
-		public static string GetConnectType(NodeData from, NodeData to) {
-
-            var inType = to.Operation.Object.NodeInputType;
-            var outType = from.Operation.Object.NodeOutputType;
-
-            if (string.Equals(inType, outType)){
-                return to.Operation.Object.NodeInputType;
-            }
-            else
-            {
-                return null;
-            }
-		}
+   
 	}
 }

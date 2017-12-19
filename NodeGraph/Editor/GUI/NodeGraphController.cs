@@ -77,5 +77,19 @@ namespace NodeGraph
         protected virtual void BuildFromGraph(Model.ConfigGraph m_targetGraph) { }
         internal virtual List<KeyValuePair<string, Model.Node>> OnDragAccept(UnityEngine.Object[] objectReferences) { return null; }
         internal virtual void Validate(NodeGUI node) { }
+        internal virtual string GetConnectType(Model. NodeData from, Model.NodeData to)
+        {
+            var inType = to.Operation.Object.NodeInputType;
+            var outType = from.Operation.Object.NodeOutputType;
+
+            if (string.Equals(inType, outType))
+            {
+                return to.Operation.Object.NodeInputType;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

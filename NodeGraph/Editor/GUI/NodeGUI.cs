@@ -308,7 +308,7 @@ namespace NodeGraph
             bool shouldDrawEnable =
                 !(eventSource != null &&
                     eventSource.eventSourceNode != null &&
-                    Model.ConnectionData.GetConnectType(eventSource.eventSourceNode.Data, m_data) == null
+                    Controller.GetConnectType(eventSource.eventSourceNode.Data, m_data) == null
                 );
 
             bool shouldDrawWithEnabledColor =
@@ -343,7 +343,7 @@ namespace NodeGraph
 
             bool shouldDrawEnable =
                 !(eventSource != null && eventSource.eventSourceNode != null &&
-                    Model.ConnectionData.GetConnectType(m_data, eventSource.eventSourceNode.Data) == null
+                    Controller.GetConnectType(m_data, eventSource.eventSourceNode.Data) == null
                 );
 
             bool shouldDrawWithEnabledColor =
