@@ -474,6 +474,11 @@ namespace NodeGraph
             float labelWidth = GUI.skin.label.CalcSize(new GUIContent(this.Name)).x;
             float outputLabelWidth = 0f;
             float inputLabelWidth = 0f;
+            float notdefultLabelHeight = 0f;
+            if(m_data.InputPoints.Find(x=>x.Label != NGSettings.DEFAULT_INPUTPOINT_LABEL) != null || m_data.OutputPoints.Find(x=>x.Label != NGSettings.DEFAULT_OUTPUTPOINT_LABEL) != null)
+            {
+                notdefultLabelHeight += EditorGUIUtility.singleLineHeight;
+            }
 
             if (m_data.InputPoints.Count > 0)
             {
@@ -504,8 +509,8 @@ namespace NodeGraph
 
             var newWidth = Mathf.Max(NGEditorSettings.GUI.NODE_BASE_WIDTH, outputLabelWidth + inputLabelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
             newWidth = Mathf.Max(newWidth, labelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
-            var customHeight = nodeDataDrawer.CustomNodeHeight + EditorGUIUtility.singleLineHeight ;
-            m_baseRect = new Rect(m_baseRect.x, m_baseRect.y, newWidth, m_baseRect.height + customHeight);
+
+            m_baseRect = new Rect(m_baseRect.x, m_baseRect.y, newWidth, m_baseRect.height + nodeDataDrawer.CustomNodeHeight + notdefultLabelHeight);
 
             RefreshConnectionPos(titleHeight);
         }
