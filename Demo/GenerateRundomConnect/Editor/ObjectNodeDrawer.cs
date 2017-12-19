@@ -10,21 +10,7 @@ using NodeGraph;
 [CustomNodeGraphDrawer(typeof(ObjectNode))]
 public class ObjectNodeDrawer : NodeDrawer
 {
-    public override string ActiveStyle
-    {
-        get
-        {
-            return "node 1 on";
-        }
-    }
-
-    public override string InactiveStyle
-    {
-        get
-        {
-            return "node 1";
-        }
-    }
+    public override int Style { get { return 1; } }
 
     public override string Category
     {
@@ -40,9 +26,9 @@ public class ObjectNodeDrawer : NodeDrawer
             return EditorGUIUtility.singleLineHeight * 1;
         }
     }
-    public override void OnNodeGUI(Rect position)
+    public override void OnNodeGUI(Rect position,NodeData data)
     {
-        base.OnNodeGUI(position);
+        base.OnNodeGUI(position, data);
         (target as ObjectNode).type =  (PrimitiveType)EditorGUI.EnumPopup(position,(target as ObjectNode).type);
     }
     public override void OnInspectorGUI(NodeGUI gui)

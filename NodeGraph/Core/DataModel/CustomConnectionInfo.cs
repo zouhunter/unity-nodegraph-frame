@@ -15,8 +15,15 @@ namespace NodeGraph.DataModel
 
         public Connection CreateInstance()
         {
-            object o = type.Assembly.CreateInstance(type.FullName);
-            return (Connection)o;
+            if(type == null || string.IsNullOrEmpty(type.FullName))
+            {
+                return new Connection();
+            }
+            else
+            {
+                object o = type.Assembly.CreateInstance(type.FullName);
+                return (Connection)o;
+            }
         }
     }
 }

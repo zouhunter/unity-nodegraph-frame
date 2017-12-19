@@ -42,7 +42,7 @@ namespace NodeGraph
             if (type != null)
             {
                 var ctrl = System.Activator.CreateInstance(type);
-                var gctrl =  ctrl as NodeGraphController;
+                var gctrl = ctrl as NodeGraphController;
                 gctrl.TargetGraph = graph;
                 return gctrl;
             }
@@ -95,9 +95,9 @@ namespace NodeGraph
         /// </summary>
         /// <param name="type"></param>
         /// <param name="fieldInfos"></param>
-        public static void GetNeedSerializeField(object instence, Dictionary<object, bool> toggleDic, Dictionary<object, List<FieldInfo>> fieldDic)
+        public static void GetNeedSerializeField(FieldInfo field,object instence, Dictionary<FieldInfo, bool> toggleDic, Dictionary<FieldInfo, List<FieldInfo>> fieldDic)
         {
-            toggleDic.Add(instence, true);
+            toggleDic.Add(field, true);
             var type = instence.GetType();
             FieldInfo[] fields = type.GetFields(BindingFlags.GetField | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (var item in fields)
@@ -106,47 +106,55 @@ namespace NodeGraph
 
                 if (item.FieldType.IsValueType || item.FieldType.IsEnum || item.FieldType.IsClass)
                 {
-                    if (fieldDic.ContainsKey(instence))
+                    if (fieldDic.ContainsKey(field))
                     {
-                        fieldDic[instence].Add(item);
+                        fieldDic[field].Add(item);
                     }
                     else
                     {
-                        fieldDic[instence] = new List<FieldInfo>() { item };
+                        fieldDic[field] = new List<FieldInfo>() { item };
                     }
                 }
 
                 if (item.FieldType.IsClass)
                 {
-                    GetNeedSerializeField(item.GetValue(instence), toggleDic, fieldDic);
+                    var value = item.GetValue(instence);
+                    if (value == null)
+                    {
+                        value = item.FieldType.IsValueType ? Activator.CreateInstance(item.FieldType) : null;
+                    }
+                    GetNeedSerializeField(item,value, toggleDic, fieldDic);
                 }
             }
         }
 
 
-        public static object DrawClassObject(object classItem, Dictionary<object, bool> toggleDic, Dictionary<object, List<FieldInfo>> fieldDic)
+        public static object DrawClassObject(FieldInfo field,object classItem, Dictionary<FieldInfo, bool> toggleDic, Dictionary<FieldInfo, List<FieldInfo>> fieldDic)
         {
+            if (classItem == null || toggleDic == null || fieldDic == null || !fieldDic.ContainsKey(field)) return null;
+
             EditorGUI.indentLevel++;
             if (GUILayout.Button(classItem.GetType().Name, EditorStyles.boldLabel))
             {
-                toggleDic[classItem] = !toggleDic[classItem];
+                toggleDic[field] = !toggleDic[field];
             }
-            if (toggleDic[classItem])
+
+            if (toggleDic[field])
             {
-                foreach (var item in fieldDic[classItem])
+                foreach (var item in fieldDic[field])
                 {
-                    if (item.FieldType.IsClass && (item.FieldType != typeof(string)))
-                    {
-                        DrawClassObject(item.GetValue(classItem), toggleDic, fieldDic);
-                    }
-                    else
+                    if (item.FieldType.IsValueType || item.FieldType == typeof(string))
                     {
                         EditorGUILayout.BeginHorizontal();
                         EditorGUILayout.LabelField(item.Name, GUILayout.Width(100));
                         item.SetValue(classItem, DrawField(item.GetValue(classItem)));
                         EditorGUILayout.EndHorizontal();
                     }
-
+                    else if (item.FieldType.IsGenericType || item.FieldType.IsArray) continue;
+                    else if (item.FieldType.IsClass && (item.FieldType != typeof(string)))
+                    {
+                        DrawClassObject(item,item.GetValue(classItem), toggleDic, fieldDic);
+                    }
                 }
             }
 

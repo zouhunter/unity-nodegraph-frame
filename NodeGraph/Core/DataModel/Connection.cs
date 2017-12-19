@@ -2,7 +2,7 @@
 namespace NodeGraph.DataModel
 {
 
-    public abstract class Connection
+    public class Connection
     {
     }
 }

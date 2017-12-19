@@ -38,7 +38,7 @@ namespace NodeGraph
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 var nodes = assembly.GetTypes()
-                    .Where(t => t != typeof(DataModel.Connection))
+                    //.Where(t => t != typeof(DataModel.Connection))
                     .Where(t => typeof(DataModel.Connection).IsAssignableFrom(t));
                 allNodes.AddRange(nodes);
             }

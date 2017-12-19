@@ -282,7 +282,7 @@ namespace NodeGraph
 
                 if (nodeDataDrawer != null)
                 {
-                    nodeDataDrawer.OnContextMenuGUI(menu);
+                    nodeDataDrawer.OnContextMenuGUI(menu,this);
                 }
 
                 menu.AddItem(
@@ -457,7 +457,7 @@ namespace NodeGraph
             if(nodeDataDrawer.CustomNodeHeight > 0)
             {
                 var customRect = new Rect(2f, m_baseRect.height - nodeDataDrawer.CustomNodeHeight - 8f, m_baseRect.width - 4, nodeDataDrawer.CustomNodeHeight);//
-                nodeDataDrawer.OnNodeGUI(customRect);
+                nodeDataDrawer.OnNodeGUI(customRect, Data);
             }
 
             GUIStyle catStyle = new GUIStyle("WhiteMiniLabel");

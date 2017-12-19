@@ -8,12 +8,12 @@ namespace NodeGraph.DataModel
 	public abstract class Node {
 		public virtual string NodeInputType {
 			get {
-				return null;
+				return "";
 			}
 		}
 		public virtual string NodeOutputType {
 			get {
-				return null;
+				return "";
 			}
 		}
         public abstract void Initialize(NodeData data);

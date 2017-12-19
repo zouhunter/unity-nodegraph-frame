@@ -23,7 +23,7 @@ namespace NodeGraph
         internal virtual string Label { get { return ""; } }
         internal virtual void OnInspectorGUI()
         {
-            base.OnInspectorGUI(target);
+            base.OnInspectorGUI(this.GetType().GetField("target"),target);
         }
     }
 
