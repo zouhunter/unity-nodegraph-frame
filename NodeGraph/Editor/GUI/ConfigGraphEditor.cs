@@ -40,7 +40,7 @@ namespace NodeGraph {
 			}
 
 			using(new EditorGUILayout.VerticalScope(GUI.skin.box)) {
-				EditorGUILayout.LabelField("Version", graph.Version.ToString());
+				//EditorGUILayout.LabelField("Version", graph.Version.ToString());
 				EditorGUILayout.LabelField("Last Modified", graph.LastModified.ToString());
 				using(new EditorGUILayout.HorizontalScope()) {
 					GUILayout.Label("Description", GUILayout.Width(100f));

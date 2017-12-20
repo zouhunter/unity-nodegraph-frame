@@ -22,9 +22,7 @@ namespace NodeGraph.DataModel {
 		[SerializeField] private List<NodeData> m_allNodes;
 		[SerializeField] private List<ConnectionData> m_allConnections;
 		[SerializeField] private string m_lastModified;
-		[SerializeField] private int m_version;
 		[SerializeField] private string m_graphDescription;
-		[SerializeField] private bool m_useAsAssetPostprocessor;
         [SerializeField] private string m_controllerType;
 
 		void OnEnable() {
@@ -41,21 +39,11 @@ namespace NodeGraph.DataModel {
 				m_lastModified = GetFileTimeUtcString();
 				m_allNodes = new List<NodeData>();
 				m_allConnections = new List<ConnectionData>();
-				m_version = ABG_FILE_VERSION;
+				//m_version = ABG_FILE_VERSION;
 				m_graphDescription = String.Empty;
                 SetGraphDirty();
             }
         }
-
-		public bool UseAsAssetPostprocessor {
-			get {  
-				return m_useAsAssetPostprocessor;
-			}
-			set {
-				m_useAsAssetPostprocessor = value;
-				SetGraphDirty();
-			}
-		}
 
         public string ControllerType
         {
@@ -83,12 +71,6 @@ namespace NodeGraph.DataModel {
 			set {
 				m_graphDescription = value;
 				SetGraphDirty();
-			}
-		}
-
-		public int Version {
-			get {
-				return m_version;
 			}
 		}
 
@@ -148,7 +130,6 @@ namespace NodeGraph.DataModel {
 			{
 				Debug.Log("[ApplyGraph] SaveData updated.");
 
-				m_version = ABG_FILE_VERSION;
 				m_lastModified = GetFileTimeUtcString();
 				m_allNodes = nodes;
 				m_allConnections = connections;

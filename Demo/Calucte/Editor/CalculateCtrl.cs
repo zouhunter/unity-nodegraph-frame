@@ -11,7 +11,7 @@ public class CalculateCtrl : NodeGraphController
     
     internal override string GetConnectType(NodeData from, NodeData to)
     {
-        var outType = from.Operation.Object.NodeOutputType;
+        //var outType = from.Operation.Object.NodeOutputType;
         var inType = to.Operation.Object.NodeInputType;
         if(inType == NodePorts.stringData)
         {
