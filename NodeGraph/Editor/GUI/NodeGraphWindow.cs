@@ -996,31 +996,14 @@ namespace NodeGraph
             switch (evt.type)
             {
                 case EventType.DragUpdated:
+                    if (!dragdropArea.Contains(evt.mousePosition))
+                        return;
+                    controller.OnDragUpdated();
+                    break;
                 case EventType.DragPerform:
                     if (!dragdropArea.Contains(evt.mousePosition))
                         return;
-
-                    foreach (UnityEngine.Object obj in DragAndDrop.objectReferences)
-                    {
-                        var path = AssetDatabase.GetAssetPath(obj);
-                       
-                        if (!string.IsNullOrEmpty(path))
-                        {
-                            FileAttributes attr = File.GetAttributes(path);
-
-                            if ((attr & FileAttributes.Directory) == FileAttributes.Directory || obj is GameObject)
-                            {
-                                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-                                break;
-                            }
-                            else
-                            {
-                                DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
-                                break;
-                            }
-                        }
-                    }
-
+                    
                     if (evt.type == EventType.DragPerform)
                     {
                         DragAndDrop.AcceptDrag();

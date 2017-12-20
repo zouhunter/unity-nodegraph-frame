@@ -221,9 +221,6 @@ namespace NodeGraph
                         {
                             NodeGUIUtility.NodeEventHandler(new NodeEvent(NodeEvent.EventType.EVENT_CONNECTING_BEGIN, this, Event.current.mousePosition, result));
 
-                            if(nodeDataDrawer != null){
-                                nodeDataDrawer.OnClickNodeGUI(this, Event.current.mousePosition, result);
-                            }
                             break;
                         }
                         else
@@ -265,6 +262,11 @@ namespace NodeGraph
                                         this, Event.current.mousePosition, point));
                                 eventSent = true;
                                 return;
+                            }
+
+                            if (nodeDataDrawer != null)
+                            {
+                                nodeDataDrawer.OnClickNodeGUI(this, Event.current.mousePosition, IsOverConnectionPoint(Event.current.mousePosition));
                             }
                         };
                         m_data.InputPoints.ForEach(raiseEventIfHit);

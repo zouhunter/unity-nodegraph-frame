@@ -75,6 +75,7 @@ namespace NodeGraph
         }
         protected virtual void JudgeNodeExceptions(Model.ConfigGraph m_targetGraph, List<NodeException> m_nodeExceptions) { }
         protected virtual void BuildFromGraph(Model.ConfigGraph m_targetGraph) { }
+        internal virtual void OnDragUpdated() { }
         internal virtual List<KeyValuePair<string, Model.Node>> OnDragAccept(UnityEngine.Object[] objectReferences) { return null; }
         internal virtual void Validate(NodeGUI node) { }
         internal virtual string GetConnectType(Model. NodeData from, Model.NodeData to)
