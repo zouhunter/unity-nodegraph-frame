@@ -5,7 +5,7 @@ namespace NodeGraph.DataModel
     /// <summary>
     /// Node.
     /// </summary>
-	public abstract class Node {
+	public abstract class Node{
 		public virtual string NodeInputType {
 			get {
 				return "";
