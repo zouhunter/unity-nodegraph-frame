@@ -1,8 +1,9 @@
-﻿
+﻿using UnityEngine;
+
 namespace NodeGraph.DataModel
 {
 
-    public class Connection
+    public class Connection:ScriptableObject
     {
     }
 }

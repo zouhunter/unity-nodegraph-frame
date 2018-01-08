@@ -12,13 +12,13 @@ namespace NodeGraph.DataModel
     public class NodeData
     {
 
-        [System.Serializable]
-        public class NodeInstance : SerializedInstance<Node>
-        {
-            public NodeInstance() : base() { }
-            public NodeInstance(NodeInstance instance) : base(instance) { }
-            public NodeInstance(Node obj) : base(obj) { }
-        }
+        //[System.Serializable]
+        //public class NodeInstance : SerializedInstance<Node>
+        //{
+        //    public NodeInstance() : base() { }
+        //    public NodeInstance(NodeInstance instance) : base(instance) { }
+        //    public NodeInstance(Node obj) : base(obj) { }
+        //}
 
         [SerializeField]
         private string m_name;
@@ -29,7 +29,7 @@ namespace NodeGraph.DataModel
         [SerializeField]
         private float m_y;
         [SerializeField]
-        private NodeInstance m_nodeInstance;
+        private Node m_node;
         [SerializeField]
         private List<ConnectionPointData> m_inputPoints;
         [SerializeField]
@@ -71,11 +71,11 @@ namespace NodeGraph.DataModel
                 return m_id;
             }
         }
-        public NodeInstance Operation
+        public Node Object
         {
             get
             {
-                return m_nodeInstance;
+                return m_node;
             }
         }
 
@@ -133,7 +133,7 @@ namespace NodeGraph.DataModel
             m_name = name;
             m_x = x;
             m_y = y;
-            m_nodeInstance = new NodeInstance(node);
+            m_node = Node.Instantiate<Node>(node);
             m_nodeNeedsRevisit = false;
 
             m_inputPoints = new List<ConnectionPointData>();
@@ -159,7 +159,7 @@ namespace NodeGraph.DataModel
             {
                 m_id = Guid.NewGuid().ToString();
             }
-            m_nodeInstance = new NodeInstance(node.m_nodeInstance);
+            m_node = Node.Instantiate(node.m_node);
         }
 
         public NodeData Duplicate(bool keepId = false)
@@ -203,30 +203,30 @@ namespace NodeGraph.DataModel
 
         public bool Validate()
         {
-            return m_nodeInstance.Object != null;
+            return m_node != null;
         }
 
         public bool CompareIgnoreGUIChanges(NodeData rhs)
         {
 
-            if (m_nodeInstance == null && rhs.m_nodeInstance != null ||
-                m_nodeInstance != null && rhs.m_nodeInstance == null)
+            if (m_node == null && rhs.m_node != null ||
+                m_node != null && rhs.m_node == null)
             {
                 LogUtility.Logger.LogFormat(LogType.Log, "{0} and {1} was different: {2}", Name, rhs.Name, "Node Type");
                 return false;
             }
 
-            if (m_nodeInstance.ClassName != rhs.m_nodeInstance.ClassName)
-            {
-                LogUtility.Logger.LogFormat(LogType.Log, "{0} and {1} was different: {2}", Name, rhs.Name, "Node Type");
-                return false;
-            }
+            //if (m_node.ClassName != rhs.m_node.ClassName)
+            //{
+            //    LogUtility.Logger.LogFormat(LogType.Log, "{0} and {1} was different: {2}", Name, rhs.Name, "Node Type");
+            //    return false;
+            //}
 
-            if (m_nodeInstance.Data != rhs.m_nodeInstance.Data)
-            {
-                LogUtility.Logger.LogFormat(LogType.Log, "{0} and {1} was different: {2}", Name, rhs.Name, "Node Variable");
-                return false;
-            }
+            //if (m_node.Data != rhs.m_node.Data)
+            //{
+            //    LogUtility.Logger.LogFormat(LogType.Log, "{0} and {1} was different: {2}", Name, rhs.Name, "Node Variable");
+            //    return false;
+            //}
 
             if (m_inputPoints.Count != rhs.m_inputPoints.Count)
             {

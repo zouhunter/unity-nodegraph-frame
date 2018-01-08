@@ -35,9 +35,9 @@ public class RunTime : MonoBehaviour {
 
         foreach (var item in graph.Nodes)
         {
-            if(item.Operation.Object is ObjectNode)
+            if(item.Object is ObjectNode)
             {
-                var node = item.Operation.Object as ObjectNode;
+                var node = item.Object as ObjectNode;
                 var go = GameObject.CreatePrimitive(node.type);
                 created.Enqueue(go);
                 go.name = item.Name;

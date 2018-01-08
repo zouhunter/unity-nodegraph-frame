@@ -15,7 +15,7 @@ namespace NodeGraph.DataModel
 
         public Node CreateInstance()
         {
-            object o = type.Assembly.CreateInstance(type.FullName);
+            object o = UnityEngine.ScriptableObject.CreateInstance(type);
             return (Node)o;
         }
 

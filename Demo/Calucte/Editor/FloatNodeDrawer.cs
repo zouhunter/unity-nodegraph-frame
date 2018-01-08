@@ -13,14 +13,14 @@ public class FloatNodeDrawer : NodeDrawer {
     {
         base.OnNodeGUI(position, data);
         position = new Rect(12, position.y + 10, position.width - 24, EditorGUIUtility.singleLineHeight);
-        if (data.Operation.Object is IntNode)
+        if (data.Object is IntNode)
         {
-            iNode = data.Operation.Object as IntNode;
+            iNode = data.Object as IntNode;
             iNode.value = EditorGUI.IntField(position, iNode.value);
         }
-        if(data.Operation.Object is FloatNode)
+        if(data.Object is FloatNode)
         {
-            fNode = data.Operation.Object as FloatNode;
+            fNode = data.Object as FloatNode;
             fNode.value = EditorGUI.FloatField(position, fNode.value);
         }
 

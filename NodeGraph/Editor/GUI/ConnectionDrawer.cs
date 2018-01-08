@@ -15,13 +15,14 @@ using System;
 
 namespace NodeGraph
 {
-    public class ConnectionDrawer : DefultDrawer
+    public class ConnectionDrawer
     {
         public DataModel.Connection target;
+        protected SerializedObject serializedObj;
         internal virtual int LineWidth { get { return 3; } }
         internal virtual Color LineColor { get { return Color.white; } }
 
-        internal virtual void OnDrawLabel(Vector3 centerPos,string label)
+        internal virtual void OnDrawLabel(Vector3 centerPos, string label)
         {
             GUIStyle labelStyle = new GUIStyle("WhiteMiniLabel");
             labelStyle.alignment = TextAnchor.MiddleLeft;
@@ -33,7 +34,10 @@ namespace NodeGraph
 
         internal virtual void OnInspectorGUI()
         {
-            base.OnInspectorGUI(this.GetType().GetField("target"), target);
+            if (serializedObj == null)
+                serializedObj = new SerializedObject(target);
+            EditorGUILayout.HelpBox("[默认绘制:]", MessageType.Info);
+            UserDefineUtility.DrawSerializedObject(serializedObj);
         }
     }
 

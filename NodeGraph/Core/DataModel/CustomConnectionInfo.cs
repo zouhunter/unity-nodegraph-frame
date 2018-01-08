@@ -17,12 +17,11 @@ namespace NodeGraph.DataModel
         {
             if(type == null || string.IsNullOrEmpty(type.FullName))
             {
-                return new Connection();
+                return Connection.CreateInstance<Connection>();
             }
             else
             {
-                object o = type.Assembly.CreateInstance(type.FullName);
-                return (Connection)o;
+                 return Connection.CreateInstance ( type) as Connection;
             }
         }
     }

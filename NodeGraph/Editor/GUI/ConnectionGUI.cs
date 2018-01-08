@@ -156,9 +156,9 @@ namespace NodeGraph
             this.m_data = data;
             this.m_outputPoint = output;
             this.m_inputPoint = input;
-            connectionDrawer = UserDefineUtility.GetUserDrawer(data.Operation.Object.GetType()) as ConnectionDrawer;
+            connectionDrawer = UserDefineUtility.GetUserDrawer(data.Object.GetType()) as ConnectionDrawer;
             if (connectionDrawer == null) connectionDrawer = new ConnectionDrawer();
-            connectionDrawer.target = data.Operation.Object;
+            connectionDrawer.target = data.Object;
             //connectionButtonStyle = "sv_label_0";
         }
 
@@ -286,7 +286,7 @@ namespace NodeGraph
             if (EditorGUI.EndChangeCheck())
             {
                 Controller.Perform();
-                Data.Operation.Save();
+                EditorUtility.SetDirty( Data.Object);
                 ParentGraph.SetGraphDirty();
             }
         }

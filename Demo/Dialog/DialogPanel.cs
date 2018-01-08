@@ -46,7 +46,7 @@ public class DialogPanel : MonoBehaviour
 
         if (currentNode != null)
         {
-            DisplayNode(currentNode.Operation.Object);
+            DisplayNode(currentNode.Object);
         }
         else
         {
@@ -62,7 +62,7 @@ public class DialogPanel : MonoBehaviour
             currentNode = graph.Nodes.Find(x => x.Id == bridge.ToNodeId);
             if (currentNode != null)
             {
-                DisplayNode(currentNode.Operation.Object);
+                DisplayNode(currentNode.Object);
             }
             else
             {
@@ -78,14 +78,14 @@ public class DialogPanel : MonoBehaviour
 
     void ReStartDialog()
     {
-        currentNode = graph.Nodes.Find(x => { Debug.Log(x.Operation.Object.GetType()); return x.Operation.Object.GetType() == typeof(DialogEntryNode); });
+        currentNode = graph.Nodes.Find(x => { Debug.Log(x.Object.GetType()); return x.Object.GetType() == typeof(DialogEntryNode); });
         if (currentNode == null)
         {
             Debug.LogError("No Entry");
         }
         else
         {
-            DisplayNode(currentNode.Operation.Object);
+            DisplayNode(currentNode.Object);
         }
     }
     void DisplayNode(Node node)

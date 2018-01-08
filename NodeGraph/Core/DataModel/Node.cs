@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace NodeGraph.DataModel
 {
     /// <summary>
     /// Node.
     /// </summary>
-	public abstract class Node{
+	public abstract class Node:ScriptableObject{
 
         public virtual void Initialize(NodeData data)
         {
@@ -39,13 +40,12 @@ namespace NodeGraph.DataModel
                 data.InputPoints.AddRange(updated);
             }
         }
-
         protected void InitOutPoints(NodeData data)
         {
-            if (inPoints != null)
+            if (outPoints != null)
             {
                 var updated = new List<ConnectionPointData>();
-                foreach (var point in inPoints)
+                foreach (var point in outPoints)
                 {
                     var old = data.OutputPoints.Find(x => (x.Label == point.label /*|| x.Type == point.type*/) && !updated.Contains(x));
                     if (old != null)

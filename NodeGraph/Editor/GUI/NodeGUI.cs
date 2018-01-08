@@ -139,10 +139,10 @@ namespace NodeGraph
             m_nodeWindowId = 0;
             m_controller = controller;
             m_data = data;
-            m_data.Operation.Object.Initialize(m_data);
-            nodeDataDrawer = UserDefineUtility.GetUserDrawer(data.Operation.Object.GetType()) as NodeDrawer;
+            m_data.Object.Initialize(m_data);
+            nodeDataDrawer = UserDefineUtility.GetUserDrawer(data.Object.GetType()) as NodeDrawer;
             if (nodeDataDrawer == null) nodeDataDrawer = new NodeDrawer();
-            nodeDataDrawer.target = data.Operation.Object;
+            nodeDataDrawer.target = data.Object;
             m_baseRect = new Rect(m_data.X, m_data.Y, NGEditorSettings.GUI.NODE_BASE_WIDTH, NGEditorSettings.GUI.NODE_BASE_HEIGHT + nodeDataDrawer.CustomNodeHeight);
             m_nodeSyle = nodeDataDrawer == null ? "node 0" : nodeDataDrawer.InactiveStyle;
         }
@@ -665,7 +665,7 @@ namespace NodeGraph
             if (EditorGUI.EndChangeCheck())
             {
                 Controller.Validate(this);
-                Data.Operation.Save();
+               EditorUtility.SetDirty(  Data.Object);
                 ParentGraph.SetGraphDirty();
             }
         }

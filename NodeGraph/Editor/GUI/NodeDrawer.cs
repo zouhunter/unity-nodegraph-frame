@@ -8,22 +8,25 @@ using System.Reflection;
 
 namespace NodeGraph
 {
-    public class NodeDrawer: DefultDrawer
+    public class NodeDrawer 
     {
         public Node target;
-        public string ActiveStyle { get { return string.Format( "node {0} on",Style); } }
-		public string InactiveStyle { get { return string.Format("node {0}",Style); } }
+        protected SerializedObject serializedObj;
+        public string ActiveStyle { get { return string.Format("node {0} on", Style); } }
+        public string InactiveStyle { get { return string.Format("node {0}", Style); } }
         public virtual int Style { get { return 0; } }
         public virtual string Category { get { return "empty"; } }
-        public virtual void OnContextMenuGUI(GenericMenu menu,NodeGUI gui) { }
+        public virtual void OnContextMenuGUI(GenericMenu menu, NodeGUI gui) { }
         public virtual float CustomNodeHeight { get { return 0; } }
-        public virtual void OnNodeGUI(Rect position,NodeData data) { }
+        public virtual void OnNodeGUI(Rect position, NodeData data) { }
         public virtual void OnInspectorGUI(NodeGUI gui)
         {
-            base.OnInspectorGUI(this.GetType().GetField("target"), target);
+            if (serializedObj == null) serializedObj = new SerializedObject(target);
+            EditorGUILayout.HelpBox("[默认绘制:]", MessageType.Info);
+            UserDefineUtility.DrawSerializedObject(serializedObj);
         }
         public virtual void OnClickNodeGUI(NodeGUI nodeGUI, Vector2 mousePosition, ConnectionPointData result) { }
-        protected void RecordUnDo(string message,NodeGUI node,bool saveOnScopeEnd,UnityAction action)
+        protected void RecordUnDo(string message, NodeGUI node, bool saveOnScopeEnd, UnityAction action)
         {
             using (new RecordUndoScope("Change Node Name", node, saveOnScopeEnd))
             {

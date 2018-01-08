@@ -110,8 +110,10 @@ namespace NodeGraph.DataModel {
         }
 
 		public void Save() {
-			m_allNodes.ForEach(n => n.Operation.Save());
-			SetGraphDirty();
+#if UNITY_EDITOR
+            m_allNodes.ForEach(n => UnityEditor.EditorUtility.SetDirty(n.Object));
+#endif
+            SetGraphDirty();
 		}
 
 		public void SetGraphDirty() {

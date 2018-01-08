@@ -10,13 +10,13 @@ namespace NodeGraph.DataModel {
 	[Serializable]
 	public class ConnectionData
     {
-        [System.Serializable]
-        public class ConnectionInstance : SerializedInstance<Connection>
-        {
-            public ConnectionInstance() : base() { }
-            public ConnectionInstance(ConnectionInstance instance) : base(instance) { }
-            public ConnectionInstance(Connection obj) : base(obj) { }
-        }
+        //[System.Serializable]
+        //public class ConnectionInstance : SerializedInstance<Connection>
+        //{
+        //    public ConnectionInstance() : base() { }
+        //    public ConnectionInstance(ConnectionInstance instance) : base(instance) { }
+        //    public ConnectionInstance(Connection obj) : base(obj) { }
+        //}
 
         [SerializeField] private string m_id;
 		[SerializeField] private string m_fromNodeId;
@@ -24,8 +24,9 @@ namespace NodeGraph.DataModel {
 		[SerializeField] private string m_toNodeId;
 		[SerializeField] private string m_toNodeConnectionPoiontId;
 		[SerializeField] private string m_type;
-        [SerializeField] private ConnectionInstance m_connectionInstance;
-        
+        //[SerializeField] private ConnectionInstance m_connectionInstance;
+        [SerializeField] private Connection m_connection;
+
         private ConnectionData() {
 			m_id = Guid.NewGuid().ToString();
 		}
@@ -38,7 +39,8 @@ namespace NodeGraph.DataModel {
 			m_toNodeId = input.NodeId;
 			m_toNodeConnectionPoiontId = input.Id;
 
-            m_connectionInstance = new ConnectionInstance(connection);
+            //m_connectionInstance = new ConnectionInstance(connection);
+            m_connection = connection;
         }
 
         /// <summary>
@@ -74,17 +76,24 @@ namespace NodeGraph.DataModel {
 				return m_fromNodeId;
 			}
 		}
-
-        public ConnectionInstance Operation
+        public Connection Object
         {
             get
             {
-                return m_connectionInstance;
+                return m_connection;
             }
         }
+        //public ConnectionInstance Operation
+        //{
+        //    get
+        //    {
+        //        return m_connectionInstance;
+        //    }
+        //}
         public bool Validate()
         {
-            return m_connectionInstance.Object != null;
+            //return m_connectionInstance.Object != null;
+            return m_connection != null;
         }
 
         /// <summary>
@@ -127,8 +136,8 @@ namespace NodeGraph.DataModel {
 			newData.m_fromNodeConnectionPointId = m_fromNodeConnectionPointId;
 			newData.m_toNodeId = m_toNodeId;
 			newData.m_toNodeConnectionPoiontId = m_toNodeConnectionPoiontId;
-            newData.m_connectionInstance = new ConnectionInstance(m_connectionInstance);
-
+            //newData.m_connectionInstance = new ConnectionInstance(m_connectionInstance);
+            newData.m_connection = UnityEngine.Object.Instantiate<Connection>(m_connection);
             return newData;
 		}
 
