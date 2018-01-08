@@ -69,7 +69,7 @@ namespace NodeGraph.DataModel {
             {
                 return max;
             }
-            private set
+            set
             {
                 max = value;
             }

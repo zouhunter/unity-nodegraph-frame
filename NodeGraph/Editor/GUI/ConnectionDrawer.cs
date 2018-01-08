@@ -30,6 +30,7 @@ namespace NodeGraph
             Handles.Label(labelPointV3, label, labelStyle);
         }
         internal virtual void OnConnectionGUI(Vector3 startV3, Vector3 endV3, Vector3 startTan, Vector3 endTan) { }
+
         internal virtual void OnInspectorGUI()
         {
             base.OnInspectorGUI(this.GetType().GetField("target"), target);

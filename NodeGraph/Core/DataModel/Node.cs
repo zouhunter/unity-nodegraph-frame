@@ -8,23 +8,61 @@ namespace NodeGraph.DataModel
     /// Node.
     /// </summary>
 	public abstract class Node{
+
         public virtual void Initialize(NodeData data)
         {
-            if (inPoints != null && data.InputPoints.Count != inPoints.Count())
+            InitInputPoints(data);
+            InitOutPoints(data);
+        }
+
+        protected void InitInputPoints(NodeData data)
+        {
+            if (inPoints != null)
             {
-                data.InputPoints.Clear();
+                var updated = new List<ConnectionPointData>();
                 foreach (var point in inPoints)
                 {
-                    data.AddInputPoint(point.label, point.type, point.max);
+                    var old = data.InputPoints.Find(x => x.Label == point.label && !updated.Contains(x));
+                    if (old != null)
+                    {
+                        updated.Add(old);
+                        old.Max = point.max;
+                        old.Type = point.type;
+                    }
+                    else
+                    {
+                        old = data.AddInputPoint(point.label, point.type, point.max);
+                        updated.Add(old);
+                    }
                 }
+                data.InputPoints.Clear();
+                data.InputPoints.AddRange(updated);
             }
+        }
 
-            if(outPoints != null && data.OutputPoints.Count != outPoints.Count()) {
-                data.OutputPoints.Clear();
-                foreach (var point in outPoints)
+        protected void InitOutPoints(NodeData data)
+        {
+            if (inPoints != null)
+            {
+                var updated = new List<ConnectionPointData>();
+                foreach (var point in inPoints)
                 {
-                    data.AddOutputPoint(point.label, point.type, point.max);
+                    var old = data.OutputPoints.Find(x => (x.Label == point.label /*|| x.Type == point.type*/) && !updated.Contains(x));
+                    if (old != null)
+                    {
+                        updated.Add(old);
+                        old.Label = point.label;
+                        old.Max = point.max;
+                        old.Type = point.type;
+                    }
+                    else
+                    {
+                        old = data.AddOutputPoint(point.label, point.type, point.max);
+                        updated.Add(old);
+                    }
                 }
+                data.OutputPoints.Clear();
+                data.OutputPoints.AddRange(updated);
             }
         }
         protected virtual IEnumerable<Point> inPoints { get { return null; } }
