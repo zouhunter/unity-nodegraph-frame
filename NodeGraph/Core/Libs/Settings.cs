@@ -32,8 +32,6 @@ namespace NodeGraph
 
         // by default, NodeGraph.DataModel's node has only 1 InputPoint. and 
         // this is only one definition of it's label.
-        public const string DEFAULT_INPUTPOINT_LABEL = "-";
-        public const string DEFAULT_OUTPUTPOINT_LABEL = "+";
         public const string BASE64_IDENTIFIER = "B64|";
         public const string BUNDLECONFIG_BUNDLE_OUTPUTPOINT_LABEL = "bundles";
         public const string BUNDLECONFIG_VARIANTNAME_DEFAULT = "";

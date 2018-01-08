@@ -23,7 +23,7 @@ public class DialogSelectDrawer : NodeDrawer
         if (GUILayout.Button("+", EditorStyles.toolbarDropDown))
         {
             node.infomation.Add("");
-            gui.Data.AddOutputPoint(((char)(node.infomation.Count + 64)).ToString());
+            gui.Data.AddOutputPoint(((char)(node.infomation.Count + 64)).ToString(),"");
         }
         for (int i = 0; i < node.infomation.Count; i++)
         {

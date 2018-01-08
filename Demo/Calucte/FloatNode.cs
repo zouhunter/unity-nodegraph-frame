@@ -2,27 +2,24 @@
 using System.Collections;
 using NodeGraph;
 using NodeGraph.DataModel;
+using System.Collections.Generic;
+
 [CustomNode("Node/Float",1,"Calculate")]
 public class FloatNode : Node
 {
-    public override string NodeInputType
-    {
-        get
-        {
-            return "f";
-        }
-    }
-    public override string NodeOutputType
-    {
-        get
-        {
-            return "f";
-        }
-    }
     public float value;
-    public override void Initialize(NodeData data)
+    protected override IEnumerable<Point> inPoints
     {
-        data.AddDefaultInputPoint();
-        data.AddDefaultOutputPoint();
+        get
+        {
+            return new Point[] { new Point("f", "Number", 2) };
+        }
+    }
+    protected override IEnumerable<Point> outPoints
+    {
+        get
+        {
+            return new Point[] { new Point("f", "Number", 2) };
+        }
     }
 }

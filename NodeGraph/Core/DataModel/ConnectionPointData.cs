@@ -16,19 +16,16 @@ namespace NodeGraph.DataModel {
 		[SerializeField] private string parentId;
 		[SerializeField] private bool isInput;
 		[SerializeField] private Rect buttonRect;
+        [SerializeField] private int max;//最大连接数
+        [SerializeField] private string type;//类型
 
-		public ConnectionPointData(string id, string label, NodeData parent, bool isInput/*, int orderPriority, bool showLabel */) {
-			this.id = id;
-			this.label = label;
-			this.parentId = parent.Id;
-			this.isInput = isInput;
-		}
-
-		public ConnectionPointData(string label, NodeData parent, bool isInput) {
+		public ConnectionPointData(string label,string type,int max, NodeData parent, bool isInput) {
 			this.id = Guid.NewGuid().ToString();
 			this.label = label;
 			this.parentId = parent.Id;
 			this.isInput = isInput;
+            this.max = max;
+            this.type = type;
 		}
 
 		public ConnectionPointData(ConnectionPointData p) {
@@ -37,6 +34,8 @@ namespace NodeGraph.DataModel {
 			this.parentId 	= p.parentId;
 			this.isInput 	= p.isInput;
 			this.buttonRect = p.buttonRect;
+            this.max        = p.max;
+            this.type       = p.type;
 		}
 
 		public string Id {
@@ -44,15 +43,37 @@ namespace NodeGraph.DataModel {
 				return id;
 			}
 		}
-
-		public string Label {
+        public string Label
+        {
+            get
+            {
+                return label;
+            }
+            set
+            {
+                label = value;
+            }
+        }
+		public string Type {
 			get {
-				return label;
+				return type;
 			}
 			set {
-				label = value;
+				type = value;
 			}
 		}
+
+        public int Max
+        {
+            get
+            {
+                return max;
+            }
+            private set
+            {
+                max = value;
+            }
+        }
 
 		public string NodeId {
 			get {
@@ -111,8 +132,5 @@ namespace NodeGraph.DataModel {
 
 			return new Vector2(x, y);
 		}
-
-		
-     
 	}
 }

@@ -167,42 +167,21 @@ namespace NodeGraph.DataModel
             return new NodeData(this, keepId);
         }
 
-        public ConnectionPointData AddInputPoint(string label)
+        public ConnectionPointData AddInputPoint(string label,string type,int max = 1)
         {
-            var p = new ConnectionPointData(label, this, true);
+            var p = new ConnectionPointData(label,type, max, this, true);
             m_inputPoints.Add(p);
             return p;
         }
 
-        public ConnectionPointData AddOutputPoint(string label)
+        public ConnectionPointData AddOutputPoint(string label,string type,int max = 1)
         {
-            var p = new ConnectionPointData(label, this, false);
+            var p = new ConnectionPointData(label,type, max, this, false);
             m_outputPoints.Add(p);
             return p;
         }
 
-        public ConnectionPointData AddDefaultInputPoint()
-        {
-
-            var p = m_inputPoints.Find(v => v.Label == NGSettings.DEFAULT_INPUTPOINT_LABEL);
-            if (null == p)
-            {
-                p = AddInputPoint(NGSettings.DEFAULT_INPUTPOINT_LABEL);
-            }
-            return p;
-        }
-
-        public ConnectionPointData AddDefaultOutputPoint()
-        {
-            var p = m_outputPoints.Find(v => v.Label == NGSettings.DEFAULT_OUTPUTPOINT_LABEL);
-            if (null == p)
-            {
-                p = AddOutputPoint(NGSettings.DEFAULT_OUTPUTPOINT_LABEL);
-            }
-            return p;
-        }
-
-        public ConnectionPointData FindInputPoint(string id)
+       public ConnectionPointData FindInputPoint(string id)
         {
             return m_inputPoints.Find(p => p.Id == id);
         }

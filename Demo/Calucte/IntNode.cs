@@ -3,27 +3,32 @@ using System.Collections;
 
 using NodeGraph;
 using NodeGraph.DataModel;
+using System.Collections.Generic;
+
+
+[CustomNode("Node/Short", 2, "Calculate")]
+public class ShortNode : Node
+{
+    public short value;
+}
+
+
 [CustomNode("Node/Int", 2, "Calculate")]
 public class IntNode : Node
 {
-    public override string NodeInputType
-    {
-        get
-        {
-            return "i";
-        }
-    }
-    public override string NodeOutputType
-    {
-        get
-        {
-            return "i";
-        }
-    }
     public int value;
-    public override void Initialize(NodeData data)
+    protected override IEnumerable<Point> inPoints
     {
-        data.AddDefaultInputPoint();
-        data.AddDefaultOutputPoint();
+        get
+        {
+            return new Point[] { new Point("i", "Number", 2) };
+        }
+    }
+    protected override IEnumerable<Point> outPoints
+    {
+        get
+        {
+            return new Point[] { new Point("i", "Number", 2) };
+        }
     }
 }

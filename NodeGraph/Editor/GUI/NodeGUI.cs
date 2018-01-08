@@ -143,7 +143,7 @@ namespace NodeGraph
             nodeDataDrawer = UserDefineUtility.GetUserDrawer(data.Operation.Object.GetType()) as NodeDrawer;
             if (nodeDataDrawer == null) nodeDataDrawer = new NodeDrawer();
             nodeDataDrawer.target = data.Operation.Object;
-            m_baseRect = new Rect(m_data.X, m_data.Y , NGEditorSettings.GUI.NODE_BASE_WIDTH, NGEditorSettings.GUI.NODE_BASE_HEIGHT + nodeDataDrawer.CustomNodeHeight);
+            m_baseRect = new Rect(m_data.X, m_data.Y, NGEditorSettings.GUI.NODE_BASE_WIDTH, NGEditorSettings.GUI.NODE_BASE_HEIGHT + nodeDataDrawer.CustomNodeHeight);
             m_nodeSyle = nodeDataDrawer == null ? "node 0" : nodeDataDrawer.InactiveStyle;
         }
 
@@ -185,10 +185,10 @@ namespace NodeGraph
             }
         }
 
-        private bool IsValidInputConnectionPoint(Model.ConnectionPointData point)
-        {
-            return m_data.Operation.Object.IsValidInputConnectionPoint(point);
-        }
+        //private bool IsValidInputConnectionPoint(Model.ConnectionPointData point)
+        //{
+        //    return m_data.Operation.Object.IsValidInputConnectionPoint(point);
+        //}
 
         /**
 			retrieve mouse events for this node in this GraphEditor window.
@@ -249,11 +249,11 @@ namespace NodeGraph
                                 return;
                             }
 
-                            // If InputConnectionPoint is not valid at this moment, ignore
-                            if (!IsValidInputConnectionPoint(point))
-                            {
-                                return;
-                            }
+                            //// If InputConnectionPoint is not valid at this moment, ignore
+                            //if (!IsValidInputConnectionPoint(point))
+                            //{
+                            //    return;
+                            //}
 
                             if (point.Region.Contains(Event.current.mousePosition))
                             {
@@ -284,7 +284,7 @@ namespace NodeGraph
 
                 if (nodeDataDrawer != null)
                 {
-                    nodeDataDrawer.OnContextMenuGUI(menu,this);
+                    nodeDataDrawer.OnContextMenuGUI(menu, this);
                 }
 
                 menu.AddItem(
@@ -307,11 +307,7 @@ namespace NodeGraph
             var defaultPointTex = NodeGUIUtility.pointMark;
             var lastColor = GUI.color;
 
-            bool shouldDrawEnable =
-                !(eventSource != null &&
-                    eventSource.eventSourceNode != null &&
-                    Controller.GetConnectType(eventSource.eventSourceNode.Data, m_data) == null
-                );
+            bool shouldDrawEnable = eventSource == null || eventSource.eventSourceNode != null;
 
             bool shouldDrawWithEnabledColor =
                 shouldDrawEnable && justConnecting &&
@@ -321,20 +317,17 @@ namespace NodeGraph
 
             foreach (var point in m_data.InputPoints)
             {
-                if (IsValidInputConnectionPoint(point))
+                if (shouldDrawWithEnabledColor && Controller.GetConnectType(eventSource.point, point) != null)
                 {
-                    if (shouldDrawWithEnabledColor)
-                    {
-                        GUI.color = NGEditorSettings.GUI.COLOR_CAN_CONNECT;
-                    }
-                    else
-                    {
-                        GUI.color = (justConnecting) ? NGEditorSettings.GUI.COLOR_CAN_NOT_CONNECT : NGEditorSettings.GUI.COLOR_CONNECTED;
-                    }
-                    var rect = ConnectionPointDataUtility.GetGlobalPointRegion(point.IsInput, point.Region, this);
-                    GUI.DrawTexture(rect, defaultPointTex);
-                    GUI.color = lastColor;
+                    GUI.color = NGEditorSettings.GUI.COLOR_CAN_CONNECT;
                 }
+                else
+                {
+                    GUI.color = (justConnecting) ? NGEditorSettings.GUI.COLOR_CAN_NOT_CONNECT : NGEditorSettings.GUI.COLOR_CONNECTED;
+                }
+                var rect = ConnectionPointDataUtility.GetGlobalPointRegion(point.IsInput, point.Region, this);
+                GUI.DrawTexture(rect, defaultPointTex);
+                GUI.color = lastColor;
             }
         }
 
@@ -343,10 +336,7 @@ namespace NodeGraph
             var defaultPointTex = NodeGUIUtility.pointMark;
             var lastColor = GUI.color;
 
-            bool shouldDrawEnable =
-                !(eventSource != null && eventSource.eventSourceNode != null &&
-                    Controller.GetConnectType(m_data, eventSource.eventSourceNode.Data) == null
-                );
+            bool shouldDrawEnable = eventSource == null || eventSource.eventSourceNode != null;
 
             bool shouldDrawWithEnabledColor =
                 shouldDrawEnable && justConnecting
@@ -358,10 +348,11 @@ namespace NodeGraph
 
             foreach (var point in m_data.OutputPoints)
             {
+
                 var pointRegion = ConnectionPointDataUtility.GetGlobalPointRegion(point.IsInput, point.Region, this);
                 //var pointRegion = point.GetGlobalPointRegion(this);
 
-                if (shouldDrawWithEnabledColor)
+                if (shouldDrawWithEnabledColor && Controller.GetConnectType(eventSource.point, point) == null)
                 {
                     GUI.color = NGEditorSettings.GUI.COLOR_CAN_CONNECT;
                 }
@@ -435,8 +426,7 @@ namespace NodeGraph
             Action<Model.ConnectionPointData> drawConnectionPoint = (Model.ConnectionPointData point) =>
             {
                 var label = point.Label;
-                if (label != NGSettings.DEFAULT_INPUTPOINT_LABEL &&
-                    label != NGSettings.DEFAULT_OUTPUTPOINT_LABEL)
+                if (!string.IsNullOrEmpty(label))
                 {
                     var region = point.Region;
                     // if point is output node, then label position offset is minus. otherwise plus.
@@ -456,7 +446,7 @@ namespace NodeGraph
             m_data.InputPoints.ForEach(drawConnectionPoint);
             m_data.OutputPoints.ForEach(drawConnectionPoint);
 
-            if(nodeDataDrawer.CustomNodeHeight > 0)
+            if (nodeDataDrawer.CustomNodeHeight > 0)
             {
                 var customRect = new Rect(2f, m_baseRect.height - nodeDataDrawer.CustomNodeHeight - 8f, m_baseRect.width - 4, nodeDataDrawer.CustomNodeHeight);//
                 nodeDataDrawer.OnNodeGUI(customRect, Data);
@@ -477,14 +467,15 @@ namespace NodeGraph
             float outputLabelWidth = 0f;
             float inputLabelWidth = 0f;
             float notdefultLabelHeight = 0f;
-            if(m_data.InputPoints.Find(x=>x.Label != NGSettings.DEFAULT_INPUTPOINT_LABEL) != null || m_data.OutputPoints.Find(x=>x.Label != NGSettings.DEFAULT_OUTPUTPOINT_LABEL) != null)
+
+            if (m_data.InputPoints.Find(x => !string.IsNullOrEmpty(x.Type)) != null || m_data.OutputPoints.Find(x => !string.IsNullOrEmpty(x.Type)) != null)
             {
                 notdefultLabelHeight += EditorGUIUtility.singleLineHeight;
             }
 
             if (m_data.InputPoints.Count > 0)
             {
-                var inputLabels = m_data.InputPoints.OrderByDescending(p => p.Label.Length).Select(p => p.Label);
+                var inputLabels = m_data.InputPoints.OrderByDescending(p => p.Type.Length).Select(p => p.Type);
                 if (inputLabels.Any())
                 {
                     inputLabelWidth = GUI.skin.label.CalcSize(new GUIContent(inputLabels.First())).x;
@@ -493,7 +484,7 @@ namespace NodeGraph
 
             if (m_data.OutputPoints.Count > 0)
             {
-                var outputLabels = m_data.OutputPoints.OrderByDescending(p => p.Label.Length).Select(p => p.Label);
+                var outputLabels = m_data.OutputPoints.OrderByDescending(p => p.Type.Length).Select(p => p.Type);
                 if (outputLabels.Any())
                 {
                     outputLabelWidth = GUI.skin.label.CalcSize(new GUIContent(outputLabels.First())).x;
@@ -524,10 +515,10 @@ namespace NodeGraph
             {
                 var region = p.Region;
 
-                if (!IsValidInputConnectionPoint(p))
-                {
-                    continue;
-                }
+                //if (!IsValidInputConnectionPoint(p))
+                //{
+                //    continue;
+                //}
 
                 if (region.x <= touchedPoint.x &&
                     touchedPoint.x <= region.x + region.width &&
@@ -636,10 +627,10 @@ namespace NodeGraph
 
             foreach (var point in m_data.InputPoints)
             {
-                if (!IsValidInputConnectionPoint(point))
-                {
-                    continue;
-                }
+                //if (!IsValidInputConnectionPoint(point))
+                //{
+                //    continue;
+                //}
 
                 var gregion = ConnectionPointDataUtility.GetGlobalPointRegion(point.IsInput, point.Region, this);
                 if (point.GetGlobalRegion(this.Region).Contains(globalPos) ||
@@ -667,7 +658,8 @@ namespace NodeGraph
             JudgeName();
             EditorGUI.BeginChangeCheck();
             Name = EditorGUILayout.TextField("Node Name", Name);
-            if (nodeDataDrawer != null) {
+            if (nodeDataDrawer != null)
+            {
                 nodeDataDrawer.OnInspectorGUI(this);
             }
             if (EditorGUI.EndChangeCheck())

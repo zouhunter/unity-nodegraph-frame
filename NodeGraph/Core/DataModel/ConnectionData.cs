@@ -23,16 +23,16 @@ namespace NodeGraph.DataModel {
 		[SerializeField] private string m_fromNodeConnectionPointId;
 		[SerializeField] private string m_toNodeId;
 		[SerializeField] private string m_toNodeConnectionPoiontId;
-		[SerializeField] private string m_label;
+		[SerializeField] private string m_type;
         [SerializeField] private ConnectionInstance m_connectionInstance;
         
         private ConnectionData() {
 			m_id = Guid.NewGuid().ToString();
 		}
 
-		public ConnectionData(string label, Connection connection, ConnectionPointData output, ConnectionPointData input) {
+		public ConnectionData(string type, Connection connection, ConnectionPointData output, ConnectionPointData input) {
 			m_id = Guid.NewGuid().ToString();
-			m_label = label;
+			m_type = type;
             m_fromNodeId = output.NodeId;
 			m_fromNodeConnectionPointId = output.Id;
 			m_toNodeId = input.NodeId;
@@ -55,13 +55,13 @@ namespace NodeGraph.DataModel {
         /// Gets or sets the label.
         /// </summary>
         /// <value>The label.</value>
-		public string Label {
+		public string ConnectionType {
 			get {
-				return m_label;
+				return m_type;
 			}
 
 			set {
-				m_label = value;
+				m_type = value;
 			}
 		}
 
@@ -122,7 +122,7 @@ namespace NodeGraph.DataModel {
 			if(keepGuid) {
 				newData.m_id = m_id;
 			}
-			newData.m_label = m_label;
+			newData.m_type = m_type;
 			newData.m_fromNodeId = m_fromNodeId;
 			newData.m_fromNodeConnectionPointId = m_fromNodeConnectionPointId;
 			newData.m_toNodeId = m_toNodeId;
@@ -157,8 +157,8 @@ namespace NodeGraph.DataModel {
 			}
 
 			// update connection label if not matching with outputPoint label
-			if( outputPoint.Label != m_label ) {
-				m_label = outputPoint.Label;
+			if( outputPoint.Type != m_type ) {
+				m_type = outputPoint.Type;
 			}
 
 			return true;

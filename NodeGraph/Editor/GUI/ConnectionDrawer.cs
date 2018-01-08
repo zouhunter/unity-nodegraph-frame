@@ -15,15 +15,24 @@ using System;
 
 namespace NodeGraph
 {
-    public class ConnectionDrawer: DefultDrawer
+    public class ConnectionDrawer : DefultDrawer
     {
         public DataModel.Connection target;
         internal virtual int LineWidth { get { return 3; } }
         internal virtual Color LineColor { get { return Color.white; } }
-        internal virtual string Label { get { return ""; } }
+
+        internal virtual void OnDrawLabel(Vector3 centerPos,string label)
+        {
+            GUIStyle labelStyle = new GUIStyle("WhiteMiniLabel");
+            labelStyle.alignment = TextAnchor.MiddleLeft;
+            var labelWidth = labelStyle.CalcSize(new GUIContent(label));
+            var labelPointV3 = new Vector3(centerPos.x - (labelWidth.x / 2), centerPos.y - 24f, 0f);
+            Handles.Label(labelPointV3, label, labelStyle);
+        }
+        internal virtual void OnConnectionGUI(Vector3 startV3, Vector3 endV3, Vector3 startTan, Vector3 endTan) { }
         internal virtual void OnInspectorGUI()
         {
-            base.OnInspectorGUI(this.GetType().GetField("target"),target);
+            base.OnInspectorGUI(this.GetType().GetField("target"), target);
         }
     }
 

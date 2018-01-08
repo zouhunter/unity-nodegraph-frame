@@ -11,5 +11,5 @@ public class CalcuteConnectiodrawer : ConnectionDrawer {
     }
     internal override int LineWidth { get { return 1; } }
 
-    internal override string Label { get { return (target as OperationConnection).calcuteType.ToString().Substring(0,1); } }
+    protected string Label { get { return (target as OperationConnection).calcuteType.ToString().Substring(0,1); } }
 }

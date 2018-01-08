@@ -6,9 +6,4 @@ using NodeGraph.DataModel;
 public class ResultNode : Node
 {
     public string value;
-    public override string NodeInputType { get { return NodePorts.stringData; } }
-    public override void Initialize(NodeData data)
-    {
-        data.AddDefaultInputPoint();
-    }
 }

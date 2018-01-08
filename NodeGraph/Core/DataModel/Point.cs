@@ -10,11 +10,19 @@ using UnityEngine.Assertions.Must;
 using UnityEngine.Assertions.Comparers;
 using System.Collections;
 using System.Collections.Generic;
-using NodeGraph;
-using NodeGraph.DataModel;
-using System;
 
-[CustomNode("RundomConnect/Node", 1)]
-public class ObjectNode : Node {
-    public PrimitiveType type;
+namespace NodeGraph.DataModel
+{
+    public struct Point
+    {
+        public string label;
+        public string type;
+        public int max;
+        public Point(string label, string type, int max = 1)
+        {
+            this.label = label;
+            this.type = type;
+            this.max = max;
+        }
+    }
 }

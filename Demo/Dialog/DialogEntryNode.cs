@@ -7,8 +7,4 @@ public class DialogEntryNode : Node
 {
     public string person;
     public string infomation;
-    public override void Initialize(NodeData data)
-    {
-        data.AddDefaultOutputPoint();
-    }
 }

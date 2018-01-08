@@ -13,7 +13,7 @@ namespace NodeGraph
 {
     public class NodeGraphWindow : EditorWindow
     {
-      
+
         [Serializable]
         public class SavedSelection
         {
@@ -366,7 +366,8 @@ namespace NodeGraph
         public void OpenGraph(string path)
         {
             Model.ConfigGraph graph = AssetDatabase.LoadAssetAtPath<Model.ConfigGraph>(path);
-            if (graph == null){
+            if (graph == null)
+            {
                 throw new NodeGraph.DataModelException("Could not open graph:" + path);
             }
             OpenGraph(graph);
@@ -399,7 +400,7 @@ namespace NodeGraph
             Selection.activeObject = graph;
             NodeConnectionUtility.Reset();
         }
-        
+
 
         private void CloseGraph()
         {
@@ -417,11 +418,12 @@ namespace NodeGraph
 
         private void CreateNewGraphFromDialog(string controllerType)
         {
-            string path =  EditorUtility.SaveFilePanelInProject(
+            string path = EditorUtility.SaveFilePanelInProject(
                 "Create New Node Graph",
                 "Node Graph", "asset",
                 "Create a new node graph:");
-            if (string.IsNullOrEmpty(path)){
+            if (string.IsNullOrEmpty(path))
+            {
                 return;
             }
 
@@ -564,7 +566,7 @@ namespace NodeGraph
                 Repaint();
             }
         }
-       
+
         private void DrawGUIToolBar()
         {
             using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
@@ -604,18 +606,18 @@ namespace NodeGraph
 
                     menu.AddSeparator("");
 
-                    if(controllerTypes != null)
+                    if (controllerTypes != null)
                     {
                         foreach (var ct in controllerTypes)
                         {
-                            menu.AddItem(new GUIContent(string.Format("Create New/({0})Graph" , ct)), false, () =>
-                            {
-                                CreateNewGraphFromDialog(ct);
-                            });
+                            menu.AddItem(new GUIContent(string.Format("Create New/({0})Graph", ct)), false, () =>
+                           {
+                               CreateNewGraphFromDialog(ct);
+                           });
                             menu.AddSeparator("");
                         }
                     }
-                 
+
 
                     //menu.AddSeparator("");
                     menu.AddItem(new GUIContent("Import/Import JSON Graph to current graph..."), false, () =>
@@ -725,7 +727,7 @@ namespace NodeGraph
                     var guideline = new GUIContent(kGUIDELINETEXT);
                     var size = GUI.skin.label.CalcSize(guideline);
 
-                    if(controllerTypes != null && controllerTypes.Length > 0)
+                    if (controllerTypes != null && controllerTypes.Length > 0)
                     {
                         GUILayout.Label(kGUIDELINETEXT);
                         selected = EditorGUILayout.Popup(selected, controllerTypes);
@@ -745,9 +747,9 @@ namespace NodeGraph
                     else
                     {
                         var rect = GUILayoutUtility.GetRect(60, 60);
-                        EditorGUI.HelpBox(rect,"请自行定义控制器",MessageType.Error);
+                        EditorGUI.HelpBox(rect, "请自行定义控制器", MessageType.Error);
                     }
-                   
+
                     GUILayout.FlexibleSpace();
                 }
                 GUILayout.FlexibleSpace();
@@ -1003,12 +1005,12 @@ namespace NodeGraph
                 case EventType.DragPerform:
                     if (!dragdropArea.Contains(evt.mousePosition))
                         return;
-                    
+
                     if (evt.type == EventType.DragPerform)
                     {
                         DragAndDrop.AcceptDrag();
                         var result = controller.OnDragAccept(DragAndDrop.objectReferences);
-                        if(result != null)
+                        if (result != null)
                         {
                             foreach (var item in result)
                             {
@@ -1017,7 +1019,7 @@ namespace NodeGraph
                             Setup();
                             Repaint();
                         }
-                       
+
                         Event.current.Use();
                     }
                     break;
@@ -1221,7 +1223,8 @@ namespace NodeGraph
 
                             case "Paste":
                                 {
-                                    if (!isValidCopy){
+                                    if (!isValidCopy)
+                                    {
                                         break;
                                     }
 
@@ -1309,7 +1312,8 @@ namespace NodeGraph
                 menu.AddItem(
                     new GUIContent(name),
                     false,
-                    () =>{
+                    () =>
+                    {
                         AddNodeFromGUI(customNodes[index].CreateInstance(), GetNodeNameFromMenu(name), pos.x + scrollPos.x, pos.y + scrollPos.y);
                         Setup();
                         Repaint();
@@ -1403,15 +1407,16 @@ namespace NodeGraph
 
                                 var outputPoint = startConnectionPoint;
                                 var inputPoint = endConnectionPoint;
-                                var label = startConnectionPoint.Label;
-                                var type = controller.GetConnectType(startNode.Data, endNode.Data);
+                                //var label = startConnectionPoint.Label;
+                                var type = controller.GetConnectType(outputPoint, inputPoint);
 
                                 // if two nodes are not supposed to connect, dismiss
-                                if (type == null){
+                                if (type == null)
+                                {
                                     break;
                                 }
 
-                                AddConnection(label,type, startNode, outputPoint, endNode, inputPoint);
+                                AddConnection(type, startNode, outputPoint, endNode, inputPoint);
                                 Setup();
                                 break;
                             }
@@ -1460,15 +1465,16 @@ namespace NodeGraph
                                 var endConnectionPoint = (isInput) ? currentEventSource.point : pointAtPosition;
                                 var outputPoint = startConnectionPoint;
                                 var inputPoint = endConnectionPoint;
-                                var label = startConnectionPoint.Label;
+                                //var label = startConnectionPoint.Label;
 
                                 // if two nodes are not supposed to connect, dismiss
-                                var type = controller.GetConnectType(startNode.Data, endNode.Data);
-                                if (type == null){
+                                var label = controller.GetConnectType(outputPoint, inputPoint);
+                                if (label == null)
+                                {
                                     break;
                                 }
 
-                                AddConnection(label,type, startNode, outputPoint, endNode, inputPoint);
+                                AddConnection(label,/*type, */startNode, outputPoint, endNode, inputPoint);
                                 Setup();
                                 break;
                             }
@@ -1564,7 +1570,7 @@ namespace NodeGraph
                     {
                         // point label change is handled by caller, so we are changing label of connection associated with it.
                         var affectingConnections = connections.FindAll(c => c.OutputPoint.Id == e.point.Id);
-                        affectingConnections.ForEach(c => c.Label = e.point.Label);
+                        affectingConnections.ForEach(c => c.ConnectionType = e.point.Type);
                         Repaint();
                         break;
                     }
@@ -1681,11 +1687,11 @@ namespace NodeGraph
 
         public NodeGUI DuplicateNode(NodeGUI node, float offset)
         {
-               var newNode = node.Duplicate(
-                controller,
-                node.GetX() + offset,
-                node.GetY() + offset
-            );
+            var newNode = node.Duplicate(
+             controller,
+             node.GetX() + offset,
+             node.GetY() + offset
+         );
             AddNodeGUI(newNode);
             return newNode;
         }
@@ -1715,8 +1721,8 @@ namespace NodeGraph
             var dstTo = nodeLookup[srcTo];
             var dstFromPoint = dstFrom.Data.OutputPoints[fromPointIndex];
             var dstToPoint = dstTo.Data.InputPoints[inPointIndex];
-            var type = srcFrom.Data.Operation.Object.NodeOutputType;
-            AddConnection(con.Label,type, dstFrom, dstFromPoint, dstTo, dstToPoint);
+            //var type = srcFrom.Data.Operation.Object.NodeOutputType;
+            AddConnection(con.ConnectionType,/*type,*/ dstFrom, dstFromPoint, dstTo, dstToPoint);
         }
 
         private void AddNodeGUI(NodeGUI newNode)
@@ -1826,28 +1832,56 @@ namespace NodeGraph
         /**
             create new connection if same relationship is not exist yet.
         */
-        private void AddConnection(string label,string type, NodeGUI startNode, Model.ConnectionPointData startPoint, NodeGUI endNode, Model.ConnectionPointData endPoint)
+        private void AddConnection(string type, NodeGUI startNode, Model.ConnectionPointData startPoint, NodeGUI endNode, Model.ConnectionPointData endPoint)
         {
             Undo.RecordObject(this, "Add Connection");
 
-            /* 可以用于删除已经连接上的节线
+            //自定义最大连接数
+            TryAutoDeleteConnection(startNode,startPoint,endNode,endPoint);
+
+            if (!connections.ContainsConnection(startPoint, endPoint))
+            {
+                connections.Add(ConnectionGUI.CreateConnection(type, startPoint, endPoint, controller));
+            }
+        }
+        /// <summary>
+        /// 删除超过连接数的线
+        /// </summary>
+        /// <param name="startNode"></param>
+        /// <param name="startPoint"></param>
+        /// <param name="endNode"></param>
+        /// <param name="endPoint"></param>
+        private void TryAutoDeleteConnection(NodeGUI startNode, Model.ConnectionPointData startPoint, NodeGUI endNode, Model.ConnectionPointData endPoint)
+        {
+            //可以用于删除已经连接上的节线
             var connectionsFromThisNode = connections
                 .Where(con => con.OutputNodeId == startNode.Id)
                 .Where(con => con.OutputPoint == startPoint)
                 .ToList();
-            if (connectionsFromThisNode.Any())
+
+            var connectionsToTargetNode = connections
+                 .Where(con => con.InputNodeId == endNode.Id)
+                .Where(con => con.InputPoint == endPoint)
+                .ToList();
+
+            if (connectionsFromThisNode.Count >= startPoint.Max)
             {
-                var alreadyExistConnection = connectionsFromThisNode[0];
-                DeleteConnection(alreadyExistConnection.Id);
+                var waitDelete = connectionsFromThisNode[0];
+                DeleteConnection(waitDelete.Id);
                 if (activeSelection != null)
                 {
-                    activeSelection.Remove(alreadyExistConnection);
+                    activeSelection.Remove(waitDelete);
                 }
-            }*/
+            }
 
-            if (!connections.ContainsConnection(startPoint, endPoint))
+             if (connectionsToTargetNode.Count >= endPoint.Max)
             {
-                connections.Add(ConnectionGUI.CreateConnection(label,type, startPoint, endPoint, controller));
+                var waitDelete = connectionsToTargetNode[0];
+                DeleteConnection(waitDelete.Id);
+                if (activeSelection != null)
+                {
+                    activeSelection.Remove(waitDelete);
+                }
             }
         }
 

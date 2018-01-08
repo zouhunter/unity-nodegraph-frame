@@ -2,7 +2,8 @@
 using System.Collections;
 using NodeGraph;
 using NodeGraph.DataModel;
-[CustomConnection("calcute")]
+
+[CustomConnection("Number")]
 public class OperationConnection : Connection {
     public CalcuteType calcuteType;
 }

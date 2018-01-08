@@ -7,8 +7,5 @@ public class DialogSelectNode : Node
 {
     public string person;
     public List<string> infomation;
-    public override void Initialize(NodeData data)
-    {
-        data.AddDefaultInputPoint();
-    }
+
 }
