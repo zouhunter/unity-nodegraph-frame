@@ -17,4 +17,18 @@ using System;
 [CustomNode("RundomConnect/Node", 1)]
 public class ObjectNode : Node {
     public PrimitiveType type;
+    protected override IEnumerable<Point> inPoints
+    {
+        get
+        {
+            return new Point[] { new Point("a", "line_connection",1) };
+        }
+    }
+    protected override IEnumerable<Point> outPoints
+    {
+        get
+        {
+            return new Point[] { new Point("b", "line_connection", 3) };
+        }
+    }
 }

@@ -8,4 +8,11 @@ public class DialogSelectNode : Node
     public string person;
     public List<string> infomation;
 
+    protected override IEnumerable<Point> inPoints
+    {
+        get
+        {
+            return new Point[] { new Point("->", "", 1) };
+        }
+    }
 }

@@ -468,14 +468,14 @@ namespace NodeGraph
             float inputLabelWidth = 0f;
             float notdefultLabelHeight = 0f;
 
-            if (m_data.InputPoints.Find(x => !string.IsNullOrEmpty(x.Type)) != null || m_data.OutputPoints.Find(x => !string.IsNullOrEmpty(x.Type)) != null)
+            if (m_data.InputPoints.Find(x => !string.IsNullOrEmpty(x.Label)) != null || m_data.OutputPoints.Find(x => !string.IsNullOrEmpty(x.Label)) != null)
             {
                 notdefultLabelHeight += EditorGUIUtility.singleLineHeight;
             }
 
             if (m_data.InputPoints.Count > 0)
             {
-                var inputLabels = m_data.InputPoints.OrderByDescending(p => p.Type.Length).Select(p => p.Type);
+                var inputLabels = m_data.InputPoints.OrderByDescending(p => p.Label.Length).Select(p => p.Label);
                 if (inputLabels.Any())
                 {
                     inputLabelWidth = GUI.skin.label.CalcSize(new GUIContent(inputLabels.First())).x;
@@ -484,7 +484,7 @@ namespace NodeGraph
 
             if (m_data.OutputPoints.Count > 0)
             {
-                var outputLabels = m_data.OutputPoints.OrderByDescending(p => p.Type.Length).Select(p => p.Type);
+                var outputLabels = m_data.OutputPoints.OrderByDescending(p => p.Label.Length).Select(p => p.Label);
                 if (outputLabels.Any())
                 {
                     outputLabelWidth = GUI.skin.label.CalcSize(new GUIContent(outputLabels.First())).x;
@@ -655,7 +655,7 @@ namespace NodeGraph
 
         internal void DrawNodeGUI(NodeGUIEditor nodeGUIEditor)
         {
-            JudgeName();
+            //JudgeName();
             EditorGUI.BeginChangeCheck();
             Name = EditorGUILayout.TextField("Node Name", Name);
             if (nodeDataDrawer != null)
@@ -670,19 +670,19 @@ namespace NodeGraph
             }
         }
 
-        private void JudgeName()
-        {
-            if (NodeGUIUtility.allNodeNames != null)
-            {
-                var overlapping = NodeGUIUtility.allNodeNames.GroupBy(x => x)
-                    .Where(group => group.Count() > 1)
-                    .Select(group => group.Key);
-                if (overlapping.Any() && overlapping.Contains(Name))
-                {
-                    EditorGUILayout.HelpBox("There are node with the same name. You may want to rename to avoid confusion:" + Name, MessageType.Info);
-                }
-            }
-        }
+        //private void JudgeName()
+        //{
+        //    if (NodeGUIUtility.allNodeNames != null)
+        //    {
+        //        var overlapping = NodeGUIUtility.allNodeNames.GroupBy(x => x)
+        //            .Where(group => group.Count() > 1)
+        //            .Select(group => group.Key);
+        //        if (overlapping.Any() && overlapping.Contains(Name))
+        //        {
+        //            EditorGUILayout.HelpBox("There are node with the same name. You may want to rename to avoid confusion:" + Name, MessageType.Info);
+        //        }
+        //    }
+        //}
 
         public static void ShowTypeNamesMenu(string current, List<string> contents, Action<string> ExistSelected)
         {

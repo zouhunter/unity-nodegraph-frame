@@ -99,7 +99,7 @@ namespace NodeGraph
         {
             toggleDic.Add(field, true);
             var type = instence.GetType();
-            FieldInfo[] fields = type.GetFields(BindingFlags.GetField | BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Public);
+            FieldInfo[] fields = type.GetFields(BindingFlags.GetField | BindingFlags.Instance | /*BindingFlags.DeclaredOnly |*/ BindingFlags.NonPublic | BindingFlags.Public);
             foreach (var item in fields)
             {
                 if (!IsFieldNeed(item)) continue;

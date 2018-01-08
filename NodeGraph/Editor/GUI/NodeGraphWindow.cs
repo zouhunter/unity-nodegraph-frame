@@ -785,6 +785,8 @@ namespace NodeGraph
             {
                 scrollPos = scrollScope.scrollPosition;
 
+                if (connections == null) Window.Close();
+
                 // draw connections.
                 foreach (var con in connections)
                 {
