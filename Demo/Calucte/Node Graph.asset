@@ -13,14 +13,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_allNodes:
   - m_name: Float
-    m_id: 8811311d-4dec-4f9a-8a8f-8533bbc8eaff
-    m_x: 120
-    m_y: 120
-    m_node: {fileID: 11490676}
+    m_id: 9d95f66c-50dc-4781-899e-58a78c7552b0
+    m_x: 132
+    m_y: 84
+    m_node: {fileID: 11432636}
     m_inputPoints:
-    - id: 37969cd3-4218-497a-9454-86f3828009d3
+    - id: 054e4eb5-3158-4d98-9728-1d8b5fa396b8
       label: f
-      parentId: 8811311d-4dec-4f9a-8a8f-8533bbc8eaff
+      parentId: 9d95f66c-50dc-4781-899e-58a78c7552b0
       isInput: 1
       buttonRect:
         serializedVersion: 2
@@ -31,9 +31,9 @@ MonoBehaviour:
       max: 2
       type: Number
     m_outputPoints:
-    - id: 605bedc7-7981-4958-8a79-4ee521a4079f
+    - id: 46731447-da17-4864-bd71-1ff73b0b2191
       label: f
-      parentId: 8811311d-4dec-4f9a-8a8f-8533bbc8eaff
+      parentId: 9d95f66c-50dc-4781-899e-58a78c7552b0
       isInput: 0
       buttonRect:
         serializedVersion: 2
@@ -44,14 +44,14 @@ MonoBehaviour:
       max: 2
       type: Number
   - m_name: Float
-    m_id: 4c3eaec9-b5d0-4fac-9f97-da9dbd7b3ee1
-    m_x: 300
-    m_y: 120
-    m_node: {fileID: 11449328}
+    m_id: 482788a1-9453-44be-9fb0-4702537adbd5
+    m_x: 132
+    m_y: 204
+    m_node: {fileID: 11442884}
     m_inputPoints:
-    - id: 91808134-64f8-4f59-9afb-b7e6705208f8
+    - id: 9e0283ae-dc5f-4212-bd92-fd206c5d6dad
       label: f
-      parentId: 4c3eaec9-b5d0-4fac-9f97-da9dbd7b3ee1
+      parentId: 482788a1-9453-44be-9fb0-4702537adbd5
       isInput: 1
       buttonRect:
         serializedVersion: 2
@@ -62,9 +62,40 @@ MonoBehaviour:
       max: 2
       type: Number
     m_outputPoints:
-    - id: 058839e3-ba71-4fa0-ac4b-4e430299928a
+    - id: 6a2496a0-34ed-4521-8b24-b1e0acc53fab
       label: f
-      parentId: 4c3eaec9-b5d0-4fac-9f97-da9dbd7b3ee1
+      parentId: 482788a1-9453-44be-9fb0-4702537adbd5
+      isInput: 0
+      buttonRect:
+        serializedVersion: 2
+        x: 111
+        y: 21.5
+        width: 10
+        height: 23
+      max: 2
+      type: Number
+  - m_name: Int
+    m_id: 80a68c7d-614e-4d2d-ac5b-39128747647c
+    m_x: 348
+    m_y: 132
+    m_node: {fileID: 11476290}
+    m_inputPoints:
+    - id: ce1f9afa-9284-4a89-bb35-eb5076d79e7e
+      label: i
+      parentId: 80a68c7d-614e-4d2d-ac5b-39128747647c
+      isInput: 1
+      buttonRect:
+        serializedVersion: 2
+        x: 0
+        y: 18.5
+        width: 21
+        height: 29
+      max: 2
+      type: Number
+    m_outputPoints:
+    - id: adb2bde6-5752-4dda-8eae-cb19b9906533
+      label: i
+      parentId: 80a68c7d-614e-4d2d-ac5b-39128747647c
       isInput: 0
       buttonRect:
         serializedVersion: 2
@@ -75,48 +106,67 @@ MonoBehaviour:
       max: 2
       type: Number
   - m_name: Result
-    m_id: 9479fac8-2a23-4b51-999c-fdf8636859c2
-    m_x: 468
-    m_y: 120
-    m_node: {fileID: 11419238}
+    m_id: c75932a8-fda8-4a85-b34e-eaf3178a9cf3
+    m_x: 564
+    m_y: 156
+    m_node: {fileID: 11473896}
     m_inputPoints: []
     m_outputPoints: []
-  - m_name: Float
-    m_id: a6976b60-f05c-4748-a5c2-df36adcc7b54
-    m_x: 636
-    m_y: 120
-    m_node: {fileID: 11455066}
-    m_inputPoints:
-    - id: dae02017-51b9-45e6-88e4-fabd3f373760
-      label: f
-      parentId: a6976b60-f05c-4748-a5c2-df36adcc7b54
-      isInput: 1
-      buttonRect:
-        serializedVersion: 2
-        x: 0
-        y: 18.5
-        width: 21
-        height: 29
-      max: 2
-      type: Number
-    m_outputPoints:
-    - id: cd74e07d-90e7-460b-ac6a-e20917929228
-      label: f
-      parentId: a6976b60-f05c-4748-a5c2-df36adcc7b54
-      isInput: 0
-      buttonRect:
-        serializedVersion: 2
-        x: 111
-        y: 21.5
-        width: 10
-        height: 23
-      max: 2
-      type: Number
-  m_allConnections: []
-  m_lastModified: 131599468433527500
+  m_allConnections:
+  - m_id: fb0c1b2a-8778-45cc-b5d9-1edbe1b27083
+    m_fromNodeId: 9d95f66c-50dc-4781-899e-58a78c7552b0
+    m_fromNodeConnectionPointId: 46731447-da17-4864-bd71-1ff73b0b2191
+    m_toNodeId: 80a68c7d-614e-4d2d-ac5b-39128747647c
+    m_toNodeConnectionPoiontId: ce1f9afa-9284-4a89-bb35-eb5076d79e7e
+    m_type: Number
+    m_connection: {fileID: 11484948}
+  - m_id: 1c25d36e-011d-404c-9d61-4ce24fd3c7d8
+    m_fromNodeId: 482788a1-9453-44be-9fb0-4702537adbd5
+    m_fromNodeConnectionPointId: 6a2496a0-34ed-4521-8b24-b1e0acc53fab
+    m_toNodeId: 80a68c7d-614e-4d2d-ac5b-39128747647c
+    m_toNodeConnectionPoiontId: ce1f9afa-9284-4a89-bb35-eb5076d79e7e
+    m_type: Number
+    m_connection: {fileID: 11416280}
+  m_lastModified: 131599773135502798
   m_graphDescription: 
   m_controllerType: CalculateCtrl
---- !u!114 &11419238
+--- !u!114 &11416280
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a31fa444bfa96fe46bcf3e293e2c277d, type: 3}
+  m_Name: OperationConnection
+  m_EditorClassIdentifier: 
+  calcuteType: 0
+--- !u!114 &11432636
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0d266f2124ea346898f633f81fd238, type: 3}
+  m_Name: FloatNode
+  m_EditorClassIdentifier: 
+  value: 0
+--- !u!114 &11442884
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0d266f2124ea346898f633f81fd238, type: 3}
+  m_Name: FloatNode
+  m_EditorClassIdentifier: 
+  value: 0
+--- !u!114 &11473896
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -128,7 +178,7 @@ MonoBehaviour:
   m_Name: ResultNode
   m_EditorClassIdentifier: Assembly-CSharp::ResultNode
   value: 
---- !u!114 &11449328
+--- !u!114 &11476290
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -136,11 +186,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f0d266f2124ea346898f633f81fd238, type: 3}
-  m_Name: FloatNode
+  m_Script: {fileID: 11500000, guid: c672d17fdb145314eae1de9ff41def0a, type: 3}
+  m_Name: IntNode
   m_EditorClassIdentifier: 
   value: 0
---- !u!114 &11455066
+--- !u!114 &11484948
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -148,19 +198,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f0d266f2124ea346898f633f81fd238, type: 3}
-  m_Name: FloatNode
+  m_Script: {fileID: 11500000, guid: a31fa444bfa96fe46bcf3e293e2c277d, type: 3}
+  m_Name: OperationConnection
   m_EditorClassIdentifier: 
-  value: 0
---- !u!114 &11490676
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f0d266f2124ea346898f633f81fd238, type: 3}
-  m_Name: FloatNode
-  m_EditorClassIdentifier: 
-  value: 0
+  calcuteType: 0
