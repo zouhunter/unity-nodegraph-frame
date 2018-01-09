@@ -30,6 +30,7 @@ namespace NodeGraph
             var labelPointV3 = new Vector3(centerPos.x - (labelWidth.x / 2), centerPos.y - 24f, 0f);
             Handles.Label(labelPointV3, label, labelStyle);
         }
+
         internal virtual void OnConnectionGUI(Vector3 startV3, Vector3 endV3, Vector3 startTan, Vector3 endTan) { }
 
         internal virtual void OnInspectorGUI()
@@ -39,6 +40,8 @@ namespace NodeGraph
             EditorGUILayout.HelpBox("[默认绘制:]", MessageType.Info);
             UserDefineUtility.DrawSerializedObject(serializedObj);
         }
+
+        internal virtual void OnContextMenuGUI(GenericMenu menu, ConnectionGUI connectionGUI) { }
     }
 
 }

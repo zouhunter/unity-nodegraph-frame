@@ -247,6 +247,12 @@ namespace NodeGraph
                 if (m_buttonRect.Contains(rightClickPos))
                 {
                     var menu = new GenericMenu();
+
+                    if (connectionDrawer != null)
+                    {
+                        connectionDrawer.OnContextMenuGUI(menu, this);
+                    }
+
                     menu.AddItem(
                         new GUIContent("Delete"),
                         false,
