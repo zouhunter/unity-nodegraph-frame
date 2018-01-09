@@ -9,10 +9,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eec4882d68a9346b3b5f8ecf1e38a534, type: 3}
-  m_Name: dialog
+  m_Name: generate
   m_EditorClassIdentifier: 
   m_allNodes: []
   m_allConnections: []
-  m_lastModified: 131598793219113086
+  m_lastModified: 131599328496283547
   m_graphDescription: 
-  m_controllerType: DialogCtrl
+  m_controllerType: EmptyController

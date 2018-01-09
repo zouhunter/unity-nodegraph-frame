@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NodeGraph;
 
 namespace NodeGraph.DataModel {
 
@@ -11,7 +12,7 @@ namespace NodeGraph.DataModel {
 	 * Save data which holds all NodeGraph.DataModel NGSettings and configurations.
 	 */ 
 	[CreateAssetMenu(fileName = "NodeGraph", menuName = "ConfigGraph", order = 650 )]
-	public class ConfigGraph : ScriptableObject {
+	public class NodeGraphObj : ScriptableObject {
 
 		/*
 		 * Important: 
@@ -39,9 +40,7 @@ namespace NodeGraph.DataModel {
 				m_lastModified = GetFileTimeUtcString();
 				m_allNodes = new List<NodeData>();
 				m_allConnections = new List<ConnectionData>();
-				//m_version = ABG_FILE_VERSION;
 				m_graphDescription = String.Empty;
-                SetGraphDirty();
             }
         }
 
@@ -70,7 +69,6 @@ namespace NodeGraph.DataModel {
 			}
 			set {
 				m_graphDescription = value;
-				SetGraphDirty();
 			}
 		}
 
@@ -109,19 +107,6 @@ namespace NodeGraph.DataModel {
             return nodesNoRoot;
         }
 
-		public void Save() {
-#if UNITY_EDITOR
-            m_allNodes.ForEach(n => UnityEditor.EditorUtility.SetDirty(n.Object));
-#endif
-            SetGraphDirty();
-		}
-
-		public void SetGraphDirty() {
-#if UNITY_EDITOR
-            UnityEditor.EditorUtility.SetDirty(this);
-#endif
-		}
-
 		//
 		// Save/Load to disk
 		//
@@ -133,17 +118,15 @@ namespace NodeGraph.DataModel {
 				Debug.Log("[ApplyGraph] SaveData updated.");
 
 				m_lastModified = GetFileTimeUtcString();
-				m_allNodes = nodes;
-				m_allConnections = connections;
-				Save();
+                m_allNodes = nodes;
+                m_allConnections = connections;
 			} else {
                 Debug.Log("[ApplyGraph] SaveData update skipped. graph is equivarent.");
 			}
 		}
 
-
-		public static ConfigGraph CreateNewGraph(string controllerType) {
-			var data = ScriptableObject.CreateInstance<ConfigGraph>();
+        public static NodeGraphObj CreateNewGraph(string controllerType) {
+			var data = ScriptableObject.CreateInstance<NodeGraphObj>();
             data.m_controllerType = controllerType;
 			return data;
 		}

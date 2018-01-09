@@ -15,14 +15,13 @@ namespace NodeGraph.DataModel
 
         public Connection CreateInstance()
         {
-            if(type == null || string.IsNullOrEmpty(type.FullName))
+            if (type == null || string.IsNullOrEmpty(type.FullName))
             {
-                return Connection.CreateInstance<Connection>();
+                type = typeof(Connection);
             }
-            else
-            {
-                 return Connection.CreateInstance ( type) as Connection;
-            }
+            var c = Connection.CreateInstance(type) as Connection;
+            c.name = type.FullName;
+            return c;
         }
     }
 }

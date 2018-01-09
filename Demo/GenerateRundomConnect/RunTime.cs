@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using NodeGraph.DataModel;
 
 public class RunTime : MonoBehaviour {
-    public ConfigGraph graph;
+    public NodeGraphObj graph;
     private Dictionary<string, GameObject> nodeDic = new Dictionary<string, GameObject>();
     private Queue<GameObject> created = new Queue<GameObject>();
     private void OnGUI()

@@ -55,7 +55,7 @@ namespace NodeGraph
                 get
                 {
                     //if (string.IsNullOrEmpty (s_basePath)) {
-                    var obj = ScriptableObject.CreateInstance<DataModel.ConfigGraph>();
+                    var obj = ScriptableObject.CreateInstance<DataModel.NodeGraphObj>();
                     MonoScript s = MonoScript.FromScriptableObject(obj);
                     var configGuiPath = AssetDatabase.GetAssetPath(s);
                     UnityEngine.Object.DestroyImmediate(obj);

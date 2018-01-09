@@ -10,7 +10,7 @@ namespace NodeGraph
 		*/
         public const bool IGNORE_META = true;
 
-        public const string GRAPH_SEARCH_CONDITION = "t:NodeGraph.DataModel.ConfigGraph";
+
 
         public const string GUI_TEXT_SETTINGTEMPLATE_MODEL = "Model";
         public const string GUI_TEXT_SETTINGTEMPLATE_AUDIO = "Audio";
@@ -43,6 +43,6 @@ namespace NodeGraph
 
         public const string NODE_INPUTPOINT_FIXED_LABEL = "FIXED_INPUTPOINT_ID";
 
-    
+        public static string GRAPH_SEARCH_CONDITION { get { return "t:" + typeof(NodeGraph.DataModel.NodeGraphObj).FullName; } }
     }
 }

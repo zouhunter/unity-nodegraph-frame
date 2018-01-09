@@ -7,11 +7,11 @@ namespace NodeGraph
     {
         public override string Group { get { return "Empty"; } }
 
-        protected override void JudgeNodeExceptions(DataModel. ConfigGraph m_targetGraph, List<NodeException> m_nodeExceptions)
+        protected override void JudgeNodeExceptions(DataModel. NodeGraphObj m_targetGraph, List<NodeException> m_nodeExceptions)
         {
             Debug.Log("To Judge All Nodes, Is There Have Some Exceptions?");
         }
-        protected override void BuildFromGraph(DataModel.ConfigGraph m_targetGraph)
+        protected override void BuildFromGraph(DataModel.NodeGraphObj m_targetGraph)
         {
             Debug.Log("On Build Button Clicked!");
         }

@@ -11,7 +11,7 @@ using Model=NodeGraph.DataModel;
 namespace NodeGraph {
     public class JSONGraphUtility {
 
-        public static void ExportGraphToJSONFromDialog(Model.ConfigGraph graph) {
+        public static void ExportGraphToJSONFromDialog(Model.NodeGraphObj graph) {
 
             string path =
                 EditorUtility.SaveFilePanelInProject(
@@ -42,14 +42,14 @@ namespace NodeGraph {
 
                 string jsonFilePath = Path.Combine (folderSelected, string.Format("{0}.json", graphName));
 
-                var graph = AssetDatabase.LoadAssetAtPath<Model.ConfigGraph>(graphPath);
+                var graph = AssetDatabase.LoadAssetAtPath<Model.NodeGraphObj>(graphPath);
                 string jsonString = EditorJsonUtility.ToJson (graph, true);
 
                 File.WriteAllText (jsonFilePath, jsonString, System.Text.Encoding.UTF8);
             }
         }
 
-        public static Model.ConfigGraph ImportJSONToGraphFromDialog(Model.ConfigGraph graph) {
+        public static Model.NodeGraphObj ImportJSONToGraphFromDialog(Model.NodeGraphObj graph) {
 
             string fileSelected = EditorUtility.OpenFilePanelWithFilters("Select JSON files to import", Application.dataPath, new string[] {"JSON files", "json", "All files", "*"});
             if(string.IsNullOrEmpty(fileSelected)) {
@@ -65,7 +65,7 @@ namespace NodeGraph {
                 JsonUtility.FromJsonOverwrite(jsonContent, graph);
                 //EditorJsonUtility.FromJsonOverwrite (jsonContent, graph);
             } else {
-                graph = ScriptableObject.CreateInstance<Model.ConfigGraph>();
+                graph = ScriptableObject.CreateInstance<Model.NodeGraphObj>();
                 JsonUtility.FromJsonOverwrite (jsonContent, graph);
                 var newAssetFolder = CreateFolderForImportedAssets ();
                 var graphPath = FileUtility.PathCombine(newAssetFolder, string.Format("{0}.asset", name));
@@ -92,7 +92,7 @@ namespace NodeGraph {
                 var jsonContent = File.ReadAllText (path, System.Text.Encoding.UTF8);
                 var name = Path.GetFileNameWithoutExtension (path);
 
-                var graph = ScriptableObject.CreateInstance<Model.ConfigGraph>();
+                var graph = ScriptableObject.CreateInstance<Model.NodeGraphObj>();
                 EditorJsonUtility.FromJsonOverwrite (jsonContent, graph);
                 var graphPath = FileUtility.PathCombine(newAssetFolder, string.Format("{0}.asset", name));
                 AssetDatabase.CreateAsset (graph, graphPath);

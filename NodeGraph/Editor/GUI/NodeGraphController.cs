@@ -15,7 +15,7 @@ namespace NodeGraph
     public abstract class NodeGraphController
     {
         private List<NodeException> m_nodeExceptions = new List<NodeException>();
-        private Model.ConfigGraph m_targetGraph;
+        private Model.NodeGraphObj m_targetGraph;
 
         public abstract string Group { get; }
 
@@ -35,7 +35,7 @@ namespace NodeGraph
             }
         }
 
-        public Model.ConfigGraph TargetGraph
+        public Model.NodeGraphObj TargetGraph
         {
             get
             {
@@ -73,8 +73,8 @@ namespace NodeGraph
                 BuildFromGraph(m_targetGraph);
             }
         }
-        protected virtual void JudgeNodeExceptions(Model.ConfigGraph m_targetGraph, List<NodeException> m_nodeExceptions) { }
-        protected virtual void BuildFromGraph(Model.ConfigGraph m_targetGraph) { }
+        protected virtual void JudgeNodeExceptions(Model.NodeGraphObj m_targetGraph, List<NodeException> m_nodeExceptions) { }
+        protected virtual void BuildFromGraph(Model.NodeGraphObj m_targetGraph) { }
         internal virtual void OnDragUpdated() { }
         internal virtual List<KeyValuePair<string, Model.Node>> OnDragAccept(UnityEngine.Object[] objectReferences) { return null; }
         internal virtual void Validate(NodeGUI node) { }

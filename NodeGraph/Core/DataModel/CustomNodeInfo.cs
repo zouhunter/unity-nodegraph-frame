@@ -15,8 +15,9 @@ namespace NodeGraph.DataModel
 
         public Node CreateInstance()
         {
-            object o = UnityEngine.ScriptableObject.CreateInstance(type);
-            return (Node)o;
+            Node o = UnityEngine.ScriptableObject.CreateInstance(type) as Node;
+            o.name = type.FullName;
+            return o;
         }
 
         public int CompareTo(object obj)

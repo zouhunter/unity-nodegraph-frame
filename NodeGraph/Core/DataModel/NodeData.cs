@@ -12,14 +12,6 @@ namespace NodeGraph.DataModel
     public class NodeData
     {
 
-        //[System.Serializable]
-        //public class NodeInstance : SerializedInstance<Node>
-        //{
-        //    public NodeInstance() : base() { }
-        //    public NodeInstance(NodeInstance instance) : base(instance) { }
-        //    public NodeInstance(Node obj) : base(obj) { }
-        //}
-
         [SerializeField]
         private string m_name;
         [SerializeField]
@@ -77,6 +69,10 @@ namespace NodeGraph.DataModel
             {
                 return m_node;
             }
+            set
+            {
+                m_node = value;
+            }
         }
 
         public float X
@@ -133,7 +129,7 @@ namespace NodeGraph.DataModel
             m_name = name;
             m_x = x;
             m_y = y;
-            m_node = Node.Instantiate<Node>(node);
+            m_node = node;
             m_nodeNeedsRevisit = false;
 
             m_inputPoints = new List<ConnectionPointData>();
@@ -159,7 +155,8 @@ namespace NodeGraph.DataModel
             {
                 m_id = Guid.NewGuid().ToString();
             }
-            m_node = Node.Instantiate(node.m_node);
+            m_node = UnityEngine.Object.Instantiate((UnityEngine.Object)node.m_node) as Node;
+            m_node.name = node.m_node.name;
         }
 
         public NodeData Duplicate(bool keepId = false)
@@ -167,21 +164,21 @@ namespace NodeGraph.DataModel
             return new NodeData(this, keepId);
         }
 
-        public ConnectionPointData AddInputPoint(string label,string type,int max = 1)
+        public ConnectionPointData AddInputPoint(string label, string type, int max = 1)
         {
-            var p = new ConnectionPointData(label,type, max, this, true);
+            var p = new ConnectionPointData(label, type, max, this, true);
             m_inputPoints.Add(p);
             return p;
         }
 
-        public ConnectionPointData AddOutputPoint(string label,string type,int max = 1)
+        public ConnectionPointData AddOutputPoint(string label, string type, int max = 1)
         {
-            var p = new ConnectionPointData(label,type, max, this, false);
+            var p = new ConnectionPointData(label, type, max, this, false);
             m_outputPoints.Add(p);
             return p;
         }
 
-       public ConnectionPointData FindInputPoint(string id)
+        public ConnectionPointData FindInputPoint(string id)
         {
             return m_inputPoints.Find(p => p.Id == id);
         }

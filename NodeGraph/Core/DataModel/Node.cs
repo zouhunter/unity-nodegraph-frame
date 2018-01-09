@@ -9,13 +9,11 @@ namespace NodeGraph.DataModel
     /// Node.
     /// </summary>
 	public abstract class Node:ScriptableObject{
-
         public virtual void Initialize(NodeData data)
         {
             InitInputPoints(data);
             InitOutPoints(data);
         }
-
         protected void InitInputPoints(NodeData data)
         {
             if (inPoints != null)

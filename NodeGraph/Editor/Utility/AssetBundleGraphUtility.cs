@@ -14,10 +14,10 @@ namespace NodeGraph {
     /// Execute graph result.
     /// </summary>
 	public class ExecuteGraphResult {
-		private Model.ConfigGraph  	graph;
+		private Model.NodeGraphObj  	graph;
 		private List<NodeException>	issues;
 
-		public ExecuteGraphResult(Model.ConfigGraph g, List<NodeException> issues) {
+		public ExecuteGraphResult(Model.NodeGraphObj g, List<NodeException> issues) {
 			this.graph  = g;
 			this.issues = issues;
 		}
@@ -36,7 +36,7 @@ namespace NodeGraph {
         /// Gets the executed graph associated with this result.
         /// </summary>
         /// <value>The graph.</value>
-		public Model.ConfigGraph Graph {
+		public Model.NodeGraphObj Graph {
 			get {
 				return graph;
 			}

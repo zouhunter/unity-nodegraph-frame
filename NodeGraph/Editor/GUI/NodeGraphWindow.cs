@@ -262,11 +262,11 @@ namespace NodeGraph
 
         public void HandleSelectionChange()
         {
-            Model.ConfigGraph selectedGraph = null;
+            Model.NodeGraphObj selectedGraph = null;
 
-            if (Selection.activeObject is Model.ConfigGraph && EditorUtility.IsPersistent(Selection.activeObject))
+            if (Selection.activeObject is Model.NodeGraphObj && EditorUtility.IsPersistent(Selection.activeObject))
             {
-                selectedGraph = Selection.activeObject as Model.ConfigGraph;
+                selectedGraph = Selection.activeObject as Model.NodeGraphObj;
             }
 
             if (selectedGraph != null && (controller == null || selectedGraph != controller.TargetGraph))
@@ -307,7 +307,7 @@ namespace NodeGraph
 
             if (!string.IsNullOrEmpty(lastGraphAssetPath))
             {
-                var graph = AssetDatabase.LoadAssetAtPath<Model.ConfigGraph>(lastGraphAssetPath);
+                var graph = AssetDatabase.LoadAssetAtPath<Model.NodeGraphObj>(lastGraphAssetPath);
                 if (graph != null)
                 {
                     OpenGraph(graph);
@@ -353,7 +353,7 @@ namespace NodeGraph
         [UnityEditor.Callbacks.OnOpenAsset()]
         public static bool OnOpenAsset(int instanceID, int line)
         {
-            var graph = EditorUtility.InstanceIDToObject(instanceID) as Model.ConfigGraph;
+            var graph = EditorUtility.InstanceIDToObject(instanceID) as Model.NodeGraphObj;
             if (graph != null)
             {
                 var window = GetWindow<NodeGraphWindow>();
@@ -365,7 +365,7 @@ namespace NodeGraph
 
         public void OpenGraph(string path)
         {
-            Model.ConfigGraph graph = AssetDatabase.LoadAssetAtPath<Model.ConfigGraph>(path);
+            Model.NodeGraphObj graph = AssetDatabase.LoadAssetAtPath<Model.NodeGraphObj>(path);
             if (graph == null)
             {
                 throw new NodeGraph.DataModelException("Could not open graph:" + path);
@@ -373,7 +373,7 @@ namespace NodeGraph
             OpenGraph(graph);
         }
 
-        public void OpenGraph(Model.ConfigGraph graph)
+        public void OpenGraph(Model.NodeGraphObj graph)
         {
             CloseGraph();
 
@@ -427,7 +427,7 @@ namespace NodeGraph
                 return;
             }
 
-            Model.ConfigGraph graph = Model.ConfigGraph.CreateNewGraph(controllerType);
+            Model.NodeGraphObj graph = Model.NodeGraphObj.CreateNewGraph(controllerType);
             AssetDatabase.CreateAsset(graph, path);
             OpenGraph(graph);
         }
@@ -498,11 +498,16 @@ namespace NodeGraph
             List<Model.NodeData> n = nodes.Select(v => v.Data).ToList();
             List<Model.ConnectionData> c = connections.Select(v => v.Data).ToList();
             controller.TargetGraph.ApplyGraph(n, c);
+            Model.NodeGraphObj obj = controller.TargetGraph;
+            var all = new List<ScriptableObject>();
+            all.AddRange(Array.ConvertAll<Model.NodeData, Model.Node>(n.ToArray(), x => x.Object));
+            all.AddRange(Array.ConvertAll<Model.ConnectionData, Model.Connection>(c.ToArray(), x => x.Object));
+            ScriptableObjUtility.SetSubAssets(all.ToArray(), obj);
+            UnityEditor.EditorUtility.SetDirty(controller.TargetGraph);
         }
 
         private void Setup(bool forceVisitAll = false)
         {
-
             EditorUtility.ClearProgressBar();
             if (controller == null)
             {
@@ -571,7 +576,6 @@ namespace NodeGraph
         {
             using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
             {
-
                 if (GUILayout.Button(new GUIContent(graphAssetName, "Select graph"), EditorStyles.toolbarPopup, GUILayout.Width(NGEditorSettings.GUI.TOOLBAR_GRAPHNAMEMENU_WIDTH), GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT)))
                 {
                     GenericMenu menu = new GenericMenu();
@@ -597,7 +601,7 @@ namespace NodeGraph
                         {
                             if (path != graphAssetPath)
                             {
-                                var graph = AssetDatabase.LoadAssetAtPath<Model.ConfigGraph>(path);
+                                var graph = AssetDatabase.LoadAssetAtPath<Model.NodeGraphObj>(path);
                                 OpenGraph(graph);
                             }
                         });
@@ -610,8 +614,7 @@ namespace NodeGraph
                     {
                         foreach (var ct in controllerTypes)
                         {
-                            menu.AddItem(new GUIContent(string.Format("Create New/({0})Graph", ct)), false, () =>
-                           {
+                            menu.AddItem(new GUIContent(string.Format("Create New/({0})Graph", ct)), false, () =>{
                                CreateNewGraphFromDialog(ct);
                            });
                             menu.AddSeparator("");
@@ -1038,7 +1041,7 @@ namespace NodeGraph
             LogUtility.Logger.Log("OnDisable");
             if (controller != null)
             {
-                controller.TargetGraph.Save();
+                EditorUtility.SetDirty(controller.TargetGraph);
             }
         }
 
@@ -1839,7 +1842,7 @@ namespace NodeGraph
             Undo.RecordObject(this, "Add Connection");
 
             //自定义最大连接数
-            TryAutoDeleteConnection(startNode,startPoint,endNode,endPoint);
+            TryAutoDeleteConnection(startNode, startPoint, endNode, endPoint);
 
             if (!connections.ContainsConnection(startPoint, endPoint))
             {
@@ -1876,7 +1879,7 @@ namespace NodeGraph
                 }
             }
 
-             if (connectionsToTargetNode.Count >= endPoint.Max)
+            if (connectionsToTargetNode.Count >= endPoint.Max)
             {
                 var waitDelete = connectionsToTargetNode[0];
                 DeleteConnection(waitDelete.Id);

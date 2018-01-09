@@ -87,7 +87,7 @@ namespace NodeGraph
             }
         }
 
-        public Model.ConfigGraph ParentGraph
+        public Model.NodeGraphObj ParentGraph
         {
             get
             {
@@ -348,11 +348,10 @@ namespace NodeGraph
 
             foreach (var point in m_data.OutputPoints)
             {
-
                 var pointRegion = ConnectionPointDataUtility.GetGlobalPointRegion(point.IsInput, point.Region, this);
                 //var pointRegion = point.GetGlobalPointRegion(this);
 
-                if (shouldDrawWithEnabledColor && Controller.GetConnectType(eventSource.point, point) == null)
+                if (shouldDrawWithEnabledColor && Controller.GetConnectType(eventSource.point, point) != null)
                 {
                     GUI.color = NGEditorSettings.GUI.COLOR_CAN_CONNECT;
                 }
@@ -665,8 +664,8 @@ namespace NodeGraph
             if (EditorGUI.EndChangeCheck())
             {
                 Controller.Validate(this);
-               EditorUtility.SetDirty(  Data.Object);
-                ParentGraph.SetGraphDirty();
+                EditorUtility.SetDirty(Data.Object);
+                EditorUtility.SetDirty(ParentGraph);
             }
         }
 

@@ -36,7 +36,7 @@ namespace NodeGraph
             return list;
         }
 
-        internal static NodeGraphController CreateController(NodeGraph.DataModel.ConfigGraph graph)
+        internal static NodeGraphController CreateController(NodeGraph.DataModel.NodeGraphObj graph)
         {
             var type = CustomControllerTypes.Find(x => x.Name == graph.ControllerType);
             if (type != null)
@@ -92,6 +92,8 @@ namespace NodeGraph
 
         public static void DrawSerializedObject(SerializedObject serializedObject)
         {
+            if (serializedObject == null) return;
+
             serializedObject.Update();
             SerializedProperty iterator = serializedObject.GetIterator();
             bool enterChildren = true;

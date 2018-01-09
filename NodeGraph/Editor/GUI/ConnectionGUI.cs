@@ -45,7 +45,7 @@ namespace NodeGraph
             }
         }
 
-        public ConfigGraph ParentGraph
+        public NodeGraphObj ParentGraph
         {
             get
             {
@@ -272,11 +272,6 @@ namespace NodeGraph
             if (active)
             {
                 Selection.activeObject = Inspector;
-                //connectionButtonStyle = "sv_label_1";
-            }
-            else
-            {
-                //connectionButtonStyle = "sv_label_0";
             }
         }
         public void DrawObject()
@@ -287,7 +282,7 @@ namespace NodeGraph
             {
                 Controller.Perform();
                 EditorUtility.SetDirty( Data.Object);
-                ParentGraph.SetGraphDirty();
+                EditorUtility.SetDirty(ParentGraph);
             }
         }
         public void Delete()

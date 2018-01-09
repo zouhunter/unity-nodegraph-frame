@@ -10,26 +10,29 @@ namespace NodeGraph.DataModel {
 	[Serializable]
 	public class ConnectionData
     {
-        //[System.Serializable]
-        //public class ConnectionInstance : SerializedInstance<Connection>
-        //{
-        //    public ConnectionInstance() : base() { }
-        //    public ConnectionInstance(ConnectionInstance instance) : base(instance) { }
-        //    public ConnectionInstance(Connection obj) : base(obj) { }
-        //}
-
         [SerializeField] private string m_id;
 		[SerializeField] private string m_fromNodeId;
 		[SerializeField] private string m_fromNodeConnectionPointId;
 		[SerializeField] private string m_toNodeId;
 		[SerializeField] private string m_toNodeConnectionPoiontId;
 		[SerializeField] private string m_type;
-        //[SerializeField] private ConnectionInstance m_connectionInstance;
         [SerializeField] private Connection m_connection;
 
         private ConnectionData() {
 			m_id = Guid.NewGuid().ToString();
 		}
+
+        public ConnectionData(ConnectionData data)
+        {
+            m_id = data.Id;
+            m_type = data.m_type ;
+            m_fromNodeId = data.m_fromNodeId;
+            m_fromNodeConnectionPointId = data.m_fromNodeConnectionPointId;
+            m_toNodeId = data.m_toNodeId;
+            m_toNodeConnectionPoiontId = data.m_toNodeConnectionPoiontId;
+            m_connection = Connection.Instantiate(data.Object);
+            m_connection.name = data.Object.name;
+        }
 
 		public ConnectionData(string type, Connection connection, ConnectionPointData output, ConnectionPointData input) {
 			m_id = Guid.NewGuid().ToString();
@@ -38,8 +41,6 @@ namespace NodeGraph.DataModel {
 			m_fromNodeConnectionPointId = output.Id;
 			m_toNodeId = input.NodeId;
 			m_toNodeConnectionPoiontId = input.Id;
-
-            //m_connectionInstance = new ConnectionInstance(connection);
             m_connection = connection;
         }
 

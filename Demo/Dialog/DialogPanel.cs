@@ -8,7 +8,7 @@ using System;
 
 public class DialogPanel : MonoBehaviour
 {
-    public ConfigGraph graph;
+    public NodeGraphObj graph;
     private NodeData currentNode;
     public Text person;
     public Text nomal;
