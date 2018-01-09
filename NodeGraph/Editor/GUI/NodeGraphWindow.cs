@@ -172,7 +172,8 @@ namespace NodeGraph
         private Vector2 scrollPos = new Vector2(1500, 0);
         private Vector2 errorScrollPos = new Vector2(0, 0);
         private Rect graphRegion = new Rect();
-        private float scaleFacter = 1;
+        private float canvasSize = 1;
+        //private float nodeSize = 1;
         private SelectPoint selectStartMousePosition;
         private GraphBackground background = new GraphBackground();
         private string graphAssetPath;
@@ -690,10 +691,19 @@ namespace NodeGraph
 
                 GUILayout.Space(4);
 
-                GUILayout.Label("Scale Factor:");
+                GUILayout.Label(string.Format("canvas:[{0}]", canvasSize.ToString("0.0")));
                 GUILayout.Label("0.1");
-                scaleFacter = GUILayout.HorizontalSlider(scaleFacter, 0.1f, 10, GUILayout.Width(graphRegion.width * 0.2f));
+                canvasSize = GUILayout.HorizontalSlider(canvasSize, 0.1f, 10, GUILayout.Width(graphRegion.width * 0.1f));
                 GUILayout.Label("10");
+
+                //GUILayout.Space(4);
+
+                //GUILayout.Label(string.Format("node:[{0}]", nodeSize.ToString("0.0")));
+                //GUILayout.Label("0.5");
+                //nodeSize = GUILayout.HorizontalSlider(nodeSize, 0.5f, 2, GUILayout.Width(graphRegion.width * 0.1f));
+                //GUILayout.Label("2");
+
+
 
                 //controller.TargetGraph.UseAsAssetPostprocessor = GUILayout.Toggle(controller.TargetGraph.UseAsAssetPostprocessor, "Use As Postprocessor", EditorStyles.toolbarButton, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
 
@@ -796,17 +806,20 @@ namespace NodeGraph
             }
             EditorGUILayout.EndScrollView();
         }
-
+        Rect canvasRect;
         private void DrawGUINodeGraph()
         {
-            using (var scrollScope = new EditorGUILayout.ScrollViewScope(scrollPos))
+            background.Draw(graphRegion, scrollPos);
+          
+
+            using (var scrollScope = new EditorGUILayout.ScrollViewScope(scrollPos,true,true))
             {
+                var position = graphRegion;
                 scrollPos = scrollScope.scrollPosition;
-
-                canvasRect = new Rect(0, EditorGUIUtility.singleLineHeight, position.width, position.height - EditorGUIUtility.singleLineHeight);
-                center = GUIScaleUtility.BeginScale(ref canvasRect, scrollPos, scaleFacter, true, true);
-
-
+                scrollScope.handleScrollWheel = false;
+                GUILayoutUtility.GetRect(position.width / canvasSize, (position.height - 2 * EditorGUIUtility.singleLineHeight) / canvasSize);
+                canvasRect = new Rect(-scrollPos.x , - scrollPos.y , position.width * 10, position.height * 10);
+                var scale = GUIScaleUtility.BeginScale(ref canvasRect, canvasRect.size * 0.5f, canvasSize, true, false);
                 #region DrawInteranl
                 if (connections == null) Window.Close();
 
@@ -872,18 +885,29 @@ namespace NodeGraph
                     GUILayoutUtility.GetRect(new GUIContent(string.Empty), GUIStyle.none, GUILayout.Width(spacerRectRightBottom.x), GUILayout.Height(spacerRectRightBottom.y));
                 }
                 #endregion
-
                 GUIScaleUtility.EndScale();
             }
+
+
             if (Event.current.type == EventType.Repaint)
             {
                 var newRgn = GUILayoutUtility.GetLastRect();
+                //newRgn = new Rect(newRgn.x , newRgn.y , newRgn.width * scaleFacter, newRgn.height * scaleFacter);
+
                 if (newRgn != graphRegion)
                 {
                     graphRegion = newRgn;
                     Repaint();
                 }
             }
+        }
+
+        private void ShowRect(Rect rect)
+        {
+
+            GUI.backgroundColor = Color.green;
+            GUI.Box(rect, "");
+            GUI.backgroundColor = Color.white;
         }
 
         private void HandleGraphGUIEvents()
@@ -1067,8 +1091,7 @@ namespace NodeGraph
                 EditorUtility.SetDirty(controller.TargetGraph);
             }
         }
-        Rect canvasRect;
-        Vector3 center;
+
         public void OnGUI()
         {
             if (controller == null)
@@ -1078,14 +1101,12 @@ namespace NodeGraph
             else
             {
                 DrawGUIToolBar();
-             
+
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    background.Draw(graphRegion, scrollPos);
-                    
                     DrawGUINodeGraph();
-                  
+
                     if (showErrors)
                     {
                         DrawGUINodeErrors();

@@ -57,7 +57,7 @@ namespace NodeGraph {
 		{
 			m_graphRegion = position;
 			m_scrollPosition = scroll;
-            Debug.Log(scroll);
+
 			if (Event.current.type == EventType.Repaint) {
                 UnityEditor.Graphs.Styles.graphBackground.Draw(position, false, false, false, false);
             }
