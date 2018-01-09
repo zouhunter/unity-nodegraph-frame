@@ -578,6 +578,8 @@ namespace NodeGraph
             {
                 if (GUILayout.Button(new GUIContent(graphAssetName, "Select graph"), EditorStyles.toolbarPopup, GUILayout.Width(NGEditorSettings.GUI.TOOLBAR_GRAPHNAMEMENU_WIDTH), GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT)))
                 {
+                    UnityEditor.EditorGUIUtility.PingObject( controller.TargetGraph);
+
                     GenericMenu menu = new GenericMenu();
 
                     var guids = AssetDatabase.FindAssets(NGSettings.GRAPH_SEARCH_CONDITION);

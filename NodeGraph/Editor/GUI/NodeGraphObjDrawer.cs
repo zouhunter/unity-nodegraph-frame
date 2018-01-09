@@ -96,7 +96,7 @@ namespace NodeGraph {
             GUILayout.Space(10);
 
             GUILayout.Label(new GUIContent(canvas.ControllerType, "自己定义控制器类型"), titleStyle);
-            GUILayout.Label(canvas.LastModified.ToString("YY:MM:DD:hh:mm:ss"), subTitleStyle);
+            GUILayout.Label(canvas.LastModified.ToString("yyyy-MM-dd hh:mm:ss"), subTitleStyle);
             //GUILayout.Label("Type: " + canvas.Descrption, subTitleStyle);
 
             GUILayout.Space(10);

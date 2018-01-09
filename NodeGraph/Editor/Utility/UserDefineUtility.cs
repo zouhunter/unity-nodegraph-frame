@@ -92,7 +92,7 @@ namespace NodeGraph
 
         public static void DrawSerializedObject(SerializedObject serializedObject)
         {
-            if (serializedObject == null) return;
+            if (serializedObject == null || serializedObject.targetObject == null) return;
 
             serializedObject.Update();
             SerializedProperty iterator = serializedObject.GetIterator();
