@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Model=NodeGraph.DataModel;
 
 namespace NodeGraph {
-	public class NodeGUIUtility {
+	public static class NodeGUIUtility {
 
 		public static Texture2D LoadTextureFromFile(string path) {
 			Texture2D texture = new Texture2D(1, 1);
@@ -240,5 +240,11 @@ namespace NodeGraph {
 				return EditorGUIUtility.IconContent(name).image as Texture2D;
 			}
 		}
+
+
+        public static Rect Muit(this Rect rect,float scaleFactor)
+        {
+            return new Rect(rect.x * scaleFactor, rect.y * scaleFactor, rect.width * scaleFactor, rect.height * scaleFactor);
+        }
 	}
 }

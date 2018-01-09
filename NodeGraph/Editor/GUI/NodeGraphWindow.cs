@@ -172,6 +172,7 @@ namespace NodeGraph
         private Vector2 scrollPos = new Vector2(1500, 0);
         private Vector2 errorScrollPos = new Vector2(0, 0);
         private Rect graphRegion = new Rect();
+        private float scaleFacter = 1;
         private SelectPoint selectStartMousePosition;
         private GraphBackground background = new GraphBackground();
         private string graphAssetPath;
@@ -399,6 +400,7 @@ namespace NodeGraph
 
             Selection.activeObject = graph;
             NodeConnectionUtility.Reset();
+            GUIScaleUtility.CheckInit();
         }
 
 
@@ -576,6 +578,7 @@ namespace NodeGraph
         {
             using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
             {
+                #region SelectGraph
                 if (GUILayout.Button(new GUIContent(graphAssetName, "Select graph"), EditorStyles.toolbarPopup, GUILayout.Width(NGEditorSettings.GUI.TOOLBAR_GRAPHNAMEMENU_WIDTH), GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT)))
                 {
                     GenericMenu menu = new GenericMenu();
@@ -615,9 +618,10 @@ namespace NodeGraph
                     {
                         foreach (var ct in controllerTypes)
                         {
-                            menu.AddItem(new GUIContent(string.Format("Create New/({0})Graph", ct)), false, () =>{
-                               CreateNewGraphFromDialog(ct);
-                           });
+                            menu.AddItem(new GUIContent(string.Format("Create New/({0})Graph", ct)), false, () =>
+                            {
+                                CreateNewGraphFromDialog(ct);
+                            });
                             menu.AddSeparator("");
                         }
                     }
@@ -665,19 +669,31 @@ namespace NodeGraph
 
                     menu.DropDown(new Rect(4f, 8f, 0f, 0f));
                 }
+                #endregion
 
                 GUILayout.Space(4);
 
+                #region Refresh
                 if (GUILayout.Button(new GUIContent("Refresh", ReloadButtonTexture.image, "Refresh and reload"), EditorStyles.toolbarButton, GUILayout.Width(80), GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT)))
                 {
                     Setup();
                 }
+                #endregion
+
+
                 showErrors = GUILayout.Toggle(showErrors, "Show Error", EditorStyles.toolbarButton, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
 
                 GUILayout.Space(4);
 
                 showVerboseLog = GUILayout.Toggle(showVerboseLog, "Show Verbose Log", EditorStyles.toolbarButton, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
                 LogUtility.Logger.filterLogType = (showVerboseLog) ? LogType.Log : LogType.Warning;
+
+                GUILayout.Space(4);
+
+                GUILayout.Label("Scale Factor:");
+                GUILayout.Label("0.1");
+                scaleFacter = GUILayout.HorizontalSlider(scaleFacter, 0.1f, 10, GUILayout.Width(graphRegion.width * 0.2f));
+                GUILayout.Label("10");
 
                 //controller.TargetGraph.UseAsAssetPostprocessor = GUILayout.Toggle(controller.TargetGraph.UseAsAssetPostprocessor, "Use As Postprocessor", EditorStyles.toolbarButton, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
 
@@ -703,6 +719,7 @@ namespace NodeGraph
                 //    target = supportedTargets[newIndex];
                 //    Setup(true);
                 //}
+
                 EditorGUI.BeginDisabledGroup(controller.IsAnyIssueFound);
                 //using (new EditorGUI.DisabledScope(controller.IsAnyIssueFound))
                 {
@@ -782,13 +799,15 @@ namespace NodeGraph
 
         private void DrawGUINodeGraph()
         {
-
-            background.Draw(graphRegion, scrollPos);
-
             using (var scrollScope = new EditorGUILayout.ScrollViewScope(scrollPos))
             {
                 scrollPos = scrollScope.scrollPosition;
 
+                canvasRect = new Rect(0, EditorGUIUtility.singleLineHeight, position.width, position.height - EditorGUIUtility.singleLineHeight);
+                center = GUIScaleUtility.BeginScale(ref canvasRect, scrollPos, scaleFacter, true, true);
+
+
+                #region DrawInteranl
                 if (connections == null) Window.Close();
 
                 // draw connections.
@@ -852,6 +871,9 @@ namespace NodeGraph
                     UpdateSpacerRect();
                     GUILayoutUtility.GetRect(new GUIContent(string.Empty), GUIStyle.none, GUILayout.Width(spacerRectRightBottom.x), GUILayout.Height(spacerRectRightBottom.y));
                 }
+                #endregion
+
+                GUIScaleUtility.EndScale();
             }
             if (Event.current.type == EventType.Repaint)
             {
@@ -1045,10 +1067,10 @@ namespace NodeGraph
                 EditorUtility.SetDirty(controller.TargetGraph);
             }
         }
-
+        Rect canvasRect;
+        Vector3 center;
         public void OnGUI()
         {
-
             if (controller == null)
             {
                 DrawNoGraphGUI();
@@ -1056,10 +1078,14 @@ namespace NodeGraph
             else
             {
                 DrawGUIToolBar();
+             
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
+                    background.Draw(graphRegion, scrollPos);
+                    
                     DrawGUINodeGraph();
+                  
                     if (showErrors)
                     {
                         DrawGUINodeErrors();
