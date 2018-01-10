@@ -105,13 +105,6 @@ MonoBehaviour:
         height: 23
       max: 2
       type: Number
-  - m_name: Result
-    m_id: c75932a8-fda8-4a85-b34e-eaf3178a9cf3
-    m_x: 564
-    m_y: 156
-    m_node: {fileID: 11473896}
-    m_inputPoints: []
-    m_outputPoints: []
   m_allConnections:
   - m_id: fb0c1b2a-8778-45cc-b5d9-1edbe1b27083
     m_fromNodeId: 9d95f66c-50dc-4781-899e-58a78c7552b0
@@ -127,9 +120,10 @@ MonoBehaviour:
     m_toNodeConnectionPoiontId: ce1f9afa-9284-4a89-bb35-eb5076d79e7e
     m_type: Number
     m_connection: {fileID: 11416280}
-  m_lastModified: 131599773135502798
+  m_lastModified: 131600708468319058
   m_graphDescription: 
   m_controllerType: CalculateCtrl
+  m_panelNamePath: 
 --- !u!114 &11416280
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -166,18 +160,6 @@ MonoBehaviour:
   m_Name: FloatNode
   m_EditorClassIdentifier: 
   value: 0
---- !u!114 &11473896
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: ResultNode
-  m_EditorClassIdentifier: Assembly-CSharp::ResultNode
-  value: 
 --- !u!114 &11476290
 MonoBehaviour:
   m_ObjectHideFlags: 1

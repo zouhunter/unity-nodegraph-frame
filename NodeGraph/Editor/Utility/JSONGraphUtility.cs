@@ -109,7 +109,15 @@ namespace NodeGraph {
         public static void DeserializeGraph(string json,ref Model.NodeGraphObj graph)
         {
             var jsonNode = JSONClass.Parse(json);
-            if(graph == null) graph = ScriptableObject.CreateInstance<Model.NodeGraphObj>();
+            if (graph == null)
+            {
+                graph = ScriptableObject.CreateInstance<Model.NodeGraphObj>();
+            }
+            else
+            {
+                //DeleteSubAsset(graph);
+            }
+
             JsonUtility.FromJsonOverwrite(json, graph);
 
             for (int i = 0; i < jsonNode["m_allNodes"].AsArray.Count; i++)
@@ -149,7 +157,22 @@ namespace NodeGraph {
             }
             return jc.ToString();
         }
-
+        private static void DeleteSubAsset(Model.NodeGraphObj graph)
+        {
+            var path = AssetDatabase.GetAssetPath(graph);
+            if (!string.IsNullOrEmpty(path))
+            {
+                var subAssets = AssetDatabase.LoadAllAssetsAtPath(path);
+                foreach (var item in subAssets)
+                {
+                    if (item != graph)
+                    {
+                        Debug.Log("delete:" + item);
+                        UnityEngine.Object.DestroyImmediate(item, true);
+                    }
+                }
+            }
+        }
         private static void AddFieldToNode(JSONNode node, JSONNode json, string type)
         {
             node.Add("json", json);

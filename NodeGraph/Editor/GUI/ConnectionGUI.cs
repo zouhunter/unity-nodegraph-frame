@@ -29,9 +29,16 @@ namespace NodeGraph
             {
                 if(_connectionDrawer == null)
                 {
-                    _connectionDrawer = UserDefineUtility.GetUserDrawer(m_data.Object.GetType()) as ConnectionDrawer;
-                    if (_connectionDrawer == null) _connectionDrawer = new ConnectionDrawer();
-                    _connectionDrawer.target = m_data.Object;
+                    if(m_data == null || m_data.Object == null)
+                    {
+                        _connectionDrawer = new ConnectionDrawer();
+                    }
+                    else
+                    {
+                        _connectionDrawer = UserDefineUtility.GetUserDrawer(m_data.Object.GetType()) as ConnectionDrawer;
+                        if (_connectionDrawer == null) _connectionDrawer = new ConnectionDrawer();
+                        _connectionDrawer.target = m_data.Object;
+                    }
                 }
                 return _connectionDrawer;
             }
