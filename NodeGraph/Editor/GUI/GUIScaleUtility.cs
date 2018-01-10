@@ -16,7 +16,7 @@ namespace NodeGraph
         // cache the reflected methods
         private static FieldInfo currentGUILayoutCache;
         private static FieldInfo currentTopLevelGroup;
-
+        private static PropertyInfo _getVisibleRect = null;
         // Delegates to the reflected methods
         private static Func<Rect> GetTopRectDelegate;
         private static Func<Rect> topmostRectDelegate;
@@ -52,6 +52,7 @@ namespace NodeGraph
             PropertyInfo topmostRect = GUIClipType.GetProperty("topmostRect", BindingFlags.Static | BindingFlags.Public);
             MethodInfo GetTopRect = GUIClipType.GetMethod("GetTopRect", BindingFlags.Static | BindingFlags.NonPublic);
             MethodInfo ClipRect = GUIClipType.GetMethod("Clip", BindingFlags.Static | BindingFlags.Public, Type.DefaultBinder, new Type[] { typeof(Rect) }, new ParameterModifier[] { });
+            _getVisibleRect = GUIClipType.GetProperty("visibleRect", BindingFlags.Static | BindingFlags.Public);
 
             if (GUIClipType == null || topmostRect == null || GetTopRect == null || ClipRect == null)
             {
@@ -193,6 +194,15 @@ namespace NodeGraph
         }
 
         #endregion
+
+
+        public static Rect GUIClipGetVisibleRect()
+        {
+            if (_getVisibleRect == null) return default(Rect);
+            var rect = (Rect)_getVisibleRect.GetValue(null, null);
+            return rect;
+        }
+
 
         #region Clips Hierarchy
 

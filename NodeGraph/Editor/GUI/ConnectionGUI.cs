@@ -22,9 +22,20 @@ namespace NodeGraph
         private ConnectionGUIInspectorHelper m_inspector;
         [SerializeField]
         private NodeGraphController m_controller;
-        //[SerializeField]
-        //private string connectionButtonStyle;
-        private ConnectionDrawer connectionDrawer;
+        private ConnectionDrawer _connectionDrawer;
+        private ConnectionDrawer connectionDrawer
+        {
+            get
+            {
+                if(_connectionDrawer == null)
+                {
+                    _connectionDrawer = UserDefineUtility.GetUserDrawer(m_data.Object.GetType()) as ConnectionDrawer;
+                    if (_connectionDrawer == null) _connectionDrawer = new ConnectionDrawer();
+                    _connectionDrawer.target = m_data.Object;
+                }
+                return _connectionDrawer;
+            }
+        }
         public string ConnectionType
         {
             get
@@ -156,9 +167,7 @@ namespace NodeGraph
             this.m_data = data;
             this.m_outputPoint = output;
             this.m_inputPoint = input;
-            connectionDrawer = UserDefineUtility.GetUserDrawer(data.Object.GetType()) as ConnectionDrawer;
-            if (connectionDrawer == null) connectionDrawer = new ConnectionDrawer();
-            connectionDrawer.target = data.Object;
+           
             //connectionButtonStyle = "sv_label_0";
         }
 

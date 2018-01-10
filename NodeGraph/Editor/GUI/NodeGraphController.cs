@@ -12,11 +12,11 @@ using Model = NodeGraph.DataModel;
 
 namespace NodeGraph
 {
+    [System.Serializable]
     public abstract class NodeGraphController
     {
         private List<NodeException> m_nodeExceptions = new List<NodeException>();
         private Model.NodeGraphObj m_targetGraph;
-
         public abstract string Group { get; }
 
         public bool IsAnyIssueFound

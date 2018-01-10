@@ -20,8 +20,23 @@ namespace NodeGraph
 
         [SerializeField]
         private Model.NodeData m_data;
-        [SerializeField]
-        private NodeDrawer nodeDataDrawer;
+
+        private NodeDrawer _nodeDataDrawer;
+
+        private NodeDrawer nodeDataDrawer
+        {
+            get
+            {
+                if (_nodeDataDrawer == null)
+                {
+                    _nodeDataDrawer = UserDefineUtility.GetUserDrawer(m_data.Object.GetType()) as NodeDrawer;
+                    if (_nodeDataDrawer == null) _nodeDataDrawer = new NodeDrawer();
+                    _nodeDataDrawer.target = m_data.Object;
+                }
+                return _nodeDataDrawer;
+
+            }
+        }
         [SerializeField]
         private NodeGraphController m_controller;
 
@@ -61,6 +76,10 @@ namespace NodeGraph
             get
             {
                 return m_controller;
+            }
+            set
+            {
+                m_controller = value;
             }
         }
         public string Id
@@ -140,9 +159,6 @@ namespace NodeGraph
             m_controller = controller;
             m_data = data;
             m_data.Object.Initialize(m_data);
-            nodeDataDrawer = UserDefineUtility.GetUserDrawer(data.Object.GetType()) as NodeDrawer;
-            if (nodeDataDrawer == null) nodeDataDrawer = new NodeDrawer();
-            nodeDataDrawer.target = data.Object;
             m_baseRect = new Rect(m_data.X, m_data.Y, NGEditorSettings.GUI.NODE_BASE_WIDTH, NGEditorSettings.GUI.NODE_BASE_HEIGHT + nodeDataDrawer.CustomNodeHeight);
             m_nodeSyle = nodeDataDrawer == null ? "node 0" : nodeDataDrawer.InactiveStyle;
         }

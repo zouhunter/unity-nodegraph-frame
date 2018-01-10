@@ -19,7 +19,7 @@ namespace NodeGraph
         /// <summary>
         /// Adds the specified hidden subAssets to the mainAsset
         /// </summary>
-        public static void SetSubAssets(ScriptableObject[] subAssets, ScriptableObject mainAsset)
+        public static void SetSubAssets(ScriptableObject[] subAssets, ScriptableObject mainAsset,bool clearOther = false)
         {
             var path = AssetDatabase.GetAssetPath(mainAsset);
             var oldAssets = AssetDatabase.LoadAllAssetsAtPath(path);
@@ -33,14 +33,16 @@ namespace NodeGraph
                     AddSubAsset(subAsset, mainAsset);
                 }
             }
-
-            foreach (var item in oldAssets)
+            if(clearOther)
             {
-                if (item == mainAsset) continue;
-
-                if(System.Array.Find(subAssets,x=>x==item) == null)
+                foreach (var item in oldAssets)
                 {
-                    Object.DestroyImmediate(item, true);
+                    if (item == mainAsset) continue;
+
+                    if (System.Array.Find(subAssets, x => x == item) == null)
+                    {
+                        Object.DestroyImmediate(item, true);
+                    }
                 }
             }
         }

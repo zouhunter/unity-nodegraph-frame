@@ -173,7 +173,7 @@ namespace NodeGraph
         private Vector2 errorScrollPos = new Vector2(0, 0);
         private Rect graphRegion = new Rect();
         private float canvasSize = 1;
-        //private float nodeSize = 1;
+        private const float maxSize = 2.5f;
         private SelectPoint selectStartMousePosition;
         private GraphBackground background = new GraphBackground();
         private string graphAssetPath;
@@ -304,6 +304,7 @@ namespace NodeGraph
             modifyMode = ModifyMode.NONE;
             NodeGUIUtility.NodeEventHandler = HandleNodeEvent;
             ConnectionGUIUtility.ConnectionEventHandler = HandleConnectionEvent;
+            GUIScaleUtility.CheckInit();
 
             string lastGraphAssetPath = EditorPrefs.GetString(kPREFKEY_LASTEDITEDGRAPH);
 
@@ -401,13 +402,11 @@ namespace NodeGraph
 
             Selection.activeObject = graph;
             NodeConnectionUtility.Reset();
-            GUIScaleUtility.CheckInit();
         }
 
 
         private void CloseGraph()
         {
-
             modifyMode = ModifyMode.NONE;
             SetGraphAssetPath(null);
             controller = null;
@@ -495,7 +494,7 @@ namespace NodeGraph
             connections = currentConnections;
         }
 
-        private void SaveGraph()
+        private void SaveGraph(bool resetAll = false)
         {
             UnityEngine.Assertions.Assert.IsNotNull(controller);
             List<Model.NodeData> n = nodes.Select(v => v.Data).ToList();
@@ -505,7 +504,7 @@ namespace NodeGraph
             var all = new List<ScriptableObject>();
             all.AddRange(Array.ConvertAll<Model.NodeData, Model.Node>(n.ToArray(), x => x.Object));
             all.AddRange(Array.ConvertAll<Model.ConnectionData, Model.Connection>(c.ToArray(), x => x.Object));
-            ScriptableObjUtility.SetSubAssets(all.ToArray(), obj);
+            ScriptableObjUtility.SetSubAssets(all.ToArray(), obj, resetAll);
             UnityEditor.EditorUtility.SetDirty(controller.TargetGraph);
         }
 
@@ -521,6 +520,7 @@ namespace NodeGraph
             {
                 foreach (var node in nodes)
                 {
+                    node.Controller = controller;
                     node.HideProgress();
                 }
 
@@ -692,9 +692,9 @@ namespace NodeGraph
                 GUILayout.Space(4);
 
                 GUILayout.Label(string.Format("canvas:[{0}]", canvasSize.ToString("0.0")));
-                GUILayout.Label("0.1");
-                canvasSize = GUILayout.HorizontalSlider(canvasSize, 0.1f, 10, GUILayout.Width(graphRegion.width * 0.1f));
-                GUILayout.Label("10");
+                GUILayout.Label("1");
+                canvasSize = GUILayout.HorizontalSlider(canvasSize, 1, maxSize, GUILayout.Width(graphRegion.width * 0.1f));
+                GUILayout.Label(maxSize.ToString());
 
                 //GUILayout.Space(4);
 
@@ -810,15 +810,12 @@ namespace NodeGraph
         private void DrawGUINodeGraph()
         {
             background.Draw(graphRegion, scrollPos);
-          
 
-            using (var scrollScope = new EditorGUILayout.ScrollViewScope(scrollPos,true,true))
+            using (var scrollScope = new EditorGUILayout.ScrollViewScope(scrollPos))
             {
                 var position = graphRegion;
                 scrollPos = scrollScope.scrollPosition;
-                scrollScope.handleScrollWheel = false;
-                GUILayoutUtility.GetRect(position.width / canvasSize, (position.height - 2 * EditorGUIUtility.singleLineHeight) / canvasSize);
-                canvasRect = new Rect(-scrollPos.x , - scrollPos.y , position.width * 10, position.height * 10);
+                canvasRect = new Rect(-scrollPos.x, -scrollPos.y, position.width * maxSize, position.height * maxSize);
                 var scale = GUIScaleUtility.BeginScale(ref canvasRect, canvasRect.size * 0.5f, canvasSize, true, false);
                 #region DrawInteranl
                 if (connections == null) Window.Close();
@@ -1088,6 +1085,10 @@ namespace NodeGraph
             LogUtility.Logger.Log("OnDisable");
             if (controller != null)
             {
+                if (controller.TargetGraph != null)
+                {
+                    SaveGraph(true);
+                }
                 EditorUtility.SetDirty(controller.TargetGraph);
             }
         }
