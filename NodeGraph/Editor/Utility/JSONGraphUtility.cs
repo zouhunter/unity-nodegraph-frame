@@ -61,8 +61,6 @@ namespace NodeGraph {
             if (graph != null) {
                 Undo.RecordObject(graph, "Import");
                 DeserializeGraph(jsonContent, ref graph);
-                JsonUtility.FromJsonOverwrite(jsonContent, graph);
-                //EditorJsonUtility.FromJsonOverwrite (jsonContent, graph);
             } else {
                 DeserializeGraph(jsonContent, ref graph);
                 var newAssetFolder = CreateFolderForImportedAssets ();
@@ -115,9 +113,9 @@ namespace NodeGraph {
             }
             else
             {
-                //DeleteSubAsset(graph);
+                DeleteSubAsset(graph);
             }
-
+            List<ScriptableObject> subAssets = new List<ScriptableObject>();
             JsonUtility.FromJsonOverwrite(json, graph);
 
             for (int i = 0; i < jsonNode["m_allNodes"].AsArray.Count; i++)
@@ -125,16 +123,28 @@ namespace NodeGraph {
                 var item = jsonNode["m_allNodes"][i]["m_node"];
                 var obj = ScriptableObject.CreateInstance(item["type"].Value) as Model.Node;
                 JsonUtility.FromJsonOverwrite(item["json"], obj);
+                obj.name = obj.GetType().FullName;
                 graph.Nodes[i].Object = (obj);
+                subAssets.Add(obj);
             }
 
 
-            for (int i = 0; i < jsonNode["m_allconnections"].AsArray.Count; i++)
+            for (int i = 0; i < jsonNode["m_allConnections"].AsArray.Count; i++)
             {
-                var item = jsonNode["m_allconnections"][i]["m_connection"];
+                var item = jsonNode["m_allConnections"][i]["m_connection"];
                 var obj = ScriptableObject.CreateInstance(item["type"].Value) as Model.Connection;
                 JsonUtility.FromJsonOverwrite(item["json"], obj);
+                obj.name = obj.GetType().FullName;
                 graph.Connections[i].Object = (obj);
+                subAssets.Add(obj);
+            }
+
+            ScriptableObjUtility.SetSubAssets(subAssets.ToArray(), graph, true);
+            EditorUtility.SetDirty(graph);
+            foreach (var item in graph.Nodes)
+            {
+                Debug.Log(item.Object);
+                EditorUtility.SetDirty(item.Object);
             }
         }
 
@@ -143,13 +153,13 @@ namespace NodeGraph {
             var rootJson = JsonUtility.ToJson(graph);
             JSONClass jc = JSONClass.Parse(rootJson) as JSONClass;
 
-            var nodes = jc["m_allNodes"];
+            var nodes = jc["m_allNodes"].AsArray;
             for (int i = 0; i < nodes.Count; i++){
                 var node = graph.Nodes[i].Object;
                 AddFieldToNode(nodes[i]["m_node"], JsonUtility.ToJson(node), node.GetType().FullName);
             }
 
-            var connections = jc["m_allconnections"];
+            var connections = jc["m_allConnections"].AsArray;
             for (int i = 0; i < connections.Count; i++)
             {
                 var connection = graph.Connections[i].Object;

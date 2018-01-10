@@ -35,6 +35,7 @@ namespace NodeGraph
 
         internal virtual void OnInspectorGUI()
         {
+            if (target == null) return;
             if (serializedObj == null)
                 serializedObj = new SerializedObject(target);
             EditorGUILayout.HelpBox("[默认绘制:]", MessageType.Info);
