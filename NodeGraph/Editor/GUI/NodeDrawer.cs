@@ -10,7 +10,9 @@ namespace NodeGraph
 {
     public class NodeDrawer 
     {
-        public Node target;
+        protected Node _target;
+        public virtual Node target { get { return _target; } set{ _target = value; } }
+
         protected SerializedObject serializedObj;
         public string ActiveStyle { get { return string.Format("node {0} on", Style); } }
         public string InactiveStyle { get { return string.Format("node {0}", Style); } }
