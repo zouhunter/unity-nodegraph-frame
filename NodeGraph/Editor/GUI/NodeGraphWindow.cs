@@ -173,7 +173,7 @@ namespace NodeGraph
         private Vector2 errorScrollPos = new Vector2(0, 0);
         private Rect graphRegion = new Rect();
         private float canvasSize = 1;
-        private const float maxSize = 2.5f;
+        public const float maxCanvasSize = 2.5f;
         private SelectPoint selectStartMousePosition;
         private GraphBackground background = new GraphBackground();
         private string graphAssetPath;
@@ -693,8 +693,8 @@ namespace NodeGraph
 
                 GUILayout.Label(string.Format("canvas:[{0}]", canvasSize.ToString("0.0")));
                 GUILayout.Label("1");
-                canvasSize = GUILayout.HorizontalSlider(canvasSize, 1, maxSize, GUILayout.Width(graphRegion.width * 0.1f));
-                GUILayout.Label(maxSize.ToString());
+                canvasSize = GUILayout.HorizontalSlider(canvasSize, 1, maxCanvasSize, GUILayout.Width(graphRegion.width * 0.1f));
+                GUILayout.Label(maxCanvasSize.ToString());
 
                 //GUILayout.Space(4);
 
@@ -815,8 +815,8 @@ namespace NodeGraph
             {
                 var position = graphRegion;
                 scrollPos = scrollScope.scrollPosition;
-                canvasRect = new Rect(-scrollPos.x, -scrollPos.y, position.width * maxSize, position.height * maxSize);
-                var scale = GUIScaleUtility.BeginScale(ref canvasRect, canvasRect.size * 0.5f, canvasSize, true, false);
+                canvasRect = new Rect(-scrollPos.x, -scrollPos.y, position.width * maxCanvasSize, position.height * maxCanvasSize);
+                /*var scale = */GUIScaleUtility.BeginScale(ref canvasRect, canvasRect.size * 0.5f, canvasSize, true, false);
                 #region DrawInteranl
                 if (connections == null) Window.Close();
 

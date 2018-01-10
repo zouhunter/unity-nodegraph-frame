@@ -13,46 +13,6 @@ namespace NodeGraph {
 
 	[CustomEditor(typeof(NodeGraphObj))]
 	public class NodeGraphObjDrawer : Editor {
-		//private class Styles {
-		//	public static readonly string kEDITBUTTON_LABEL		= "Open in Graph Editor";
-		//	public static readonly string kEDITBUTTON_DESCRIPTION	= "Opens in the Node Graph Editor, which will allow you to configure the graph";
-		//	public static readonly GUIContent kEDITBUTTON = new GUIContent(kEDITBUTTON_LABEL, kEDITBUTTON_DESCRIPTION);
-		//}
-
-		//public override void OnInspectorGUI()
-		//{
-		//	Model.NodeGroup graph = target as Model.NodeGroup;
-            
-  //          using (new EditorGUILayout.HorizontalScope())
-  //          {
-  //              GUILayout.Label("NodeGraphController", "BoldLabel");
-  //              GUILayout.Label(graph.ControllerType);
-  //          }
-
-  //          using (new EditorGUILayout.HorizontalScope()) {
-		//		GUILayout.Label(graph.name, "BoldLabel");
-		//		if (GUILayout.Button(Styles.kEDITBUTTON, GUILayout.Width(150f), GUILayout.ExpandWidth(false)))
-		//		{
-		//			// Get the target we are inspecting and open the graph
-		//			var window = EditorWindow.GetWindow<NodeGraphWindow>();
-		//			window.OpenGraph(graph);
-		//		}
-		//	}
-
-		//	using(new EditorGUILayout.VerticalScope(GUI.skin.box)) {
-		//		//EditorGUILayout.LabelField("Version", graph.Version.ToString());
-		//		EditorGUILayout.LabelField("Last Modified", graph.LastModified.ToString());
-		//		using(new EditorGUILayout.HorizontalScope()) {
-		//			GUILayout.Label("Description", GUILayout.Width(100f));
-		//			string newdesc = EditorGUILayout.TextArea(graph.Descrption, GUILayout.MaxHeight(100f));
-		//			if(newdesc != graph.Descrption) {
-		//				graph.Descrption = newdesc;
-		//			}
-		//		}
-		//		GUILayout.Space(2f);
-		//	}
-		//}
-
         public static GUIStyle titleStyle;
         public static GUIStyle subTitleStyle;
         public static GUIStyle boldLabelStyle;
@@ -62,7 +22,6 @@ namespace NodeGraph {
         public void OnEnable()
         {
             canvas = (NodeGraphObj)target;
-            //canvas.Validate();
         }
 
         public override void OnInspectorGUI()
@@ -97,7 +56,6 @@ namespace NodeGraph {
 
             GUILayout.Label(new GUIContent(canvas.ControllerType, "自己定义控制器类型"), titleStyle);
             GUILayout.Label(canvas.LastModified.ToString("yyyy-MM-dd hh:mm:ss"), subTitleStyle);
-            //GUILayout.Label("Type: " + canvas.Descrption, subTitleStyle);
 
             GUILayout.Space(10);
 
@@ -128,7 +86,8 @@ namespace NodeGraph {
                 foreach (NodeData node in canvas.Nodes)
                 {
                     string label = node.Name;
-                    EditorGUILayout.ObjectField(label, node.Object, node.Object.GetType(), false);
+                    var type = node.Object == null ? typeof(Node) : node.Object.GetType();
+                    node.Object = EditorGUILayout.ObjectField(label, node.Object, type, false) as Node;
                 }
 
                 GUILayout.Space(10);
@@ -142,7 +101,8 @@ namespace NodeGraph {
                 foreach (var connection in canvas.Connections)
                 {
                     string label = connection.ConnectionType;
-                    EditorGUILayout.ObjectField(label, connection.Object, connection.Object.GetType(), false);
+                    var type = connection.Object == null ? typeof(Connection) : connection.Object.GetType();
+                    EditorGUILayout.ObjectField(label, connection.Object, type, false);
                 }
 
                 GUILayout.Space(10);

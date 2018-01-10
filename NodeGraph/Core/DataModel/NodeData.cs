@@ -11,7 +11,6 @@ namespace NodeGraph.DataModel
 	[Serializable]
     public class NodeData
     {
-
         [SerializeField]
         private string m_name;
         [SerializeField]

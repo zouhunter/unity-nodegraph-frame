@@ -14,7 +14,7 @@ public class TestScaleGUI : EditorWindow
     [MenuItem("Test/TestScaleGUI")]
     public static void Create()
     {
-        var win = GetWindow<TestScaleGUI>("TestScaleGUI");
+        /*var win = */GetWindow<TestScaleGUI>("TestScaleGUI");
     }
 
     private void OnEnable()
@@ -55,10 +55,10 @@ public class TestScaleGUI : EditorWindow
 
     private void OnGUI()
     {
-        var topRect = GUIClipGetTopRect();
+       /* var topRect =*/ GUIClipGetTopRect();
 
         var pivotPoint = Vector2.zero;
-        var rect = new Rect(0, 0, topRect.width, topRect.height);
+        //var rect = new Rect(0, 0, topRect.width, topRect.height);
 
         var zoom = 2.0f; // 1.0f～ 値が大きいほど、小さく表示される
         var invZoom = 1.0f / zoom;
@@ -68,7 +68,7 @@ public class TestScaleGUI : EditorWindow
             {
                 _scrPos = scrollScope.scrollPosition;
 
-                var area = GUILayoutUtility.GetRect(new GUIContent(string.Empty), GUIStyle.none, GUILayout.Width(3000), GUILayout.Height(3000));
+                /*var area =*/ GUILayoutUtility.GetRect(new GUIContent(string.Empty), GUIStyle.none, GUILayout.Width(3000), GUILayout.Height(3000));
                 {
                     GUIUtility.ScaleAroundPivot(Vector2.one * invZoom, pivotPoint);
                     var visibleRect = GUIClipGetVisibleRect();

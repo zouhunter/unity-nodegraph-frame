@@ -83,6 +83,10 @@ namespace NodeGraph.DataModel {
             {
                 return m_connection;
             }
+            set
+            {
+                m_connection = value;
+            }
         }
         //public ConnectionInstance Operation
         //{
