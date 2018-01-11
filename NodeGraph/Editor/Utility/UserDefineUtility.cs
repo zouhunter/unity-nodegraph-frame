@@ -35,6 +35,7 @@ namespace NodeGraph
             }
             return list;
         }
+        private static Dictionary<Type, Type> userDrawer;
 
         internal static NodeGraphController CreateController(NodeGraph.DataModel.NodeGraphObj graph)
         {
@@ -51,7 +52,6 @@ namespace NodeGraph
                 return null;
             }
         }
-        private static Dictionary<Type, Type> userDrawer;
         internal static object GetUserDrawer(Type type)
         {
             InitDrawerTypes();
@@ -89,24 +89,6 @@ namespace NodeGraph
                 }
             }
         }
-
-        public static void DrawSerializedObject(SerializedObject serializedObject)
-        {
-            if (serializedObject == null || serializedObject.targetObject == null) return;
-
-            serializedObject.Update();
-            SerializedProperty iterator = serializedObject.GetIterator();
-            bool enterChildren = true;
-            while (iterator.NextVisible(enterChildren))
-            {
-                EditorGUI.BeginDisabledGroup("m_Script" == iterator.propertyPath);
-                EditorGUILayout.PropertyField(iterator, true, new GUILayoutOption[0]);
-                EditorGUI.EndDisabledGroup();
-                enterChildren = false;
-            }
-            serializedObject.ApplyModifiedProperties();
-        }
-
     }
 
 }

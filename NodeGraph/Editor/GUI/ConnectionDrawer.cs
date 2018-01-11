@@ -18,7 +18,8 @@ namespace NodeGraph
     public class ConnectionDrawer
     {
         public DataModel.Connection target;
-        protected SerializedObject serializedObj;
+        protected Editor targetDrawer;
+
         internal virtual int LineWidth { get { return 3; } }
         internal virtual Color LineColor { get { return Color.white; } }
 
@@ -36,10 +37,11 @@ namespace NodeGraph
         internal virtual void OnInspectorGUI()
         {
             if (target == null) return;
-            if (serializedObj == null)
-                serializedObj = new SerializedObject(target);
-            EditorGUILayout.HelpBox("[默认绘制:]", MessageType.Info);
-            UserDefineUtility.DrawSerializedObject(serializedObj);
+
+            if (targetDrawer == null)
+                targetDrawer = Editor.CreateEditor(target);
+            targetDrawer.DrawHeader();
+            targetDrawer.OnInspectorGUI();
         }
 
         internal virtual void OnContextMenuGUI(GenericMenu menu, ConnectionGUI connectionGUI) { }
