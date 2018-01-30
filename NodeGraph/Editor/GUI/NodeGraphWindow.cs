@@ -317,7 +317,7 @@ namespace NodeGraph
                 }
             }
 
-            controllerTypes = UserDefineUtility.CustomControllerTypes.ConvertAll<string>(x => x.Name).ToArray();
+            controllerTypes = UserDefineUtility.CustomControllerTypes.ConvertAll<string>(x => x.FullName).ToArray();
         }
 
         private void ShowErrorOnNodes()
@@ -619,9 +619,10 @@ namespace NodeGraph
                     {
                         foreach (var ct in controllerTypes)
                         {
-                            menu.AddItem(new GUIContent(string.Format("Create New/({0})Graph", ct)), false, () =>
+                            string contollerType = ct;
+                            menu.AddItem(new GUIContent(string.Format("Create New/({0})Graph", contollerType)), false, () =>
                             {
-                                CreateNewGraphFromDialog(ct);
+                                CreateNewGraphFromDialog(contollerType);
                             });
                             menu.AddSeparator("");
                         }

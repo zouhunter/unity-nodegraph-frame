@@ -27,6 +27,7 @@ namespace NodeGraph
 
             if (targetDrawer == null)
                 targetDrawer = Editor.CreateEditor(target);
+
             targetDrawer.DrawHeader();
             targetDrawer.OnInspectorGUI();
         }

@@ -39,7 +39,7 @@ namespace NodeGraph
 
         internal static NodeGraphController CreateController(NodeGraph.DataModel.NodeGraphObj graph)
         {
-            var type = CustomControllerTypes.Find(x => x.Name == graph.ControllerType);
+            var type = CustomControllerTypes.Find(x => x.FullName == graph.ControllerType);
             if (type != null)
             {
                 var ctrl = System.Activator.CreateInstance(type);
@@ -49,6 +49,7 @@ namespace NodeGraph
             }
             else
             {
+                Debug.LogError("can not find controllerType:" + graph.ControllerType);
                 return null;
             }
         }
