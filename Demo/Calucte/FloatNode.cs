@@ -5,7 +5,6 @@ using NodeGraph.DataModel;
 using System.Collections.Generic;
 
 [CustomNode("Node/Float",1,"Calculate")]
-[CreateAssetMenu(menuName = "Test")]
 public class FloatNode : Node
 {
     public float value;

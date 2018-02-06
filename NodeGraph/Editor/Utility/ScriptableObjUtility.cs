@@ -45,7 +45,7 @@ namespace NodeGraph
                     }
                 }
             }
-            Debug.Log("[SetSubAssets] " + mainAsset +" subassets Updated.");
+            //Debug.Log("[SetSubAssets] " + mainAsset +" subassets Updated.");
         }
 
         /// <summary>

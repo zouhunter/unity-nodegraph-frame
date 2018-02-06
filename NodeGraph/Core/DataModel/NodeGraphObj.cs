@@ -34,6 +34,8 @@ namespace NodeGraph.DataModel
         private string m_controllerType;
         [SerializeField]
         private string m_panelNamePath;
+
+        public static bool log = false;
         void OnEnable()
         {
             Initialize();
@@ -150,14 +152,14 @@ namespace NodeGraph.DataModel
             if (!Enumerable.SequenceEqual(nodes.OrderBy(v => v.Id), m_allNodes.OrderBy(v => v.Id)) ||
                 !Enumerable.SequenceEqual(connections.OrderBy(v => v.Id), m_allConnections.OrderBy(v => v.Id)))
             {
-                Debug.Log("[ApplyGraph] SaveData updated.");
+                if(log) Debug.Log("[ApplyGraph] SaveData updated.");
                 m_lastModified = GetFileTimeUtcString();
                 m_allNodes = nodes;
                 m_allConnections = connections;
             }
             else
             {
-                Debug.Log("[ApplyGraph] SaveData update skipped. graph is equivarent.");
+                if (log) Debug.Log("[ApplyGraph] SaveData update skipped. graph is equivarent.");
             }
         }
 
