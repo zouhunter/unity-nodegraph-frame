@@ -812,12 +812,19 @@ namespace NodeGraph
         {
             background.Draw(graphRegion, scrollPos);
 
+            var windowRect = new Rect(0, 0, graphRegion.width - 15, position.height - 50);
+
             using (var scrollScope = new EditorGUILayout.ScrollViewScope(scrollPos))
             {
-                var position = graphRegion;
+                //var position = graphRegion;
                 scrollPos = scrollScope.scrollPosition;
-                canvasRect = new Rect(-scrollPos.x, -scrollPos.y, position.width * maxCanvasSize, position.height * maxCanvasSize);
-                /*var scale = */GUIScaleUtility.BeginScale(ref canvasRect, canvasRect.size * 0.5f, canvasSize, true, false);
+                GUILayoutUtility.GetRect(windowRect.width * maxCanvasSize / canvasSize, windowRect.height * maxCanvasSize / canvasSize);
+                //canvasRect = new Rect(-scrollPos.x, -scrollPos.y, position.width * maxCanvasSize, position.height * maxCanvasSize);
+                var vect = GUIScaleUtility.BeginScale(ref windowRect, windowRect.size * 0.5f, canvasSize, false);
+
+                var viewRect = new Rect(-scrollPos, 2 * vect + scrollPos);
+                //进行新的视角裁切
+                GUI.BeginClip(viewRect);
                 #region DrawInteranl
                 if (connections == null) Window.Close();
 
@@ -883,9 +890,10 @@ namespace NodeGraph
                     GUILayoutUtility.GetRect(new GUIContent(string.Empty), GUIStyle.none, GUILayout.Width(spacerRectRightBottom.x), GUILayout.Height(spacerRectRightBottom.y));
                 }
                 #endregion
+                //结束裁切
+                GUI.EndClip();
                 GUIScaleUtility.EndScale();
             }
-
 
             if (Event.current.type == EventType.Repaint)
             {
