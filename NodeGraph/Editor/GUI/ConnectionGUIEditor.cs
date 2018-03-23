@@ -7,6 +7,9 @@ namespace NodeGraph
     [CustomEditor(typeof(ConnectionGUIInspectorHelper))]
     public class ConnectionGUIEditor : Editor
     {
+        protected override void OnHeaderGUI()
+        {
+        }
         public override bool RequiresConstantRepaint()
         {
             return true;
@@ -20,7 +23,6 @@ namespace NodeGraph
                 return;
             }
 
-            EditorGUILayout.HelpBox("连接信息:", MessageType.Info);
             con.DrawObject();
         }
 

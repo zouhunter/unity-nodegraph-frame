@@ -13,6 +13,7 @@ namespace NodeGraph {
         public List<string> Errors { get { return _errors; } }
 
         private NodeGUI _node;
+
         private List<string> _errors = new List<string>();
 
         public void UpdateNodeGUI(NodeGUI node)
