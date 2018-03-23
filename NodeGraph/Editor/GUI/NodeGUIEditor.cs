@@ -14,12 +14,13 @@ namespace NodeGraph
     [CustomEditor(typeof(NodeGUIInspectorHelper))]
     public class NodeGUIEditor : Editor
     {
-
+        protected override void OnHeaderGUI()
+        {
+        }
         public override bool RequiresConstantRepaint()
         {
             return true;
         }
-
         public override void OnInspectorGUI()
         {
             var currentTarget = (NodeGUIInspectorHelper)target;
@@ -43,8 +44,6 @@ namespace NodeGraph
                 }
             }
         }
-
-
         public string DrawFolderSelector(string label,
             string dialogTitle,
             string currentDirPath,

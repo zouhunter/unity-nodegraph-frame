@@ -22,8 +22,8 @@ namespace NodeGraph
         private ConnectionGUIInspectorHelper m_inspector;
         [SerializeField]
         private NodeGraphController m_controller;
-        private ConnectionDrawer _connectionDrawer;
-        private ConnectionDrawer connectionDrawer
+        private ConnectionView _connectionDrawer;
+        private ConnectionView connectionDrawer
         {
             get
             {
@@ -31,12 +31,12 @@ namespace NodeGraph
                 {
                     if(m_data == null || m_data.Object == null)
                     {
-                        _connectionDrawer = new ConnectionDrawer();
+                        _connectionDrawer = new ConnectionView();
                     }
                     else
                     {
-                        _connectionDrawer = UserDefineUtility.GetUserDrawer(m_data.Object.GetType()) as ConnectionDrawer;
-                        if (_connectionDrawer == null) _connectionDrawer = new ConnectionDrawer();
+                        _connectionDrawer = UserDefineUtility.GetUserDrawer(m_data.Object.GetType()) as ConnectionView;
+                        if (_connectionDrawer == null) _connectionDrawer = new ConnectionView();
                         _connectionDrawer.target = m_data.Object;
                     }
                 }

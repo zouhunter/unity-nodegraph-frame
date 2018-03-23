@@ -21,16 +21,16 @@ namespace NodeGraph
         [SerializeField]
         private Model.NodeData m_data;
 
-        private NodeDrawer _nodeDataDrawer;
+        private NodeView _nodeDataDrawer;
 
-        private NodeDrawer nodeDataDrawer
+        private NodeView nodeDataDrawer
         {
             get
             {
                 if (_nodeDataDrawer == null)
                 {
-                    _nodeDataDrawer = UserDefineUtility.GetUserDrawer(m_data.Object.GetType()) as NodeDrawer;
-                    if (_nodeDataDrawer == null) _nodeDataDrawer = new NodeDrawer();
+                    _nodeDataDrawer = UserDefineUtility.GetUserDrawer(m_data.Object.GetType()) as NodeView;
+                    if (_nodeDataDrawer == null) _nodeDataDrawer = new NodeView();
                     _nodeDataDrawer.target = m_data.Object;
                 }
                 return _nodeDataDrawer;
@@ -672,7 +672,6 @@ namespace NodeGraph
         {
             //JudgeName();
             EditorGUI.BeginChangeCheck();
-            Name = EditorGUILayout.TextField("Node Name", Name);
             if (nodeDataDrawer != null){
                 nodeDataDrawer.OnInspectorGUI(this);
             }

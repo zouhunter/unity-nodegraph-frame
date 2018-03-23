@@ -15,10 +15,10 @@ using System;
 namespace NodeGraph
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class CustomNodeGraphDrawer : Attribute
+    public class CustomNodeView : Attribute
     {
         public List<Type> targetTypes;
-        public CustomNodeGraphDrawer(params Type[] types)
+        public CustomNodeView(params Type[] types)
         {
             targetTypes = new List<Type>();
             this.targetTypes.AddRange(types);

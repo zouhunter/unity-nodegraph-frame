@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using NodeGraph.DataModel;
 using NodeGraph;
 
-[CustomNodeGraphDrawer(typeof(ObjectNode))]
-public class ObjectNodeDrawer : NodeDrawer
+[CustomNodeView(typeof(ObjectNode))]
+public class ObjectNodeDrawer : NodeView
 {
     public override int Style { get { return 1; } }
 

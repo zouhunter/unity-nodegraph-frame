@@ -72,13 +72,13 @@ namespace NodeGraph
                 foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     var nodes = assembly.GetTypes()
-                        .Where(t => t != typeof(NodeDrawer) && t != typeof(ConnectionDrawer))
-                        .Where(t => typeof(NodeDrawer).IsAssignableFrom(t) || typeof(ConnectionDrawer).IsAssignableFrom(t));
+                        .Where(t => t != typeof(NodeView) && t != typeof(ConnectionView))
+                        .Where(t => typeof(NodeView).IsAssignableFrom(t) || typeof(ConnectionView).IsAssignableFrom(t));
                     allDrawer.AddRange(nodes);
                 }
                 foreach (var type in allDrawer)
                 {
-                    CustomNodeGraphDrawer attr = type.GetCustomAttributes(typeof(CustomNodeGraphDrawer), false).FirstOrDefault() as CustomNodeGraphDrawer;
+                    CustomNodeView attr = type.GetCustomAttributes(typeof(CustomNodeView), false).FirstOrDefault() as CustomNodeView;
 
                     if (attr != null)
                     {

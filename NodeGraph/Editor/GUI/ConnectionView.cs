@@ -15,7 +15,7 @@ using System;
 
 namespace NodeGraph
 {
-    public class ConnectionDrawer
+    public class ConnectionView
     {
         public DataModel.Connection target;
         protected Editor targetDrawer;

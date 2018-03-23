@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace NodeGraph
 {
-    public class NodeDrawer 
+    public class NodeView 
     {
         protected Node _target;
         public virtual Node target { get { return _target; } set{ _target = value; } }

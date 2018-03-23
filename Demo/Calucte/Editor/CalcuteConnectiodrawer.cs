@@ -4,8 +4,9 @@ using UnityEditor;
 using NodeGraph;
 using NodeGraph.DataModel;
 
-[CustomNodeGraphDrawer(typeof(OperationConnection))]
-public class CalcuteConnectiodrawer : ConnectionDrawer {
+[CustomNodeView(typeof(OperationConnection))]
+public class CalcuteConnectiodrawer : ConnectionView
+{
     internal override Color LineColor {
         get { return Color.green; }
     }

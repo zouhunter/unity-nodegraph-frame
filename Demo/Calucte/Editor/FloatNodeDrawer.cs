@@ -3,8 +3,8 @@ using System.Collections;
 using UnityEditor;
 using NodeGraph;
 using NodeGraph.DataModel;
-[CustomNodeGraphDrawer(typeof(FloatNode),typeof(IntNode))]
-public class FloatNodeDrawer : NodeDrawer {
+[CustomNodeView(typeof(FloatNode),typeof(IntNode))]
+public class FloatNodeDrawer : NodeView {
     public override float CustomNodeHeight { get { return EditorGUIUtility.singleLineHeight * 2; } }
     IntNode iNode;
     FloatNode fNode;

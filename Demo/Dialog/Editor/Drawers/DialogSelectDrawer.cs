@@ -4,8 +4,8 @@ using NodeGraph;
 using NodeGraph.DataModel;
 using UnityEditor;
 
-[CustomNodeGraphDrawer(typeof(DialogSelectNode))]
-public class DialogSelectDrawer : NodeDrawer
+[CustomNodeView(typeof(DialogSelectNode))]
+public class DialogSelectDrawer : NodeView
 {
     DialogSelectNode node;
     public override int Style { get { return 1; } }
