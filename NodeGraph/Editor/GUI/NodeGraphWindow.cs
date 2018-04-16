@@ -143,7 +143,7 @@ namespace NodeGraph
             }
         }
 
-        public enum ModifyMode : int
+        public enum ModifyMode 
         {
             NONE,
             CONNECTING,

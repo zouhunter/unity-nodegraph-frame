@@ -2,7 +2,3 @@
 using UnityEditor;
 using System.Reflection;
 using System.Collections.Generic;
-namespace NodeGraph
-{
-   
-}

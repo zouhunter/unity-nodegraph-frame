@@ -1,6 +1,6 @@
 namespace NodeGraph {
 	public class ConnectionEvent {
-		public enum EventType : int {
+		public enum EventType  {
 			EVENT_NONE,
 
 			EVENT_CONNECTION_TAPPED,

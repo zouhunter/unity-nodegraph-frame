@@ -4,7 +4,7 @@ using Model=NodeGraph.DataModel;
 
 namespace NodeGraph {
 	public class NodeEvent {
-		public enum EventType : int {
+		public enum EventType  {
 			EVENT_NONE,
 
 			EVENT_CONNECTING_BEGIN,
