@@ -72,6 +72,10 @@ namespace NodeGraph
             {
                 BuildFromGraph(m_targetGraph);
             }
+            else
+            {
+                Debug.LogError("have exception in build!");
+            }
         }
         protected virtual void JudgeNodeExceptions(Model.NodeGraphObj m_targetGraph, List<NodeException> m_nodeExceptions) { }
         protected virtual void BuildFromGraph(Model.NodeGraphObj m_targetGraph) { }
