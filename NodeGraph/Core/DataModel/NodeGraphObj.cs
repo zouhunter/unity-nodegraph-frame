@@ -12,10 +12,9 @@ namespace NodeGraph.DataModel
     /*
 	 * Save data which holds all NodeGraph.DataModel NGSettings and configurations.
 	 */
-    [CreateAssetMenu(fileName = "NodeGraph", menuName = "ConfigGraph", order = 650)]
+    
     public class NodeGraphObj : ScriptableObject
     {
-
         /*
 		 * Important: 
 		 * ABG_FILE_VERSION must be increased by one when any structure change(s) happen

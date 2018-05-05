@@ -143,7 +143,7 @@ namespace NodeGraph
             }
         }
 
-        public enum ModifyMode 
+        public enum ModifyMode
         {
             NONE,
             CONNECTING,
@@ -178,16 +178,18 @@ namespace NodeGraph
         private GraphBackground background = new GraphBackground();
         private string graphAssetPath;
         private string graphAssetName;
-
         private NodeGraphController controller;
 
         private Vector2 m_LastMousePosition;
         private Vector2 m_DragNodeDistance;
         private readonly Dictionary<NodeGUI, Vector2> m_InitialDragNodePositions = new Dictionary<NodeGUI, Vector2>();
 
+        private static bool autoOpen = true;
         private static readonly string kPREFKEY_LASTEDITEDGRAPH = "AssetBundles.GraphTool.LastEditedGraph";
         static readonly int kDragNodesControlID = "NodeGraph.DataModelTool.HandleDragNodes".GetHashCode();
+        private const string CreateAssetMenu = "Assets/Create/NodeGraphObj";
         public const string GUI_TEXT_MENU_OPEN = "Window/NodeGraph";
+
         private string[] controllerTypes;
         private int selected;
         private GUIContent ReloadButtonTexture
@@ -234,7 +236,15 @@ namespace NodeGraph
         [MenuItem(GUI_TEXT_MENU_OPEN, false, 1)]
         public static void Open()
         {
+            autoOpen = true;
             GetWindow<NodeGraphWindow>();
+        }
+        
+        [MenuItem(CreateAssetMenu, false, 650)]
+        public static void CreateAsset()
+        {
+            autoOpen = false;
+            var window = GetWindow<NodeGraphWindow>();
         }
         public void OnFocus()
         {
@@ -306,16 +316,20 @@ namespace NodeGraph
             ConnectionGUIUtility.ConnectionEventHandler = HandleConnectionEvent;
             GUIScaleUtility.CheckInit();
 
-            string lastGraphAssetPath = EditorPrefs.GetString(kPREFKEY_LASTEDITEDGRAPH);
-
-            if (!string.IsNullOrEmpty(lastGraphAssetPath))
+            if (autoOpen)
             {
-                var graph = AssetDatabase.LoadAssetAtPath<Model.NodeGraphObj>(lastGraphAssetPath);
-                if (graph != null)
+                Debug.Log(autoOpen);
+                string lastGraphAssetPath = EditorPrefs.GetString(kPREFKEY_LASTEDITEDGRAPH);
+                if (!string.IsNullOrEmpty(lastGraphAssetPath))
                 {
-                    OpenGraph(graph);
+                    var graph = AssetDatabase.LoadAssetAtPath<Model.NodeGraphObj>(lastGraphAssetPath);
+                    if (graph != null)
+                    {
+                        OpenGraph(graph);
+                    }
                 }
             }
+           
 
             controllerTypes = UserDefineUtility.CustomControllerTypes.ConvertAll<string>(x => x.FullName).ToArray();
         }
@@ -1086,7 +1100,7 @@ namespace NodeGraph
 
         public void OnEnable()
         {
-            Init();
+           Init();
         }
 
         public void OnDisable()
