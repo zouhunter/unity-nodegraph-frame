@@ -244,7 +244,7 @@ namespace NodeGraph
         public static void CreateAsset()
         {
             autoOpen = false;
-            var window = GetWindow<NodeGraphWindow>();
+            GetWindow<NodeGraphWindow>();
         }
         public void OnFocus()
         {
@@ -318,7 +318,6 @@ namespace NodeGraph
 
             if (autoOpen)
             {
-                Debug.Log(autoOpen);
                 string lastGraphAssetPath = EditorPrefs.GetString(kPREFKEY_LASTEDITEDGRAPH);
                 if (!string.IsNullOrEmpty(lastGraphAssetPath))
                 {
