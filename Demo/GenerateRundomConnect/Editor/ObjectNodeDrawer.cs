@@ -6,9 +6,11 @@ using System.Linq;
 using System.Collections.Generic;
 using NodeGraph.DataModel;
 using NodeGraph;
+using NodeGraph.DefultSkin;
+
 
 [CustomNodeView(typeof(ObjectNode))]
-public class ObjectNodeDrawer : NodeView
+public class ObjectNodeDrawer : DefultSkinNodeView
 {
     public override int Style { get { return 1; } }
 

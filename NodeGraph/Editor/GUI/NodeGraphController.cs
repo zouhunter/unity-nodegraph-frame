@@ -12,6 +12,17 @@ using Model = NodeGraph.DataModel;
 
 namespace NodeGraph
 {
+    public abstract class NodeGraphController<T>: NodeGraphController where T : Model.NodeGraphObj
+    {
+        public override Model.NodeGraphObj CreateNodeGraphObject(string path)
+        {
+            Model.NodeGraphObj graph = ScriptableObject.CreateInstance<T>();
+            graph.ControllerType = this.GetType().FullName;
+            AssetDatabase.CreateAsset(graph, path);
+            return graph;
+        }
+    }
+
     [System.Serializable]
     public abstract class NodeGraphController
     {
@@ -81,7 +92,9 @@ namespace NodeGraph
         protected virtual void BuildFromGraph(Model.NodeGraphObj m_targetGraph) { }
         internal virtual void OnDragUpdated() { }
         internal virtual List<KeyValuePair<string, Model.Node>> OnDragAccept(UnityEngine.Object[] objectReferences) { return null; }
-        internal virtual void Validate(NodeGUI node) { }
+        internal virtual void Validate(NodeGUI node) {
+           
+        }
 
         internal virtual string GetConnectType(Model.ConnectionPointData output, Model.ConnectionPointData input)
         {
@@ -90,5 +103,11 @@ namespace NodeGraph
             }
             return null;
         }
+
+        internal virtual void DrawNodeGUI(NodeGUI nodeGUI)
+        {
+
+        }
+        public abstract Model.NodeGraphObj CreateNodeGraphObject(string path);
     }
 }

@@ -22,18 +22,15 @@ namespace NodeGraph.DataModel
         public const int ABG_FILE_VERSION = 2;
 
         [SerializeField]
-        private List<NodeData> m_allNodes;
+        private List<NodeData> m_allNodes = new List<NodeData>();
         [SerializeField]
-        private List<ConnectionData> m_allConnections;
+        private List<ConnectionData> m_allConnections = new List<ConnectionData>();
         [SerializeField]
         private string m_lastModified;
         [SerializeField]
         private string m_graphDescription;
         [SerializeField]
         private string m_controllerType;
-        [SerializeField]
-        private string m_panelNamePath;
-
         public static bool log = false;
         void OnEnable()
         {
@@ -97,17 +94,6 @@ namespace NodeGraph.DataModel
                 return m_allNodes;
             }
         }
-        public string PanelNamePath
-        {
-            get
-            {
-                return m_panelNamePath;
-            }
-            set
-            {
-                m_panelNamePath = value;
-            }
-        }
         public List<ConnectionData> Connections
         {
             get
@@ -160,13 +146,6 @@ namespace NodeGraph.DataModel
             {
                 if (log) Debug.Log("[ApplyGraph] SaveData update skipped. graph is equivarent.");
             }
-        }
-
-        public static NodeGraphObj CreateNewGraph(string controllerType)
-        {
-            var data = ScriptableObject.CreateInstance<NodeGraphObj>();
-            data.m_controllerType = controllerType;
-            return data;
         }
 
         /*

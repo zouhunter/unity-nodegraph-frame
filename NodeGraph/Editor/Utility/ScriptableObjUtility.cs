@@ -51,7 +51,7 @@ namespace NodeGraph
         /// <summary>
         /// Adds the specified hidden subAsset to the mainAsset
         /// </summary>
-        private static void AddSubAsset(ScriptableObject subAsset, ScriptableObject mainAsset)
+        public static void AddSubAsset(ScriptableObject subAsset, ScriptableObject mainAsset)
         {
             if (subAsset != null && mainAsset != null)
             {
@@ -60,17 +60,24 @@ namespace NodeGraph
             }
         }
 
-
         /// <summary>
-        /// Adds the specified hidden subAsset to the mainAsset at path
+        /// 
         /// </summary>
-        //public static void AddSubAsset(ScriptableObject subAsset, string path)
-        //{
-        //    if (subAsset != null && !string.IsNullOrEmpty(path))
-        //    {
-        //        UnityEditor.AssetDatabase.AddObjectToAsset(subAsset, path);
-        //        subAsset.hideFlags = HideFlags.HideInHierarchy;
-        //    }
-        //}
+        /// <param name="mainAsset"></param>
+        public static void ClearSubAsset(ScriptableObject mainAsset)
+        {
+            if (mainAsset != null)
+            {
+                var path = AssetDatabase.GetAssetPath(mainAsset);
+                var subAssets = AssetDatabase.LoadAllAssetsAtPath(path);
+
+                foreach (ScriptableObject subAsset in subAssets)
+                {
+                    if (subAsset == mainAsset) continue;
+
+                    Object.DestroyImmediate(subAsset, true);
+                }
+            }
+        }
     }
 }

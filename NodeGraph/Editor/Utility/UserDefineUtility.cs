@@ -37,28 +37,38 @@ namespace NodeGraph
         }
         private static Dictionary<Type, Type> userDrawer;
 
-        internal static NodeGraphController CreateController(NodeGraph.DataModel.NodeGraphObj graph)
+        internal static NodeGraphController CreateController(string controllerType)
         {
-            var type = CustomControllerTypes.Find(x => x.FullName == graph.ControllerType);
+            var type = CustomControllerTypes.Find(x => x.FullName == controllerType);
             if (type != null)
             {
                 var ctrl = System.Activator.CreateInstance(type);
                 var gctrl = ctrl as NodeGraphController;
-                gctrl.TargetGraph = graph;
                 return gctrl;
             }
             else
             {
-                Debug.LogError("can not find controllerType:" + graph.ControllerType);
+                Debug.LogError("can not find controllerType:" + controllerType);
                 return null;
             }
         }
         internal static object GetUserDrawer(Type type)
         {
             InitDrawerTypes();
+
+            Type supportDrawer = null;
+
             if (userDrawer.ContainsKey(type))
             {
-                var drawer = Activator.CreateInstance(userDrawer[type]);
+                supportDrawer = userDrawer[type];
+            }
+            else
+            {
+                supportDrawer = userDrawer.Where(x => type.IsSubclassOf(x.Key)).FirstOrDefault().Value;
+            }
+            if (supportDrawer != null)
+            {
+                var drawer = Activator.CreateInstance(supportDrawer);
                 return drawer;
             }
             return null;
@@ -76,6 +86,7 @@ namespace NodeGraph
                         .Where(t => typeof(NodeView).IsAssignableFrom(t) || typeof(ConnectionView).IsAssignableFrom(t));
                     allDrawer.AddRange(nodes);
                 }
+
                 foreach (var type in allDrawer)
                 {
                     CustomNodeView attr = type.GetCustomAttributes(typeof(CustomNodeView), false).FirstOrDefault() as CustomNodeView;

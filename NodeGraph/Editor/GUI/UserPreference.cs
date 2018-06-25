@@ -44,7 +44,7 @@ namespace NodeGraph {
 			EditorPrefs.SetFloat(kKEY_USERPREF_GRID, s_editorWindowGridSize);
 		}
 
-		[PreferenceItem("AB GraphTool")]
+		[PreferenceItem("Node Graph")]
 		public static void PreferencesGUI() {
 			LoadAllPreferenceValues();
 

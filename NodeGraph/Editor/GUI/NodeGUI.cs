@@ -41,7 +41,7 @@ namespace NodeGraph
         private NodeGraphController m_controller;
 
         [SerializeField]
-        private string m_nodeSyle;
+        private GUIStyle m_nodeSyle;
 
         [SerializeField]
         private NodeGUIInspectorHelper m_nodeInsp;
@@ -82,6 +82,7 @@ namespace NodeGraph
                 m_controller = value;
             }
         }
+
         public string Id
         {
             get
@@ -110,6 +111,8 @@ namespace NodeGraph
         {
             get
             {
+                if (Controller == null)
+                    return null;
                 return Controller.TargetGraph;
             }
         }
@@ -159,8 +162,8 @@ namespace NodeGraph
             m_controller = controller;
             m_data = data;
             m_data.Object.Initialize(m_data);
-            m_baseRect = new Rect(m_data.X, m_data.Y, NGEditorSettings.GUI.NODE_BASE_WIDTH, NGEditorSettings.GUI.NODE_BASE_HEIGHT + nodeDataDrawer.CustomNodeHeight);
-            m_nodeSyle = nodeDataDrawer == null ? "node 0" : nodeDataDrawer.InactiveStyle;
+            m_baseRect = new Rect(m_data.X, m_data.Y, NGEditorSettings.GUI.NODE_BASE_WIDTH + nodeDataDrawer.SuperWidth, NGEditorSettings.GUI.NODE_BASE_HEIGHT + nodeDataDrawer.SuperHeight);
+            m_nodeSyle = nodeDataDrawer == null ? EditorStyles.miniButton : nodeDataDrawer.InactiveStyle;
         }
 
         public NodeGUI Duplicate(NodeGraphController controller, float newX, float newY)
@@ -176,11 +179,11 @@ namespace NodeGraph
             if (active)
             {
                 Selection.activeObject = Inspector;
-                m_nodeSyle = nodeDataDrawer == null ? "node 0 on" : nodeDataDrawer.ActiveStyle;
+                m_nodeSyle = nodeDataDrawer == null ? EditorStyles.miniButton : nodeDataDrawer.ActiveStyle;
             }
             else
             {
-                m_nodeSyle = nodeDataDrawer == null ? "node 0" : nodeDataDrawer.InactiveStyle;
+                m_nodeSyle = nodeDataDrawer == null ? EditorStyles.miniButton : nodeDataDrawer.InactiveStyle;
             }
         }
 
@@ -395,8 +398,8 @@ namespace NodeGraph
 
         public void DrawNode()
         {
-            GUIStyle s = NodeGUIUtility.nodeSkin.FindStyle(m_nodeSyle);
-            GUI.Window(m_nodeWindowId, m_baseRect, DrawThisNode, string.Empty, s);
+            GUI.Window(m_nodeWindowId, m_baseRect, DrawThisNode, string.Empty, m_nodeSyle);
+            Controller.DrawNodeGUI(this);
         }
 
         private void DrawThisNode(int id)
@@ -421,14 +424,15 @@ namespace NodeGraph
 
             var titleHeight = style.CalcSize(new GUIContent(Name)).y + NGEditorSettings.GUI.NODE_TITLE_HEIGHT_MARGIN;
             var nodeTitleRect = new Rect(0, 0, m_baseRect.width, titleHeight);
-            GUI.color = textColor;
-            GUI.Label(nodeTitleRect, Name, style);
+            //GUI.color = textColor;
+            //GUI.Label(nodeTitleRect, Name, style);
             GUI.color = oldColor;
 
             if (m_running)
             {
                 EditorGUI.ProgressBar(new Rect(10f, m_baseRect.height - 20f, m_baseRect.width - 20f, 10f), m_progress, string.Empty);
             }
+
             if (m_hasErrors)
             {
                 GUIStyle errorStyle = new GUIStyle("CN EntryError");
@@ -461,12 +465,7 @@ namespace NodeGraph
             m_data.InputPoints.ForEach(drawConnectionPoint);
             m_data.OutputPoints.ForEach(drawConnectionPoint);
 
-            if (nodeDataDrawer.CustomNodeHeight > 0)
-            {
-                var customRect = new Rect(2f, m_baseRect.height - nodeDataDrawer.CustomNodeHeight - 8f, m_baseRect.width - 4, nodeDataDrawer.CustomNodeHeight);//
-                nodeDataDrawer.OnNodeGUI(customRect, Data);
-            }
-
+            nodeDataDrawer.OnNodeGUI(new Rect(0, 0, m_baseRect.width, m_baseRect.height), Data);
             GUIStyle catStyle = new GUIStyle("WhiteMiniLabel");
             catStyle.alignment = TextAnchor.LowerRight;
             var categoryRect = new Rect(2f, m_baseRect.height - 14f, m_baseRect.width - 4f, 16f);
@@ -518,7 +517,7 @@ namespace NodeGraph
             var newWidth = Mathf.Max(NGEditorSettings.GUI.NODE_BASE_WIDTH, outputLabelWidth + inputLabelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
             newWidth = Mathf.Max(newWidth, labelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
 
-            m_baseRect = new Rect(m_baseRect.x, m_baseRect.y, newWidth, m_baseRect.height + nodeDataDrawer.CustomNodeHeight + notdefultLabelHeight);
+            m_baseRect = new Rect(m_baseRect.x, m_baseRect.y, newWidth + nodeDataDrawer.SuperWidth, m_baseRect.height + nodeDataDrawer.SuperHeight + notdefultLabelHeight);
 
             RefreshConnectionPos(titleHeight);
         }
@@ -608,6 +607,10 @@ namespace NodeGraph
         public void SetProgress(float val)
         {
             m_progress = val;
+            if (NodeGraphWindow.Window)
+            {
+                NodeGraphWindow.Window.Repaint();
+            }
         }
 
         public void ShowProgress()
@@ -672,14 +675,15 @@ namespace NodeGraph
         {
             //JudgeName();
             EditorGUI.BeginChangeCheck();
-            if (nodeDataDrawer != null){
+            if (nodeDataDrawer != null)
+            {
                 nodeDataDrawer.OnInspectorGUI(this);
             }
             if (EditorGUI.EndChangeCheck())
             {
-                Controller.Validate(this);
+                if (Controller != null) Controller.Validate(this);
                 EditorUtility.SetDirty(Data.Object);
-                EditorUtility.SetDirty(ParentGraph);
+                if (ParentGraph) EditorUtility.SetDirty(ParentGraph);
             }
         }
 

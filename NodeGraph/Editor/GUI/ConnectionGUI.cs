@@ -183,6 +183,33 @@ namespace NodeGraph
             return m_buttonRect;
         }
 
+        public bool IsValid(List<NodeGUI> nodes)
+        {
+            var startNode = nodes.Find(node => node.Id == OutputNodeId);
+            if (startNode == null)
+            {
+                return false;
+            }
+
+            var endNode = nodes.Find(node => node.Id == InputNodeId);
+            if (endNode == null)
+            {
+                return false;
+            }
+
+            if (nodes.Find(x => x.Data.OutputPoints.Find(y => y.Id == m_data.FromNodeConnectionPointId) != null) == null)
+            {
+                return false;
+            }
+
+            if (nodes.Find(x => x.Data.InputPoints.Find(y => y.Id == m_data.ToNodeConnectionPointId) != null) == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public void DrawConnection(List<NodeGUI> nodes)
         {
             var startNode = nodes.Find(node => node.Id == OutputNodeId);
@@ -196,6 +223,7 @@ namespace NodeGraph
             {
                 return;
             }
+
 
             var startPoint = m_outputPoint.GetGlobalPosition(startNode.Region);
 
@@ -234,7 +262,6 @@ namespace NodeGraph
             }
 
             ConnectionGUIUtility.HandleMaterial.SetPass(0);
-
             Handles.DrawBezier(startV3, endV3, startTan, endTan, lineColor, null, lineWidth);
         }
 
@@ -311,6 +338,8 @@ namespace NodeGraph
         {
             ConnectionGUIUtility.ConnectionEventHandler(new ConnectionEvent(ConnectionEvent.EventType.EVENT_CONNECTION_DELETED, this));
         }
+
+       
     }
 
     public static class NodeEditor_ConnectionListExtension

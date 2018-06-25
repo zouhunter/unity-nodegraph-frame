@@ -220,7 +220,7 @@ namespace NodeGraph
          * An alternative way to get Window, becuase
          * GetWindow<NodeGraph.DataModelEditorWindow>() forces window to be active and present
          */
-        private static NodeGraphWindow Window
+        public static NodeGraphWindow Window
         {
             get
             {
@@ -239,7 +239,7 @@ namespace NodeGraph
             autoOpen = true;
             GetWindow<NodeGraphWindow>();
         }
-        
+
         [MenuItem(CreateAssetMenu, false, 650)]
         public static void CreateAsset()
         {
@@ -328,7 +328,7 @@ namespace NodeGraph
                     }
                 }
             }
-           
+
 
             controllerTypes = UserDefineUtility.CustomControllerTypes.ConvertAll<string>(x => x.FullName).ToArray();
         }
@@ -404,7 +404,8 @@ namespace NodeGraph
             activeSelection = null;
             currentEventSource = null;
 
-            controller = UserDefineUtility.CreateController(graph); //new NodeGraph.NodeGraphController(graph);
+            controller = UserDefineUtility.CreateController(graph.ControllerType); //new NodeGraph.NodeGraphController(graph);
+            controller.TargetGraph = graph;
             ConstructGraphGUI();
             Setup();
 
@@ -413,7 +414,7 @@ namespace NodeGraph
                 UpdateSpacerRect();
             }
 
-            Selection.activeObject = graph;
+            //Selection.activeObject = graph;
             NodeConnectionUtility.Reset();
         }
 
@@ -441,9 +442,8 @@ namespace NodeGraph
             {
                 return;
             }
-
-            Model.NodeGraphObj graph = Model.NodeGraphObj.CreateNewGraph(controllerType);
-            AssetDatabase.CreateAsset(graph, path);
+            controller = UserDefineUtility.CreateController(controllerType);
+            var graph = controller.CreateNodeGraphObject(path);
             OpenGraph(graph);
         }
 
@@ -472,6 +472,8 @@ namespace NodeGraph
         {
 
             var activeGraph = controller.TargetGraph;
+
+            if (activeGraph == null) return;
 
             var currentNodes = new List<NodeGUI>();
             var currentConnections = new List<ConnectionGUI>();
@@ -517,8 +519,26 @@ namespace NodeGraph
             var all = new List<ScriptableObject>();
             all.AddRange(Array.ConvertAll<Model.NodeData, Model.Node>(n.ToArray(), x => x.Object));
             all.AddRange(Array.ConvertAll<Model.ConnectionData, Model.Connection>(c.ToArray(), x => x.Object));
-            ScriptableObjUtility.SetSubAssets(all.ToArray(), obj, resetAll);
-            UnityEditor.EditorUtility.SetDirty(controller.TargetGraph);
+            ScriptableObject mainAsset;
+            if (!IsMainAsset(obj, out mainAsset))
+            {
+                Undo.RecordObject(obj, "none");
+                all.Add(obj);
+                ScriptableObjUtility.SetSubAssets(all.ToArray(), mainAsset, resetAll);
+                UnityEditor.EditorUtility.SetDirty(mainAsset);
+            }
+            else
+            {
+                ScriptableObjUtility.SetSubAssets(all.ToArray(), obj, resetAll);
+                UnityEditor.EditorUtility.SetDirty(obj);
+            }
+        }
+
+        private bool IsMainAsset(ScriptableObject obj, out ScriptableObject mainAsset)
+        {
+            var path = AssetDatabase.GetAssetPath(obj);
+            mainAsset = AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
+            return mainAsset == obj;
         }
 
         private void Setup(bool forceVisitAll = false)
@@ -841,12 +861,6 @@ namespace NodeGraph
                 #region DrawInteranl
                 if (connections == null) Window.Close();
 
-                // draw connections.
-                foreach (var con in connections)
-                {
-                    con.DrawConnection(nodes);
-                }
-
                 // draw node window x N.
                 {
                     BeginWindows();
@@ -856,6 +870,14 @@ namespace NodeGraph
                     HandleDragNodes();
 
                     EndWindows();
+                }
+
+                ClearBadConnection();
+
+                // draw connections.
+                foreach (var con in connections)
+                {
+                    con.DrawConnection(nodes);
                 }
 
                 // draw connection input point marks.
@@ -917,6 +939,18 @@ namespace NodeGraph
                 {
                     graphRegion = newRgn;
                     Repaint();
+                }
+            }
+        }
+
+        private void ClearBadConnection()
+        {
+            var connectionsCopy = connections.ToArray();
+            foreach (var connection in connectionsCopy)
+            {
+                if (!connection.IsValid(nodes))
+                {
+                    connections.Remove(connection);
                 }
             }
         }
@@ -1099,7 +1133,7 @@ namespace NodeGraph
 
         public void OnEnable()
         {
-           Init();
+            Init();
         }
 
         public void OnDisable()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NodeGraph
 {
-    public class EmptyController : NodeGraphController
+    public class EmptyController : NodeGraphController<NodeGraph.DataModel.NodeGraphObj>
     {
         public override string Group { get { return "Empty"; } }
 

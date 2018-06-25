@@ -33,7 +33,7 @@ namespace NodeGraph
         }
 
         internal virtual void OnConnectionGUI(Vector2 startV3, Vector2 endV3, Vector2 startTan, Vector2 endTan) { }
-
+ 
         internal virtual void OnInspectorGUI()
         {
             if (target == null) return;

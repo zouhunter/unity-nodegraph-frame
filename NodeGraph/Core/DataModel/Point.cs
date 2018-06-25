@@ -13,6 +13,7 @@ using System.Collections.Generic;
 
 namespace NodeGraph.DataModel
 {
+    [System.Serializable]
     public struct Point
     {
         public string label;

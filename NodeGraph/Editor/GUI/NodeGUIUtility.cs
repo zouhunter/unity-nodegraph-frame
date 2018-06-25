@@ -37,14 +37,14 @@ namespace NodeGraph {
 			}
 		}
 
-		public static GUISkin nodeSkin {
-			get {
-				if(NodeSingleton.s.nodeSkin == null) {
-                    NodeSingleton.s.nodeSkin = AssetDatabase.LoadAssetAtPath<GUISkin>(NGEditorSettings.GUI.Skin);
-				}
-				return NodeSingleton.s.nodeSkin;
-			}
-		}
+		//public static GUISkin nodeSkin {
+		//	get {
+		//		if(NodeSingleton.s.nodeSkin == null) {
+  //                  NodeSingleton.s.nodeSkin = AssetDatabase.LoadAssetAtPath<GUISkin>(NGEditorSettings.GUI.Skin);
+		//		}
+		//		return NodeSingleton.s.nodeSkin;
+		//	}
+		//}
 
 		public static Texture2D inputPointBG {
 			get {
@@ -134,7 +134,7 @@ namespace NodeGraph {
 
 			public Texture2D inputPointBG;
 			public Texture2D outputPointBG;
-			public GUISkin nodeSkin;
+			//public GUISkin nodeSkin;
 
 			public Texture2D pointMark;
 			public PlatformButton[] platformButtons;

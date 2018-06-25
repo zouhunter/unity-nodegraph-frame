@@ -3,9 +3,10 @@ using System.Collections;
 using NodeGraph;
 using NodeGraph.DataModel;
 using UnityEditor;
+using NodeGraph.DefultSkin;
 
 [CustomNodeView(typeof(DialogSelectNode))]
-public class DialogSelectDrawer : NodeView
+public class DialogSelectDrawer : DefultSkinNodeView
 {
     DialogSelectNode node;
     public override int Style { get { return 1; } }
