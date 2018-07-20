@@ -73,24 +73,24 @@ namespace NodeGraph {
 			}
 		}
 
-		public static PlatformButton[] platformButtons {
-			get {
-				if(NodeSingleton.s.platformButtons == null) {
-					NodeSingleton.s.SetupPlatformButtons();
-				}
-				return NodeSingleton.s.platformButtons;
-			}
-		}
+		//public static PlatformButton[] platformButtons {
+		//	get {
+		//		if(NodeSingleton.s.platformButtons == null) {
+		//			NodeSingleton.s.SetupPlatformButtons();
+		//		}
+		//		return NodeSingleton.s.platformButtons;
+		//	}
+		//}
 
-		public static PlatformButton GetPlatformButtonFor(BuildTargetGroup g) {
-			foreach(var button in platformButtons) {
-				if(button.targetGroup == g) {
-					return button;
-				}
-			}
+		//public static PlatformButton GetPlatformButtonFor(BuildTargetGroup g) {
+		//	foreach(var button in platformButtons) {
+		//		if(button.targetGroup == g) {
+		//			return button;
+		//		}
+		//	}
 
-			throw new NodeGraph.DataModelException("Fatal: unknown target group requsted(can't happen)" + g);
-		}
+		//	throw new NodeGraph.DataModelException("Fatal: unknown target group requsted(can't happen)" + g);
+		//}
 
 		public static List<string> allNodeNames {
 			get {
@@ -101,32 +101,32 @@ namespace NodeGraph {
 			}
 		}
 
-		public static List<BuildTarget> SupportedBuildTargets {
-			get {
-				if(NodeSingleton.s.supportedBuildTargets == null) {
-					NodeSingleton.s.SetupSupportedBuildTargets();
-				}
-				return NodeSingleton.s.supportedBuildTargets;
-			}
-		}
-		public static string[] supportedBuildTargetNames {
-			get {
-				if(NodeSingleton.s.supportedBuildTargetNames == null) {
-					NodeSingleton.s.SetupSupportedBuildTargets();
-				}
-				return NodeSingleton.s.supportedBuildTargetNames;
-			}
-		}
+		//public static List<BuildTarget> SupportedBuildTargets {
+		//	get {
+		//		if(NodeSingleton.s.supportedBuildTargets == null) {
+		//			NodeSingleton.s.SetupSupportedBuildTargets();
+		//		}
+		//		return NodeSingleton.s.supportedBuildTargets;
+		//	}
+		//}
+		//public static string[] supportedBuildTargetNames {
+		//	get {
+		//		if(NodeSingleton.s.supportedBuildTargetNames == null) {
+		//			NodeSingleton.s.SetupSupportedBuildTargets();
+		//		}
+		//		return NodeSingleton.s.supportedBuildTargetNames;
+		//	}
+		//}
 
 
-		public static List<BuildTargetGroup> SupportedBuildTargetGroups {
-			get {
-				if(NodeSingleton.s.supportedBuildTargetGroups == null) {
-					NodeSingleton.s.SetupSupportedBuildTargets();
-				}
-				return NodeSingleton.s.supportedBuildTargetGroups;
-			}
-		}
+		//public static List<BuildTargetGroup> SupportedBuildTargetGroups {
+		//	get {
+		//		if(NodeSingleton.s.supportedBuildTargetGroups == null) {
+		//			NodeSingleton.s.SetupSupportedBuildTargets();
+		//		}
+		//		return NodeSingleton.s.supportedBuildTargetGroups;
+		//	}
+		//}
 
 
 		private class NodeSingleton {
@@ -137,11 +137,11 @@ namespace NodeGraph {
 			//public GUISkin nodeSkin;
 
 			public Texture2D pointMark;
-			public PlatformButton[] platformButtons;
+			//public PlatformButton[] platformButtons;
 
-			public List<BuildTarget> supportedBuildTargets;
-			public string[] supportedBuildTargetNames;
-			public List<BuildTargetGroup> supportedBuildTargetGroups;
+			//public List<BuildTarget> supportedBuildTargets;
+			//public string[] supportedBuildTargetNames;
+			//public List<BuildTargetGroup> supportedBuildTargetGroups;
 
 			public List<string> allNodeNames;
 
@@ -157,88 +157,88 @@ namespace NodeGraph {
 				}
 			}
 
-			public void SetupPlatformButtons () {
-				SetupSupportedBuildTargets();
-				var buttons = new List<PlatformButton>();
+			//public void SetupPlatformButtons () {
+			//	SetupSupportedBuildTargets();
+			//	var buttons = new List<PlatformButton>();
 
-				Dictionary<BuildTargetGroup, string> icons = new Dictionary<BuildTargetGroup, string> {
-					{BuildTargetGroup.Android, 		"BuildNGSettings.Android.Small"},
-					{BuildTargetGroup.iOS, 			"BuildNGSettings.iPhone.Small"},
-					{BuildTargetGroup.PS4, 			"BuildNGSettings.PS4.Small"},
-					{BuildTargetGroup.PSM, 			"BuildNGSettings.PSM.Small"},
-					{BuildTargetGroup.PSP2, 		"BuildNGSettings.PSP2.Small"},
-					{BuildTargetGroup.SamsungTV, 	"BuildNGSettings.Android.Small"},
-					{BuildTargetGroup.Standalone, 	"BuildNGSettings.Standalone.Small"},
-					{BuildTargetGroup.Tizen, 		"BuildNGSettings.Tizen.Small"},
-					{BuildTargetGroup.tvOS, 		"BuildNGSettings.tvOS.Small"},
-					{BuildTargetGroup.Unknown, 		"BuildNGSettings.Standalone.Small"},
-					{BuildTargetGroup.WebGL, 		"BuildNGSettings.WebGL.Small"},
-					{BuildTargetGroup.WiiU, 		"BuildNGSettings.WiiU.Small"},
-					{BuildTargetGroup.WSA, 			"BuildNGSettings.WP8.Small"},
-					{BuildTargetGroup.XboxOne, 		"BuildNGSettings.XboxOne.Small"}
-					#if !UNITY_5_5_OR_NEWER
-					,
-					{BuildTargetGroup.XBOX360, 		"BuildNGSettings.Xbox360.Small"},
-					{BuildTargetGroup.Nintendo3DS, 	"BuildNGSettings.N3DS.Small"},
-					{BuildTargetGroup.PS3,			"BuildNGSettings.PS3.Small"}
-					#endif
-					#if UNITY_5_5_OR_NEWER
-					,
-					{BuildTargetGroup.N3DS, 		"BuildNGSettings.N3DS.Small"}
-					#endif
-					#if UNITY_5_6 || UNITY_5_6_OR_NEWER
-					,
-					{BuildTargetGroup.Facebook, 	"BuildNGSettings.Facebook.Small"},
-					{BuildTargetGroup.Switch, 		"BuildNGSettings.Switch.Small"}
-					#endif
-				};
+			//	Dictionary<BuildTargetGroup, string> icons = new Dictionary<BuildTargetGroup, string> {
+			//		{BuildTargetGroup.Android, 		"BuildNGSettings.Android.Small"},
+			//		{BuildTargetGroup.iOS, 			"BuildNGSettings.iPhone.Small"},
+			//		{BuildTargetGroup.PS4, 			"BuildNGSettings.PS4.Small"},
+			//		{BuildTargetGroup.PSM, 			"BuildNGSettings.PSM.Small"},
+			//		{BuildTargetGroup.PSP2, 		"BuildNGSettings.PSP2.Small"},
+			//		{BuildTargetGroup.SamsungTV, 	"BuildNGSettings.Android.Small"},
+			//		{BuildTargetGroup.Standalone, 	"BuildNGSettings.Standalone.Small"},
+			//		{BuildTargetGroup.Tizen, 		"BuildNGSettings.Tizen.Small"},
+			//		{BuildTargetGroup.tvOS, 		"BuildNGSettings.tvOS.Small"},
+			//		{BuildTargetGroup.Unknown, 		"BuildNGSettings.Standalone.Small"},
+			//		{BuildTargetGroup.WebGL, 		"BuildNGSettings.WebGL.Small"},
+			//		{BuildTargetGroup.WiiU, 		"BuildNGSettings.WiiU.Small"},
+			//		{BuildTargetGroup.WSA, 			"BuildNGSettings.WP8.Small"},
+			//		{BuildTargetGroup.XboxOne, 		"BuildNGSettings.XboxOne.Small"}
+			//		#if !UNITY_5_5_OR_NEWER
+			//		,
+			//		{BuildTargetGroup.XBOX360, 		"BuildNGSettings.Xbox360.Small"},
+			//		{BuildTargetGroup.Nintendo3DS, 	"BuildNGSettings.N3DS.Small"},
+			//		{BuildTargetGroup.PS3,			"BuildNGSettings.PS3.Small"}
+			//		#endif
+			//		#if UNITY_5_5_OR_NEWER
+			//		,
+			//		{BuildTargetGroup.N3DS, 		"BuildNGSettings.N3DS.Small"}
+			//		#endif
+			//		#if UNITY_5_6 || UNITY_5_6_OR_NEWER
+			//		,
+			//		{BuildTargetGroup.Facebook, 	"BuildNGSettings.Facebook.Small"},
+			//		{BuildTargetGroup.Switch, 		"BuildNGSettings.Switch.Small"}
+			//		#endif
+			//	};
 
-				buttons.Add(new PlatformButton(new GUIContent("Default", "Default NGSettings"), BuildTargetGroup.Unknown));
+			//	buttons.Add(new PlatformButton(new GUIContent("Default", "Default NGSettings"), BuildTargetGroup.Unknown));
 
-				foreach(var g in supportedBuildTargetGroups) {
-					buttons.Add(new PlatformButton(new GUIContent(GetPlatformIcon(icons[g]), BuildTargetUtility.GroupToHumaneString(g)), g));
-				}
+			//	foreach(var g in supportedBuildTargetGroups) {
+			//		buttons.Add(new PlatformButton(new GUIContent(GetPlatformIcon(icons[g]), BuildTargetUtility.GroupToHumaneString(g)), g));
+			//	}
 
-				this.platformButtons = buttons.ToArray();
-			}
+			//	this.platformButtons = buttons.ToArray();
+			//}
 
-			public void SetupSupportedBuildTargets() {
+			//public void SetupSupportedBuildTargets() {
 				
-				if( supportedBuildTargets == null ) {
-					supportedBuildTargets = new List<BuildTarget>();
-					supportedBuildTargetGroups = new List<BuildTargetGroup>();
+			//	if( supportedBuildTargets == null ) {
+			//		supportedBuildTargets = new List<BuildTarget>();
+			//		supportedBuildTargetGroups = new List<BuildTargetGroup>();
 
-					try {
-						foreach(BuildTarget target in Enum.GetValues(typeof(BuildTarget))) {
-							if(BuildTargetUtility.IsBuildTargetSupported(target)) {
-								if(!supportedBuildTargets.Contains(target)) {
-									supportedBuildTargets.Add(target);
-								}
-								BuildTargetGroup g = BuildTargetUtility.TargetToGroup(target);
-								if(g == BuildTargetGroup.Unknown) {
-									// skip unknown platform
-									continue;
-								}
-								if(!supportedBuildTargetGroups.Contains(g)) {
-									supportedBuildTargetGroups.Add(g);
-								}
-							}
-						}
+			//		try {
+			//			foreach(BuildTarget target in Enum.GetValues(typeof(BuildTarget))) {
+			//				if(BuildTargetUtility.IsBuildTargetSupported(target)) {
+			//					if(!supportedBuildTargets.Contains(target)) {
+			//						supportedBuildTargets.Add(target);
+			//					}
+			//					BuildTargetGroup g = BuildTargetUtility.TargetToGroup(target);
+			//					if(g == BuildTargetGroup.Unknown) {
+			//						// skip unknown platform
+			//						continue;
+			//					}
+			//					if(!supportedBuildTargetGroups.Contains(g)) {
+			//						supportedBuildTargetGroups.Add(g);
+			//					}
+			//				}
+			//			}
 
-						supportedBuildTargetNames = new string[supportedBuildTargets.Count];
-						for(int i =0; i < supportedBuildTargets.Count; ++i) {
-							supportedBuildTargetNames[i] = BuildTargetUtility.TargetToHumaneString(supportedBuildTargets[i]);
-						}
+			//			supportedBuildTargetNames = new string[supportedBuildTargets.Count];
+			//			for(int i =0; i < supportedBuildTargets.Count; ++i) {
+			//				supportedBuildTargetNames[i] = BuildTargetUtility.TargetToHumaneString(supportedBuildTargets[i]);
+			//			}
 
-					} catch(Exception e) {
-						LogUtility.Logger.LogError(LogUtility.kTag, e);
-					}
-				}
-			}
+			//		} catch(Exception e) {
+			//			LogUtility.Logger.LogError(LogUtility.kTag, e);
+			//		}
+			//	}
+			//}
 
-			private Texture2D GetPlatformIcon(string name) {
-				return EditorGUIUtility.IconContent(name).image as Texture2D;
-			}
+			//private Texture2D GetPlatformIcon(string name) {
+			//	return EditorGUIUtility.IconContent(name).image as Texture2D;
+			//}
 		}
 
 

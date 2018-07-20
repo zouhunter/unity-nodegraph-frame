@@ -109,5 +109,35 @@ namespace NodeGraph
 
         }
         public abstract Model.NodeGraphObj CreateNodeGraphObject(string path);
+
+        protected static bool IsMainAsset(ScriptableObject obj, out ScriptableObject mainAsset)
+        {
+            var path = AssetDatabase.GetAssetPath(obj);
+            mainAsset = AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
+            return mainAsset == obj;
+        }
+
+        public virtual void SaveGraph(List<Model.NodeData> nodes, List<Model.ConnectionData> connections,bool resetAll = false)
+        {
+            UnityEngine.Assertions.Assert.IsNotNull(this);
+            TargetGraph.ApplyGraph(nodes, connections);
+            Model.NodeGraphObj obj = TargetGraph;
+            var all = new List<ScriptableObject>();
+            all.AddRange(Array.ConvertAll<Model.NodeData, Model.Node>(nodes.ToArray(), x => x.Object));
+            all.AddRange(Array.ConvertAll<Model.ConnectionData, Model.Connection>(connections.ToArray(), x => x.Object));
+            ScriptableObject mainAsset;
+            if (!IsMainAsset(obj, out mainAsset))
+            {
+                Undo.RecordObject(obj, "none");
+                all.Add(obj);
+                ScriptableObjUtility.SetSubAssets(all.ToArray(), mainAsset, resetAll, HideFlags.HideInHierarchy);
+                UnityEditor.EditorUtility.SetDirty(mainAsset);
+            }
+            else
+            {
+                ScriptableObjUtility.SetSubAssets(all.ToArray(), obj, resetAll, HideFlags.HideInHierarchy);
+                UnityEditor.EditorUtility.SetDirty(obj);
+            }
+        }
     }
 }

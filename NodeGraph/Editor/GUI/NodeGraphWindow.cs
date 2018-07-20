@@ -409,8 +409,7 @@ namespace NodeGraph
             ConstructGraphGUI();
             Setup();
 
-            if (nodes.Any())
-            {
+            if (nodes.Any()){
                 UpdateSpacerRect();
             }
 
@@ -508,38 +507,7 @@ namespace NodeGraph
             nodes = currentNodes;
             connections = currentConnections;
         }
-
-        private void SaveGraph(bool resetAll = false)
-        {
-            UnityEngine.Assertions.Assert.IsNotNull(controller);
-            List<Model.NodeData> n = nodes.Select(v => v.Data).ToList();
-            List<Model.ConnectionData> c = connections.Select(v => v.Data).ToList();
-            controller.TargetGraph.ApplyGraph(n, c);
-            Model.NodeGraphObj obj = controller.TargetGraph;
-            var all = new List<ScriptableObject>();
-            all.AddRange(Array.ConvertAll<Model.NodeData, Model.Node>(n.ToArray(), x => x.Object));
-            all.AddRange(Array.ConvertAll<Model.ConnectionData, Model.Connection>(c.ToArray(), x => x.Object));
-            ScriptableObject mainAsset;
-            if (!IsMainAsset(obj, out mainAsset))
-            {
-                Undo.RecordObject(obj, "none");
-                all.Add(obj);
-                ScriptableObjUtility.SetSubAssets(all.ToArray(), mainAsset, resetAll);
-                UnityEditor.EditorUtility.SetDirty(mainAsset);
-            }
-            else
-            {
-                ScriptableObjUtility.SetSubAssets(all.ToArray(), obj, resetAll);
-                UnityEditor.EditorUtility.SetDirty(obj);
-            }
-        }
-
-        private bool IsMainAsset(ScriptableObject obj, out ScriptableObject mainAsset)
-        {
-            var path = AssetDatabase.GetAssetPath(obj);
-            mainAsset = AssetDatabase.LoadAssetAtPath<ScriptableObject>(path);
-            return mainAsset == obj;
-        }
+        
 
         private void Setup(bool forceVisitAll = false)
         {
@@ -557,7 +525,7 @@ namespace NodeGraph
                     node.HideProgress();
                 }
 
-                SaveGraph();
+                controller.SaveGraph(nodes.Select(x => x.Data).ToList(), connections.Select(x => x.Data).ToList()); ;
 
                 // update static all node names.
                 NodeGUIUtility.allNodeNames = new List<string>(nodes.Select(node => node.Name).ToList());
@@ -590,8 +558,7 @@ namespace NodeGraph
                 node.ResetErrorStatus();
                 node.HideProgress();
 
-                SaveGraph();
-
+                controller.SaveGraph(nodes.Select(x => x.Data).ToList(), connections.Select(x => x.Data).ToList()); ;
                 controller.Validate(node);
 
                 //RefreshInspector(controller.StreamManager);
@@ -1143,7 +1110,7 @@ namespace NodeGraph
             {
                 if (controller.TargetGraph != null)
                 {
-                    SaveGraph(true);
+                    controller.SaveGraph(nodes.Select(x=>x.Data).ToList(),connections.Select(x=>x.Data).ToList(),true);
                 }
                 EditorUtility.SetDirty(controller.TargetGraph);
             }

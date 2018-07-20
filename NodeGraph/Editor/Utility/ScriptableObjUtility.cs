@@ -19,7 +19,7 @@ namespace NodeGraph
         /// <summary>
         /// Adds the specified hidden subAssets to the mainAsset
         /// </summary>
-        public static void SetSubAssets(ScriptableObject[] subAssets, ScriptableObject mainAsset,bool clearOther = false)
+        public static void SetSubAssets(ScriptableObject[] subAssets, ScriptableObject mainAsset,bool clearOther = false,HideFlags hideFlags = HideFlags.None)
         {
             var path = AssetDatabase.GetAssetPath(mainAsset);
             var oldAssets = AssetDatabase.LoadAllAssetsAtPath(path);
@@ -30,7 +30,7 @@ namespace NodeGraph
 
                 if (System.Array.Find(oldAssets, x => x == subAsset) == null)
                 {
-                    AddSubAsset(subAsset, mainAsset);
+                    AddSubAsset(subAsset, mainAsset, hideFlags);
                 }
             }
             if(clearOther)
@@ -51,12 +51,12 @@ namespace NodeGraph
         /// <summary>
         /// Adds the specified hidden subAsset to the mainAsset
         /// </summary>
-        public static void AddSubAsset(ScriptableObject subAsset, ScriptableObject mainAsset)
+        public static void AddSubAsset(ScriptableObject subAsset, ScriptableObject mainAsset,HideFlags hideFlag)
         {
             if (subAsset != null && mainAsset != null)
             {
                 UnityEditor.AssetDatabase.AddObjectToAsset(subAsset, mainAsset);
-                subAsset.hideFlags = HideFlags.HideInHierarchy;
+                subAsset.hideFlags = hideFlag;
             }
         }
 
