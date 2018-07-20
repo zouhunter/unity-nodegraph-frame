@@ -135,15 +135,5 @@ namespace NodeGraph
             }
             return CustomNode.kDEFAULT_PRIORITY;
         }
-        public static DataModel.Node CreateNodeInstance(string assemblyQualifiedName)
-        {
-            if (assemblyQualifiedName != null)
-            {
-                var type = Type.GetType(assemblyQualifiedName);
-
-                return (DataModel.Node)type.Assembly.CreateInstance(type.FullName);
-            }
-            return null;
-        }
     }
 }
