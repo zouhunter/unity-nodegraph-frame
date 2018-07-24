@@ -326,10 +326,11 @@ namespace NodeGraph
         public void DrawObject()
         {
             EditorGUI.BeginChangeCheck();
-            if (connectionDrawer != null) connectionDrawer.OnInspectorGUI();
+            if (connectionDrawer != null)
+                connectionDrawer.OnInspectorGUI();
             if (EditorGUI.EndChangeCheck())
             {
-                Controller.Perform();
+                if(Controller != null) Controller.Perform();
                 EditorUtility.SetDirty( Data.Object);
                 EditorUtility.SetDirty(ParentGraph);
             }

@@ -33,19 +33,11 @@ namespace NodeGraph
                     AddSubAsset(subAsset, mainAsset, hideFlags);
                 }
             }
+
             if(clearOther)
             {
-                foreach (var item in oldAssets)
-                {
-                    if (item == mainAsset) continue;
-
-                    if (System.Array.Find(subAssets, x => x == item) == null)
-                    {
-                        Object.DestroyImmediate(item, true);
-                    }
-                }
+                ClearSubAssets(mainAsset, subAssets);
             }
-            //Debug.Log("[SetSubAssets] " + mainAsset +" subassets Updated.");
         }
 
         /// <summary>
@@ -64,18 +56,22 @@ namespace NodeGraph
         /// 
         /// </summary>
         /// <param name="mainAsset"></param>
-        public static void ClearSubAsset(ScriptableObject mainAsset)
+        public static void ClearSubAssets(ScriptableObject mainAsset, ScriptableObject[] ignores = null)
         {
             if (mainAsset != null)
             {
                 var path = AssetDatabase.GetAssetPath(mainAsset);
                 var subAssets = AssetDatabase.LoadAllAssetsAtPath(path);
 
-                foreach (ScriptableObject subAsset in subAssets)
-                {
-                    if (subAsset == mainAsset) continue;
 
-                    Object.DestroyImmediate(subAsset, true);
+                foreach (var item in subAssets)
+                {
+                    if (item == mainAsset) continue;
+
+                    if (ignores == null || System.Array.Find(ignores, x => x == item) == null)
+                    {
+                        Object.DestroyImmediate(item, true);
+                    }
                 }
             }
         }

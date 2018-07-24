@@ -681,9 +681,16 @@ namespace NodeGraph
             }
             if (EditorGUI.EndChangeCheck())
             {
-                if (Controller != null) Controller.Validate(this);
+                if (Controller != null)
+                {
+                    Controller.Validate(this);
+                    Controller.Perform();
+                }
+
                 EditorUtility.SetDirty(Data.Object);
-                if (ParentGraph) EditorUtility.SetDirty(ParentGraph);
+
+                if (ParentGraph)
+                    EditorUtility.SetDirty(ParentGraph);
             }
         }
 
