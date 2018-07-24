@@ -19,8 +19,8 @@ namespace NodeGraph {
     public class CustomNode : Attribute
     {
         private string m_name;
-        private string m_group;
         private int m_orderPriority;
+        private string m_group;
 
         public static readonly int kDEFAULT_PRIORITY = 1000;
         public static readonly string kDEFAULT_GROUP = "Empty";

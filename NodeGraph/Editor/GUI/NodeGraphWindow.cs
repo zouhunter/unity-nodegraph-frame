@@ -1388,17 +1388,18 @@ namespace NodeGraph
         {
             var menu = new GenericMenu();
             var customNodes = NodeConnectionUtility.CustomNodeTypes(controller.Group);
+            customNodes.Sort();
             for (int i = 0; i < customNodes.Count; ++i)
             {
                 // workaround: avoiding compilier closure bug
                 var index = i;
-                var name = customNodes[index].node.Name;
+                var path = customNodes[index].node.Name;
                 menu.AddItem(
-                    new GUIContent(name),
+                    new GUIContent(path),
                     false,
                     () =>
                     {
-                        AddNodeFromGUI(customNodes[index].CreateInstance(), GetNodeNameFromMenu(name), pos.x + scrollPos.x, pos.y + scrollPos.y);
+                        AddNodeFromGUI(customNodes[index].CreateInstance(), GetNodeNameFromMenu(path), pos.x + scrollPos.x, pos.y + scrollPos.y);
                         Setup();
                         Repaint();
                     }

@@ -13,54 +13,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_allNodes: []
   m_allConnections: []
-  m_lastModified: 131599777210105852
+  m_lastModified: 131765562280369021
   m_graphDescription: 
-  m_controllerType: EmptyController
---- !u!114 &11426272
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: ObjectNode
-  m_EditorClassIdentifier: Assembly-CSharp::ObjectNode
-  type: 1
---- !u!114 &11432124
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: ObjectNode
-  m_EditorClassIdentifier: Assembly-CSharp::ObjectNode
-  type: 3
---- !u!114 &11433244
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: ObjectNode
-  m_EditorClassIdentifier: Assembly-CSharp::ObjectNode
-  type: 0
---- !u!114 &11491212
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: ObjectNode
-  m_EditorClassIdentifier: Assembly-CSharp::ObjectNode
-  type: 4
+  m_controllerType: NodeGraph.EmptyController
