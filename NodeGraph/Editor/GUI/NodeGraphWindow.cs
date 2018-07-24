@@ -433,19 +433,26 @@ namespace NodeGraph
 
         private void CreateNewGraphFromDialog(string controllerType)
         {
-            string path = EditorUtility.SaveFilePanelInProject(
-                "Create New Node Graph",
-                "Node Graph", "asset",
-                "Create a new node graph:");
-            if (string.IsNullOrEmpty(path))
-            {
-                return;
-            }
             controller = UserDefineUtility.CreateController(controllerType);
-            var graph = controller.CreateNodeGraphObject(path);
-            OpenGraph(graph);
+            var graph = controller.CreateNodeGraphObject();
+            DelyAccept(graph, OpenGraph);
         }
 
+        private void DelyAccept(Model.NodeGraphObj graph,UnityEngine.Events.UnityAction<Model.NodeGraphObj> onGet)
+        {
+            if (graph == null || onGet == null) return;
+
+            EditorApplication.update = () =>
+            {
+                var path = AssetDatabase.GetAssetPath(graph);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var prefab = AssetDatabase.LoadAssetAtPath<Model.NodeGraphObj>(path);
+                    onGet.Invoke(prefab);
+                    EditorApplication.update = null;
+                }
+            };
+        }
 
         /**
          * Get WindowId does not collide with other nodeGUIs

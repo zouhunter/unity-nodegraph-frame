@@ -11,7 +11,7 @@ using NodeGraph.DataModel;
 
 namespace NodeGraph {
 
-	[CustomEditor(typeof(NodeGraphObj))]
+	[CustomEditor(typeof(NodeGraphObj),true)]
 	public class NodeGraphObjDrawer : Editor {
         public static GUIStyle titleStyle;
         public static GUIStyle subTitleStyle;

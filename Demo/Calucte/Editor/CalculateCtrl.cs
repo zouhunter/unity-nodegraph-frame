@@ -7,17 +7,10 @@ using UnityEditor;
 using NodeGraph.DefultSkin;
 using System;
 
-public class CalculateCtrl : NodeGraphController
+public class CalculateCtrl : NodeGraphController<NodeGraph.DataModel.NodeGraphObj>
 {
     public override string Group { get { return "Calculate"; } }
 
-    public override NodeGraphObj CreateNodeGraphObject(string path)
-    {
-        var obj = ScriptableObject.CreateInstance<NodeGraph.DataModel.NodeGraphObj>();
-        obj.ControllerType = this.GetType().FullName;
-        AssetDatabase.CreateAsset(obj, path);
-        return obj;
-    }
 
     //internal override string GetConnectType(NodeData from, NodeData to)
     //{
