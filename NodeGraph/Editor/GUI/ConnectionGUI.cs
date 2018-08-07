@@ -67,7 +67,7 @@ namespace NodeGraph
         {
             get
             {
-                return m_controller.TargetGraph;
+                return m_controller == null ? null : m_controller.TargetGraph;
             }
         }
         public NodeGraphController Controller
@@ -331,8 +331,8 @@ namespace NodeGraph
             if (EditorGUI.EndChangeCheck())
             {
                 if(Controller != null) Controller.Perform();
-                EditorUtility.SetDirty( Data.Object);
-                EditorUtility.SetDirty(ParentGraph);
+                if(Data.Object != null) EditorUtility.SetDirty( Data.Object);
+                if(ParentGraph != null) EditorUtility.SetDirty(ParentGraph);
             }
         }
         public void Delete()

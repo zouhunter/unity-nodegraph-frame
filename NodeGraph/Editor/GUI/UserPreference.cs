@@ -12,7 +12,7 @@ using Model=NodeGraph.DataModel;
 
 namespace NodeGraph {
 
-	public class UserPreference : MonoBehaviour {
+	public static class UserPreference  {
 
 		static readonly string kKEY_USERPREF_GRID = "NodeGraph.UserPref.GridSize";
 
