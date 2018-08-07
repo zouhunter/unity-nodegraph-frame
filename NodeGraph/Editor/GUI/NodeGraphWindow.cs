@@ -523,12 +523,12 @@ namespace NodeGraph
             {
                 return;
             }
-
             try
             {
                 foreach (var node in nodes)
                 {
                     node.Controller = controller;
+                    node.Data.Object.Initialize(node.Data);
                     node.HideProgress();
                 }
 
