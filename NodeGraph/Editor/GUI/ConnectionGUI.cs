@@ -165,8 +165,8 @@ namespace NodeGraph
 
         private ConnectionGUI(ConnectionData data, ConnectionPointData output, ConnectionPointData input, NodeGraphController controller)
         {
-            UnityEngine.Assertions.Assert.IsTrue(output.IsOutput, "Given Output point is not output.");
-            UnityEngine.Assertions.Assert.IsTrue(input.IsInput, "Given Input point is not input.");
+            //UnityEngine.Assertions.Assert.IsTrue(output.IsOutput, "Given Output point is not output.");
+            //UnityEngine.Assertions.Assert.IsTrue(input.IsInput, "Given Input point is not input.");
             m_controller = controller;
             m_inspector = ScriptableObject.CreateInstance<ConnectionGUIInspectorHelper>();
             m_inspector.hideFlags = HideFlags.DontSave;
