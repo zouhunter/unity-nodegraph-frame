@@ -282,14 +282,14 @@ namespace NodeGraph
                                 eventSent = true;
                                 return;
                             }
-
-                            if (nodeDataDrawer != null)
-                            {
-                                nodeDataDrawer.OnClickNodeGUI(this, Event.current.mousePosition, IsOverConnectionPoint(Event.current.mousePosition));
-                            }
                         };
+
                         m_data.InputPoints.ForEach(raiseEventIfHit);
                         m_data.OutputPoints.ForEach(raiseEventIfHit);
+
+                        if (nodeDataDrawer != null){
+                            nodeDataDrawer.OnClickNodeGUI(this, Event.current.mousePosition, IsOverConnectionPoint(Event.current.mousePosition));
+                        }
                         break;
                     }
             }
