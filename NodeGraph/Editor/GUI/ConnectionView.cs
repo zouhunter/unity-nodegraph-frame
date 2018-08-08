@@ -28,7 +28,7 @@ namespace NodeGraph
             GUIStyle labelStyle = new GUIStyle("WhiteMiniLabel");
             labelStyle.alignment = TextAnchor.MiddleLeft;
             var labelWidth = labelStyle.CalcSize(new GUIContent(label));
-            var labelPointV3 = new Vector2(centerPos.x - (labelWidth.x / 2), centerPos.y - 24f);
+            var labelPointV3 = new Vector2(centerPos.x - (labelWidth.x / 2), centerPos.y - 5);
             Handles.Label(labelPointV3, label, labelStyle);
         }
 

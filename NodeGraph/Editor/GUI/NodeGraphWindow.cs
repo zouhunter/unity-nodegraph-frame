@@ -523,6 +523,7 @@ namespace NodeGraph
             {
                 return;
             }
+
             try
             {
                 foreach (var node in nodes)
@@ -931,7 +932,6 @@ namespace NodeGraph
 
         private void ShowRect(Rect rect)
         {
-
             GUI.backgroundColor = Color.green;
             GUI.Box(rect, "");
             GUI.backgroundColor = Color.white;
@@ -1132,7 +1132,6 @@ namespace NodeGraph
             else
             {
                 DrawGUIToolBar();
-
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
@@ -1679,7 +1678,6 @@ namespace NodeGraph
 
         private void HandleDragNodes()
         {
-
             Event evt = Event.current;
             int id = GUIUtility.GetControlID(kDragNodesControlID, FocusType.Passive);
 
@@ -1840,8 +1838,14 @@ namespace NodeGraph
 
         }
 
+        /// <summary>
+        /// 处理连接事件
+        /// </summary>
+        /// <param name="e"></param>
         public void HandleConnectionEvent(ConnectionEvent e)
         {
+            modifyMode = ModifyMode.NONE;
+
             switch (modifyMode)
             {
                 case ModifyMode.NONE:
@@ -1851,7 +1855,6 @@ namespace NodeGraph
 
                             case ConnectionEvent.EventType.EVENT_CONNECTION_TAPPED:
                                 {
-
                                     if (Event.current.shift)
                                     {
                                         Undo.RecordObject(this, "Toggle Select Connection");
@@ -1902,7 +1905,6 @@ namespace NodeGraph
 
         private void UpdateActiveObjects(SavedSelection selection)
         {
-
             foreach (var n in nodes)
             {
                 n.SetActive(selection.nodes.Contains(n));

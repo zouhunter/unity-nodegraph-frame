@@ -67,7 +67,7 @@ namespace NodeGraph
         {
             get
             {
-                return m_controller == null ? null : m_controller.TargetGraph;
+                return m_controller.TargetGraph;
             }
         }
         public NodeGraphController Controller
@@ -165,8 +165,9 @@ namespace NodeGraph
 
         private ConnectionGUI(ConnectionData data, ConnectionPointData output, ConnectionPointData input, NodeGraphController controller)
         {
-            //UnityEngine.Assertions.Assert.IsTrue(output.IsOutput, "Given Output point is not output.");
-            //UnityEngine.Assertions.Assert.IsTrue(input.IsInput, "Given Input point is not input.");
+            UnityEngine.Assertions.Assert.IsTrue(output.IsOutput, "Given Output point is not output.");
+            UnityEngine.Assertions.Assert.IsTrue(input.IsInput, "Given Input point is not input.");
+
             m_controller = controller;
             m_inspector = ScriptableObject.CreateInstance<ConnectionGUIInspectorHelper>();
             m_inspector.hideFlags = HideFlags.DontSave;
@@ -174,8 +175,6 @@ namespace NodeGraph
             this.m_data = data;
             this.m_outputPoint = output;
             this.m_inputPoint = input;
-           
-            //connectionButtonStyle = "sv_label_0";
         }
 
         public Rect GetRect()
@@ -262,17 +261,27 @@ namespace NodeGraph
             }
 
             ConnectionGUIUtility.HandleMaterial.SetPass(0);
+
             Handles.DrawBezier(startV3, endV3, startTan, endTan, lineColor, null, lineWidth);
         }
 
-        private void HandleClick(Vector3 center)
+        private void HandleClick(Vector3 center,float size = 10)
         {
-            m_buttonRect = new Rect(center.x - 10, center.y - 35, 20, 50f);
+            m_buttonRect = new Rect(center.x - size, center.y - size, size * 2, size * 2);
+            HandleClick(m_buttonRect);
+        }
+
+        private void HandleClick(Rect m_buttonRect)
+        {
+            Handles.BeginGUI();
+            GUI.Box(m_buttonRect, "");
+            Handles.EndGUI();
 
             if ((Event.current.type == EventType.MouseUp && Event.current.button == 0))
             {
-                var rightClickPos = Event.current.mousePosition;
-                if (m_buttonRect.Contains(rightClickPos))
+                var clickPos = Event.current.mousePosition;
+
+                if (m_buttonRect.Contains(clickPos))
                 {
                     this.Inspector.UpdateInspector(this);
                     ConnectionGUIUtility.ConnectionEventHandler(new ConnectionEvent(ConnectionEvent.EventType.EVENT_CONNECTION_TAPPED, this));
@@ -281,13 +290,11 @@ namespace NodeGraph
 
             }
 
-            if (Event.current.type == EventType.ContextClick
-               || (Event.current.type == EventType.MouseUp && Event.current.button == 1)
-           )
+            else if (Event.current.type == EventType.ContextClick || (Event.current.type == EventType.MouseUp && Event.current.button == 1))
             {
-                var rightClickPos = Event.current.mousePosition;
+                var clickPos = Event.current.mousePosition;
 
-                if (m_buttonRect.Contains(rightClickPos))
+                if (m_buttonRect.Contains(clickPos))
                 {
                     var menu = new GenericMenu();
 
@@ -331,8 +338,8 @@ namespace NodeGraph
             if (EditorGUI.EndChangeCheck())
             {
                 if(Controller != null) Controller.Perform();
-                if(Data.Object != null) EditorUtility.SetDirty( Data.Object);
-                if(ParentGraph != null) EditorUtility.SetDirty(ParentGraph);
+                EditorUtility.SetDirty( Data.Object);
+                EditorUtility.SetDirty(ParentGraph);
             }
         }
         public void Delete()
