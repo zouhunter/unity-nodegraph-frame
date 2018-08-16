@@ -111,7 +111,6 @@ namespace NodeGraph
 
             public void Clear(NodeGraph.NodeGraphController controller, bool deactivate = false)
             {
-
                 if (deactivate)
                 {
                     foreach (var n in nodes)
@@ -382,8 +381,7 @@ namespace NodeGraph
         public void OpenGraph(string path)
         {
             Model.NodeGraphObj graph = AssetDatabase.LoadAssetAtPath<Model.NodeGraphObj>(path);
-            if (graph == null)
-            {
+            if (graph == null) {
                 throw new NodeGraph.DataModelException("Could not open graph:" + path);
             }
             OpenGraph(graph);
@@ -391,7 +389,7 @@ namespace NodeGraph
 
         public void OpenGraph(Model.NodeGraphObj graph)
         {
-            CloseGraph();
+            ClearGraph();
 
             SetGraphAssetPath(AssetDatabase.GetAssetPath(graph));
 
@@ -409,7 +407,8 @@ namespace NodeGraph
             ConstructGraphGUI();
             Setup();
 
-            if (nodes.Any()){
+            if (nodes.Any())
+            {
                 UpdateSpacerRect();
             }
 
@@ -418,13 +417,13 @@ namespace NodeGraph
         }
 
 
-        private void CloseGraph()
+        private void ClearGraph()
         {
             modifyMode = ModifyMode.NONE;
             SetGraphAssetPath(null);
             controller = null;
-            nodes = null;
-            connections = null;
+            nodes.Clear();
+            connections.Clear();
 
             selectStartMousePosition = null;
             activeSelection = null;
@@ -438,7 +437,7 @@ namespace NodeGraph
             DelyAccept(graph, OpenGraph);
         }
 
-        private void DelyAccept(Model.NodeGraphObj graph,UnityEngine.Events.UnityAction<Model.NodeGraphObj> onGet)
+        private void DelyAccept(Model.NodeGraphObj graph, UnityEngine.Events.UnityAction<Model.NodeGraphObj> onGet)
         {
             if (graph == null || onGet == null) return;
 
@@ -508,47 +507,45 @@ namespace NodeGraph
                 var startPoint = startNode.Data.FindConnectionPoint(c.FromNodeConnectionPointId);
                 var endPoint = endNode.Data.FindConnectionPoint(c.ToNodeConnectionPointId);
 
-                currentConnections.Add(ConnectionGUI.LoadConnection(c, startPoint, endPoint, controller));
+                currentConnections.Add(ConnectionGUI.LoadConnection(c, startPoint, endPoint));
             }
 
             nodes = currentNodes;
             connections = currentConnections;
         }
-        
+
 
         private void Setup(bool forceVisitAll = false)
         {
             EditorUtility.ClearProgressBar();
+
             if (controller == null)
             {
                 return;
             }
 
-            try
+            foreach (var node in nodes)
             {
-                foreach (var node in nodes)
-                {
-                    node.Controller = controller;
-                    node.HideProgress();
-                }
-
-                controller.SaveGraph(nodes.Select(x => x.Data).ToList(), connections.Select(x => x.Data).ToList()); ;
-
-                // update static all node names.
-                NodeGUIUtility.allNodeNames = new List<string>(nodes.Select(node => node.Name).ToList());
-
-                controller.Perform();
-
-                ShowErrorOnNodes();
+                node.Controller = controller;
+                node.Data.Validate();
+                node.Data.Object.Initialize(node.Data);
+                node.HideProgress();
             }
-            catch (Exception e)
+
+            foreach (var connection in connections)
             {
-                LogUtility.Logger.LogError(LogUtility.kTag, e);
+                connection.Data.Validate();
             }
-            finally
-            {
-                EditorUtility.ClearProgressBar();
-            }
+
+            controller.SaveGraph(nodes.Where(x => x != null).Select(x => x.Data).ToList(), connections.Where(x => x != null).Select(x => x.Data).ToList()); ;
+            // update static all node names.
+            NodeGUIUtility.allNodeNames = new List<string>(nodes.Select(node => node.Name).ToList());
+
+            controller.Perform();
+
+            ShowErrorOnNodes();
+
+            EditorUtility.ClearProgressBar();
         }
 
         private void Validate(NodeGUI node)
@@ -639,8 +636,8 @@ namespace NodeGraph
                     //menu.AddSeparator("");
                     menu.AddItem(new GUIContent("Import/Import JSON Graph to current graph..."), false, () =>
                     {
-                        var graph = JSONGraphUtility.ImportJSONToGraphFromDialog(controller.TargetGraph);
-                        if (graph != null)
+                        var graph = controller.TargetGraph;
+                        if (JSONGraphUtility.ImportJSONToGraphFromDialog(ref graph))
                         {
                             OpenGraph(graph);
                         }
@@ -648,10 +645,14 @@ namespace NodeGraph
                     menu.AddSeparator("Import/");
                     menu.AddItem(new GUIContent("Import/Import JSON Graph and create new..."), false, () =>
                     {
-                        var graph = JSONGraphUtility.ImportJSONToGraphFromDialog(null);
-                        if (graph != null)
+                        Model.NodeGraphObj graph = null;
+                        if (JSONGraphUtility.ImportJSONToGraphFromDialog(ref graph))
                         {
                             OpenGraph(graph);
+                        }
+                        else
+                        {
+                            Debug.Log("import faild!");
                         }
                     });
                     menu.AddItem(new GUIContent("Import/Import JSON Graphs in folder..."), false, () =>
@@ -931,7 +932,6 @@ namespace NodeGraph
 
         private void ShowRect(Rect rect)
         {
-
             GUI.backgroundColor = Color.green;
             GUI.Box(rect, "");
             GUI.backgroundColor = Color.white;
@@ -1117,7 +1117,7 @@ namespace NodeGraph
             {
                 if (controller.TargetGraph != null)
                 {
-                    controller.SaveGraph(nodes.Select(x=>x.Data).ToList(),connections.Select(x=>x.Data).ToList(),true);
+                    controller.SaveGraph(nodes.Select(x => x.Data).ToList(), connections.Select(x => x.Data).ToList(), true);
                 }
                 EditorUtility.SetDirty(controller.TargetGraph);
             }
@@ -1132,7 +1132,6 @@ namespace NodeGraph
             else
             {
                 DrawGUIToolBar();
-
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
@@ -1679,7 +1678,6 @@ namespace NodeGraph
 
         private void HandleDragNodes()
         {
-
             Event evt = Event.current;
             int id = GUIUtility.GetControlID(kDragNodesControlID, FocusType.Passive);
 
@@ -1835,13 +1833,20 @@ namespace NodeGraph
             {
                 var n = nodes[deletedNodeIndex];
                 n.SetActive(false);
+                ScriptObjectCatchUtil.Catch(n.Data.Id, n.Data.Object);
                 nodes.RemoveAt(deletedNodeIndex);
             }
 
         }
 
+        /// <summary>
+        /// 处理连接事件
+        /// </summary>
+        /// <param name="e"></param>
         public void HandleConnectionEvent(ConnectionEvent e)
         {
+            modifyMode = ModifyMode.NONE;
+
             switch (modifyMode)
             {
                 case ModifyMode.NONE:
@@ -1851,7 +1856,6 @@ namespace NodeGraph
 
                             case ConnectionEvent.EventType.EVENT_CONNECTION_TAPPED:
                                 {
-
                                     if (Event.current.shift)
                                     {
                                         Undo.RecordObject(this, "Toggle Select Connection");
@@ -1902,7 +1906,6 @@ namespace NodeGraph
 
         private void UpdateActiveObjects(SavedSelection selection)
         {
-
             foreach (var n in nodes)
             {
                 n.SetActive(selection.nodes.Contains(n));
@@ -1924,9 +1927,8 @@ namespace NodeGraph
             //自定义最大连接数
             TryAutoDeleteConnection(startNode, startPoint, endNode, endPoint);
 
-            if (!connections.ContainsConnection(startPoint, endPoint))
-            {
-                connections.Add(ConnectionGUI.CreateConnection(type, startPoint, endPoint, controller));
+            if (!connections.ContainsConnection(startPoint, endPoint)){
+                connections.Add(ConnectionGUI.CreateConnection(type, startPoint, endPoint));
             }
         }
         /// <summary>
@@ -1994,6 +1996,8 @@ namespace NodeGraph
             {
                 var c = connections[deletedConnectionIndex];
                 c.SetActive(false);
+                //Debug.Log("catch:" + c.Data.Id);
+                ScriptObjectCatchUtil.Catch(c.Data.Id, c.Data.Object);
                 connections.RemoveAt(deletedConnectionIndex);
             }
         }

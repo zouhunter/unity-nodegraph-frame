@@ -3,7 +3,6 @@
 namespace NodeGraph.DataModel
 {
 
-    public class Connection:ScriptableObject
-    {
+    public class Connection : ScriptableObject {
     }
 }

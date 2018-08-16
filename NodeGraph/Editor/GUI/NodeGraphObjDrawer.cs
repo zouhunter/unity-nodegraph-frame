@@ -22,6 +22,7 @@ namespace NodeGraph {
         public void OnEnable()
         {
             canvas = (NodeGraphObj)target;
+            canvas.Validate();
         }
 
         public override void OnInspectorGUI()

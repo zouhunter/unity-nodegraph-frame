@@ -14,7 +14,7 @@ namespace NodeGraph.DataModel {
 		[SerializeField] private string id;
 		[SerializeField] private string label;
 		[SerializeField] private string parentId;
-		[SerializeField] private bool isInput;
+		[SerializeField] private int isInput;
 		[SerializeField] private Rect buttonRect;
         [SerializeField] private int max;//最大连接数
         [SerializeField] private string type;//类型
@@ -23,7 +23,7 @@ namespace NodeGraph.DataModel {
 			this.id = Guid.NewGuid().ToString();
 			this.label = label;
 			this.parentId = parent.Id;
-			this.isInput = isInput;
+			this.isInput = isInput ? 1:0;
             this.max = max;
             this.type = type;
 		}
@@ -83,13 +83,13 @@ namespace NodeGraph.DataModel {
 
 		public bool IsInput {
 			get {
-				return isInput;
+				return isInput == 1;
 			}
 		}
 
 		public bool IsOutput {
 			get {
-				return !isInput;
+				return isInput == 0;
 			}
 		}
 

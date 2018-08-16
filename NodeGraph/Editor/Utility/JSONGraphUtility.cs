@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Model=NodeGraph.DataModel;
 
 namespace NodeGraph {
+
     public class JSONGraphUtility {
 
         public static void ExportGraphToJSONFromDialog(Model.NodeGraphObj graph) {
@@ -47,11 +48,11 @@ namespace NodeGraph {
             }
         }
 
-        public static Model.NodeGraphObj ImportJSONToGraphFromDialog(Model.NodeGraphObj graph) {
+        public static bool ImportJSONToGraphFromDialog(ref Model.NodeGraphObj graph) {
 
             string fileSelected = EditorUtility.OpenFilePanelWithFilters("Select JSON files to import", Application.dataPath, new string[] {"JSON files", "json", "All files", "*"});
             if(string.IsNullOrEmpty(fileSelected)) {
-                return null;
+                return false;
             }
 
             string name = Path.GetFileNameWithoutExtension(fileSelected);
@@ -62,12 +63,16 @@ namespace NodeGraph {
                 Undo.RecordObject(graph, "Import");
                 DeserializeGraph(jsonContent, ref graph);
             } else {
-                DeserializeGraph(jsonContent, ref graph);
                 var newAssetFolder = CreateFolderForImportedAssets ();
                 var graphPath = FileUtility.PathCombine(newAssetFolder, string.Format("{0}.asset", name));
+                graph = ScriptableObject.CreateInstance<Model.NodeGraphObj>();
                 AssetDatabase.CreateAsset (graph, graphPath);
+                AssetDatabase.Refresh();
+                graph = AssetDatabase.LoadAssetAtPath<Model.NodeGraphObj>(graphPath);
+                Debug.Log("create new:" + graph);
             }
-            return graph;
+            DeserializeGraph(jsonContent, ref graph);
+            return true;
         }
 
         public static void ImportAllJSONInDirectoryToGraphFromDialog() {
@@ -104,7 +109,7 @@ namespace NodeGraph {
             return String.Format("Assets/{0}", folderName);
         }
 
-        public static void DeserializeGraph(string json,ref Model.NodeGraphObj graph)
+        public static void DeserializeGraph(string json, ref Model.NodeGraphObj graph)
         {
             var jsonNode = JSONClass.Parse(json);
             if (graph == null)
@@ -115,6 +120,7 @@ namespace NodeGraph {
             {
                 DeleteSubAsset(graph);
             }
+
             List<ScriptableObject> subAssets = new List<ScriptableObject>();
             JsonUtility.FromJsonOverwrite(json, graph);
 
@@ -143,7 +149,7 @@ namespace NodeGraph {
             EditorUtility.SetDirty(graph);
             foreach (var item in graph.Nodes)
             {
-                Debug.Log(item.Object);
+                //Debug.Log(item.Object);
                 EditorUtility.SetDirty(item.Object);
             }
         }
@@ -154,7 +160,8 @@ namespace NodeGraph {
             JSONClass jc = JSONClass.Parse(rootJson) as JSONClass;
 
             var nodes = jc["m_allNodes"].AsArray;
-            for (int i = 0; i < nodes.Count; i++){
+            for (int i = 0; i < nodes.Count; i++)
+            {
                 var node = graph.Nodes[i].Object;
                 AddFieldToNode(nodes[i]["m_node"], JsonUtility.ToJson(node), node.GetType().FullName);
             }
@@ -167,6 +174,7 @@ namespace NodeGraph {
             }
             return jc.ToString();
         }
+
         private static void DeleteSubAsset(Model.NodeGraphObj graph)
         {
             var path = AssetDatabase.GetAssetPath(graph);
@@ -177,7 +185,7 @@ namespace NodeGraph {
                 {
                     if (item != graph)
                     {
-                        Debug.Log("delete:" + item);
+                        //Debug.Log("delete:" + item);
                         UnityEngine.Object.DestroyImmediate(item, true);
                     }
                 }

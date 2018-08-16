@@ -7,9 +7,6 @@ namespace NodeGraph
     [CustomEditor(typeof(ConnectionGUIInspectorHelper))]
     public class ConnectionGUIEditor : Editor
     {
-        protected override void OnHeaderGUI()
-        {
-        }
         public override bool RequiresConstantRepaint()
         {
             return true;

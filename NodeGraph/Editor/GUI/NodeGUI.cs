@@ -29,6 +29,8 @@ namespace NodeGraph
             {
                 if (_nodeDataDrawer == null)
                 {
+                    if (m_data.Object == null) return null;
+
                     _nodeDataDrawer = UserDefineUtility.GetUserDrawer(m_data.Object.GetType()) as NodeView;
                     if (_nodeDataDrawer == null) _nodeDataDrawer = new NodeView();
                     _nodeDataDrawer.target = m_data.Object;
@@ -121,12 +123,11 @@ namespace NodeGraph
         {
             get
             {
-                if (m_nodeInsp == null)
-                {
+                if (m_nodeInsp == null){
                     m_nodeInsp = ScriptableObject.CreateInstance<NodeGUIInspectorHelper>();
                     m_nodeInsp.hideFlags = HideFlags.DontSave;
-                    m_nodeInsp.UpdateNodeGUI(this);
                 }
+                m_nodeInsp.UpdateNodeGUI(this);
                 return m_nodeInsp;
             }
         }
@@ -162,7 +163,9 @@ namespace NodeGraph
             m_controller = controller;
             m_data = data;
             m_data.Object.Initialize(m_data);
-            m_baseRect = new Rect(m_data.X, m_data.Y, NGEditorSettings.GUI.NODE_BASE_WIDTH + nodeDataDrawer.SuperWidth, NGEditorSettings.GUI.NODE_BASE_HEIGHT + nodeDataDrawer.SuperHeight);
+            var superwidth = nodeDataDrawer != null ? nodeDataDrawer.SuperWidth: 0;
+            var superHeight = nodeDataDrawer != null ? nodeDataDrawer.SuperHeight : 0;
+            m_baseRect = new Rect(m_data.X, m_data.Y, NGEditorSettings.GUI.NODE_BASE_WIDTH + superwidth, NGEditorSettings.GUI.NODE_BASE_HEIGHT + superHeight);
             m_nodeSyle = nodeDataDrawer == null ? EditorStyles.miniButton : nodeDataDrawer.InactiveStyle;
         }
 
@@ -282,14 +285,14 @@ namespace NodeGraph
                                 eventSent = true;
                                 return;
                             }
-
-                            if (nodeDataDrawer != null)
-                            {
-                                nodeDataDrawer.OnClickNodeGUI(this, Event.current.mousePosition, IsOverConnectionPoint(Event.current.mousePosition));
-                            }
                         };
+
                         m_data.InputPoints.ForEach(raiseEventIfHit);
                         m_data.OutputPoints.ForEach(raiseEventIfHit);
+
+                        if (nodeDataDrawer != null){
+                            nodeDataDrawer.OnClickNodeGUI(this, Event.current.mousePosition, IsOverConnectionPoint(Event.current.mousePosition));
+                        }
                         break;
                     }
             }
@@ -399,7 +402,7 @@ namespace NodeGraph
         public void DrawNode()
         {
             GUI.Window(m_nodeWindowId, m_baseRect, DrawThisNode, string.Empty, m_nodeSyle);
-            Controller.DrawNodeGUI(this);
+            if(Controller != null) Controller.DrawNodeGUI(this);
         }
 
         private void DrawThisNode(int id)
@@ -465,7 +468,9 @@ namespace NodeGraph
             m_data.InputPoints.ForEach(drawConnectionPoint);
             m_data.OutputPoints.ForEach(drawConnectionPoint);
 
+            if(nodeDataDrawer != null)
             nodeDataDrawer.OnNodeGUI(new Rect(0, 0, m_baseRect.width, m_baseRect.height), Data);
+
             GUIStyle catStyle = new GUIStyle("WhiteMiniLabel");
             catStyle.alignment = TextAnchor.LowerRight;
             var categoryRect = new Rect(2f, m_baseRect.height - 14f, m_baseRect.width - 4f, 16f);
@@ -517,6 +522,7 @@ namespace NodeGraph
             var newWidth = Mathf.Max(NGEditorSettings.GUI.NODE_BASE_WIDTH, outputLabelWidth + inputLabelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
             newWidth = Mathf.Max(newWidth, labelWidth + NGEditorSettings.GUI.NODE_WIDTH_MARGIN);
 
+            if(nodeDataDrawer != null)
             m_baseRect = new Rect(m_baseRect.x, m_baseRect.y, newWidth + nodeDataDrawer.SuperWidth, m_baseRect.height + nodeDataDrawer.SuperHeight + notdefultLabelHeight);
 
             RefreshConnectionPos(titleHeight);
@@ -689,10 +695,13 @@ namespace NodeGraph
 
                 EditorUtility.SetDirty(Data.Object);
 
+                NodeGUIUtility.NodeEventHandler(new NodeEvent(NodeEvent.EventType.EVENT_NODE_UPDATED, this, Event.current.mousePosition, null));
+
                 if (ParentGraph)
                     EditorUtility.SetDirty(ParentGraph);
             }
         }
+
 
         public static void ShowTypeNamesMenu(string current, List<string> contents, Action<string> ExistSelected)
         {
@@ -740,5 +749,7 @@ namespace NodeGraph
             }
             menu.ShowAsContext();
         }
+
+    
     }
 }

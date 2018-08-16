@@ -8,6 +8,7 @@ namespace NodeGraph.DefultSkin
     {
         public virtual int Style { get { return 0; } }
         public virtual float CustomNodeHeight { get { return 0; } }
+        private int lastSyle;
         private GUISkin _skin;
         protected GUISkin skin
         {
@@ -22,20 +23,43 @@ namespace NodeGraph.DefultSkin
                 return _skin;
             }
         }
-
+        private GUIStyle _activeStyle;
         public override GUIStyle ActiveStyle
         {
             get
             {
-               return skin.FindStyle(string.Format("node {0} on", Style));
+                if (Style != lastSyle){
+                    ResetStyle();
+                }
+                if (_activeStyle == null)
+                {
+                    _activeStyle = new GUIStyle(skin.FindStyle(string.Format("node {0} on", Style)));
+                }
+                return _activeStyle;
             }
         }
+
+        private GUIStyle _inactiveStyle;
         public override GUIStyle InactiveStyle
         {
             get
             {
-                return skin.FindStyle(string.Format("node {0}", Style));
+                if(Style != lastSyle){
+                    ResetStyle();
+                }
+                if(_inactiveStyle == null)
+                {
+                    _inactiveStyle = new GUIStyle( skin.FindStyle(string.Format("node {0}", Style))) ;
+                }
+                return _inactiveStyle;
             }
+        }
+
+        protected void ResetStyle()
+        {
+            _activeStyle = null;
+            _inactiveStyle = null;
+            lastSyle = Style;
         }
     }
 }

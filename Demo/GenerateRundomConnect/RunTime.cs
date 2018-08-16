@@ -12,13 +12,14 @@ using System.Collections;
 using System.Collections.Generic;
 using NodeGraph.DataModel;
 
-public class RunTime : MonoBehaviour {
+public class RunTime : MonoBehaviour
+{
     public NodeGraphObj graph;
     private Dictionary<string, GameObject> nodeDic = new Dictionary<string, GameObject>();
     private Queue<GameObject> created = new Queue<GameObject>();
     private void OnGUI()
     {
-        if(GUILayout.Button("Init"))
+        if (GUILayout.Button("Init"))
         {
             RandomGenerate();
         }
@@ -28,14 +29,14 @@ public class RunTime : MonoBehaviour {
     {
         while (created.Count > 0)
         {
-           var item = created.Dequeue();
+            var item = created.Dequeue();
             GameObject.Destroy(item);
         }
         nodeDic.Clear();
 
         foreach (var item in graph.Nodes)
         {
-            if(item.Object is ObjectNode)
+            if (item.Object is ObjectNode)
             {
                 var node = item.Object as ObjectNode;
                 var go = GameObject.CreatePrimitive(node.type);
@@ -44,7 +45,7 @@ public class RunTime : MonoBehaviour {
                 go.transform.position = Random.insideUnitSphere * 5;
                 nodeDic.Add(item.Id, go);
             }
-           
+
         }
 
         foreach (var item in graph.Connections)
@@ -52,8 +53,16 @@ public class RunTime : MonoBehaviour {
             var line = new GameObject();
             created.Enqueue(line);
             var render = line.AddComponent<LineRenderer>();
-            render.SetVertexCount(2);
+#if UNITY_2017
+             render.SetVertexCount(2);
             render.SetWidth(0.1f, 0.1f);
+#elif UNITY_5_6
+            render.positionCount = 2;
+            render.startWidth = render.endWidth = 0.1f;
+#else
+            /??
+#endif
+
             render.SetPosition(0, nodeDic[item.FromNodeId].transform.position);
             render.SetPosition(1, nodeDic[item.ToNodeId].transform.position);
         }
