@@ -53,7 +53,7 @@ public class RunTime : MonoBehaviour
             var line = new GameObject();
             created.Enqueue(line);
             var render = line.AddComponent<LineRenderer>();
-#if UNITY_2017
+#if UNITY_2018
              render.SetVertexCount(2);
             render.SetWidth(0.1f, 0.1f);
 #elif UNITY_5_6

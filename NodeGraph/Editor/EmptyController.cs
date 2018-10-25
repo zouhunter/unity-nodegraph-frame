@@ -11,7 +11,7 @@ namespace NodeGraph
         {
             Debug.Log("To Judge All Nodes, Is There Have Some Exceptions?");
         }
-        protected override void BuildFromGraph(DataModel.NodeGraphObj m_targetGraph)
+        internal override void BuildFromGraph(DataModel.NodeGraphObj m_targetGraph)
         {
             Debug.Log("On Build Button Clicked!");
         }

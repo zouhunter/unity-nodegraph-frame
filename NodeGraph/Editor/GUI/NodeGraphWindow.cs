@@ -824,10 +824,8 @@ namespace NodeGraph
 
             using (var scrollScope = new EditorGUILayout.ScrollViewScope(scrollPos))
             {
-                //var position = graphRegion;
                 scrollPos = scrollScope.scrollPosition;
-                GUILayoutUtility.GetRect(windowRect.width * maxCanvasSize / canvasSize, windowRect.height * maxCanvasSize / canvasSize);
-                //canvasRect = new Rect(-scrollPos.x, -scrollPos.y, position.width * maxCanvasSize, position.height * maxCanvasSize);
+               var contentRect = GUILayoutUtility.GetRect(windowRect.width * maxCanvasSize / canvasSize, windowRect.height * maxCanvasSize / canvasSize);
                 var vect = GUIScaleUtility.BeginScale(ref windowRect, windowRect.size * 0.5f, canvasSize, false);
 
                 var viewRect = new Rect(-scrollPos, 2 * vect + scrollPos);
@@ -891,7 +889,7 @@ namespace NodeGraph
 
                 // handle Graph GUI events
                 HandleGraphGUIEvents();
-                HandleDragAndDropGUI(graphRegion);
+                HandleDragAndDropGUI(contentRect);
 
                 // set rect for scroll.
                 if (nodes.Any())
@@ -1091,8 +1089,7 @@ namespace NodeGraph
                         var result = controller.OnDragAccept(DragAndDrop.objectReferences);
                         if (result != null)
                         {
-                            foreach (var item in result)
-                            {
+                            foreach (var item in result){
                                 AddNodeFromGUI(item.Value, item.Key, evt.mousePosition.x, evt.mousePosition.y);
                             }
                             Setup();
