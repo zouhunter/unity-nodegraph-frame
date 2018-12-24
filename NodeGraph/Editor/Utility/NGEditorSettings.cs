@@ -48,36 +48,19 @@ namespace NodeGraph
         }
         public class Path
         {
-            private static string s_basePath;
-
-            public static string BasePath
+            private static string guiResourcePath = "";
+            public const string ASSETS_PATH = "Assets/";
+            public static string GUIResourceBasePath
             {
                 get
                 {
-                    //if (string.IsNullOrEmpty (s_basePath)) {
-                    var obj = ScriptableObject.CreateInstance<DataModel.NodeGraphObj>();
-                    MonoScript s = MonoScript.FromScriptableObject(obj);
-                    var configGuiPath = AssetDatabase.GetAssetPath(s);
-                    UnityEngine.Object.DestroyImmediate(obj);
-
-                    var fileInfo = new FileInfo(configGuiPath);
-                    var baseDir = fileInfo.Directory.Parent.Parent;
-
-                    UnityEngine.Assertions.Assert.AreEqual("NodeGraph", baseDir.Name);
-
-                    string baseDirPath = baseDir.ToString().Replace('\\', '/');
-
-                    int index = baseDirPath.LastIndexOf(ASSETS_PATH);
-                    UnityEngine.Assertions.Assert.IsTrue(index >= 0);
-                    s_basePath = baseDirPath.Substring(index);
-                    return s_basePath;
+                    if(string.IsNullOrEmpty(guiResourcePath))
+                    {
+                        guiResourcePath = AssetDatabase.GUIDToAssetPath("3706d7e9bff914014a8c0d30e8f854e6") + "/";
+                    }
+                    return guiResourcePath;
                 }
             }
-
-            public const string ASSETS_PATH = "Assets/";
-            public static string GUIResourceBasePath { get { return BasePath + "/Editor/GUI/GraphicResources/"; } }
         }
-
-
     }
 }
