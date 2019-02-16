@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace NodeGraph.DataModel
 {
-
     /// <summary>
     /// Node data.
     /// </summary>
@@ -25,7 +24,6 @@ namespace NodeGraph.DataModel
         private List<ConnectionPointData> m_inputPoints;
         [SerializeField]
         private List<ConnectionPointData> m_outputPoints;
-
         private bool m_nodeNeedsRevisit;
 
         /*
@@ -114,7 +112,6 @@ namespace NodeGraph.DataModel
             }
         }
 
-
         /// <summary>
         /// Create new node from GUI.
         /// </summary>
@@ -122,7 +119,7 @@ namespace NodeGraph.DataModel
         /// <param name="node">Node.</param>
         /// <param name="x">The x coordinate.</param>
         /// <param name="y">The y coordinate.</param>
-		public NodeData(string name, Node node, float x, float y)
+        public NodeData(string name, Node node, float x, float y)
         {
             m_id = Guid.NewGuid().ToString();
             m_name = name;
@@ -140,7 +137,7 @@ namespace NodeGraph.DataModel
             m_name = node.m_name;
             m_x = node.m_x;
             m_y = node.m_y;
-            m_nodeNeedsRevisit = false;
+
             m_inputPoints = new List<ConnectionPointData>();
             m_outputPoints = new List<ConnectionPointData>();
 
@@ -154,8 +151,15 @@ namespace NodeGraph.DataModel
             {
                 m_id = Guid.NewGuid().ToString();
             }
-            m_node = UnityEngine.Object.Instantiate((UnityEngine.Object)node.m_node) as Node;
-            m_node.name = node.m_node.name;
+            if(node.Object == null)
+            {
+                m_node = ScriptObjectCatchUtil.Revert(node.Id) as Node;
+            }
+            else
+            {
+                m_node = UnityEngine.Object.Instantiate((UnityEngine.Object)node.Object) as Node;
+                m_node.name = node.Object.name;
+            }
         }
 
         public NodeData Duplicate(bool keepId = false)
@@ -199,30 +203,20 @@ namespace NodeGraph.DataModel
 
         public bool Validate()
         {
-            return m_node != null;
+            if (m_node == null){
+                m_node = ScriptObjectCatchUtil.Revert(Id) as Node;
+            }
+            return Object != null;
         }
 
         public bool CompareIgnoreGUIChanges(NodeData rhs)
         {
-
             if (m_node == null && rhs.m_node != null ||
                 m_node != null && rhs.m_node == null)
             {
                 LogUtility.Logger.LogFormat(LogType.Log, "{0} and {1} was different: {2}", Name, rhs.Name, "Node Type");
                 return false;
             }
-
-            //if (m_node.ClassName != rhs.m_node.ClassName)
-            //{
-            //    LogUtility.Logger.LogFormat(LogType.Log, "{0} and {1} was different: {2}", Name, rhs.Name, "Node Type");
-            //    return false;
-            //}
-
-            //if (m_node.Data != rhs.m_node.Data)
-            //{
-            //    LogUtility.Logger.LogFormat(LogType.Log, "{0} and {1} was different: {2}", Name, rhs.Name, "Node Variable");
-            //    return false;
-            //}
 
             if (m_inputPoints.Count != rhs.m_inputPoints.Count)
             {

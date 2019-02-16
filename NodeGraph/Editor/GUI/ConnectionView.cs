@@ -25,11 +25,13 @@ namespace NodeGraph
 
         internal virtual void OnDrawLabel(Vector2 centerPos, string label)
         {
-            GUIStyle labelStyle = new GUIStyle("WhiteMiniLabel");
-            labelStyle.alignment = TextAnchor.MiddleLeft;
-            var labelWidth = labelStyle.CalcSize(new GUIContent(label));
-            var labelPointV3 = new Vector2(centerPos.x - (labelWidth.x / 2), centerPos.y - 5);
-            Handles.Label(labelPointV3, label, labelStyle);
+            if(!string.IsNullOrEmpty(label)){
+                GUIStyle labelStyle = EditorStyles.miniTextField;// new GUIStyle("WhiteMiniLabel");
+                labelStyle.alignment = TextAnchor.MiddleLeft;
+                var labelWidth = labelStyle.CalcSize(new GUIContent(label));
+                var labelPointV3 = new Vector2(centerPos.x - (labelWidth.x / 2), centerPos.y - 5);
+                Handles.Label(labelPointV3, label, labelStyle);
+            }
         }
 
         internal virtual void OnConnectionGUI(Vector2 startV3, Vector2 endV3, Vector2 startTan, Vector2 endTan) { }

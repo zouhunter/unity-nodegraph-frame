@@ -53,8 +53,19 @@ public class RunTime : MonoBehaviour
             var line = new GameObject();
             created.Enqueue(line);
             var render = line.AddComponent<LineRenderer>();
-            render.positionCount = (2);
+#if UNITY_2018
+            render.positionCount = 2;
             render.startWidth = render.endWidth = 0.1f;
+#elif UNITY_2017
+            render.SetVertexCount(2);
+            render.SetWidth(0.1f, 0.1f);
+#elif UNITY_5_6
+            render.positionCount = 2;
+            render.startWidth = render.endWidth = 0.1f;
+#else
+            输入对应的设置方式
+#endif
+
             render.SetPosition(0, nodeDic[item.FromNodeId].transform.position);
             render.SetPosition(1, nodeDic[item.ToNodeId].transform.position);
         }

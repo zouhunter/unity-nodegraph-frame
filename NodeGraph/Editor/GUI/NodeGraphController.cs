@@ -26,8 +26,8 @@ namespace NodeGraph
     [System.Serializable]
     public abstract class NodeGraphController
     {
-        private List<NodeException> m_nodeExceptions = new List<NodeException>();
-        private Model.NodeGraphObj m_targetGraph;
+        protected List<NodeException> m_nodeExceptions = new List<NodeException>();
+        protected Model.NodeGraphObj m_targetGraph;
         public abstract string Group { get; }
 
         public bool IsAnyIssueFound
@@ -77,7 +77,7 @@ namespace NodeGraph
             JudgeNodeExceptions(m_targetGraph, m_nodeExceptions);
             LogUtility.Logger.Log(LogType.Log, "---Setup END---");
         }
-        public void Build()
+        public virtual void Build()
         {
             if(m_nodeExceptions == null || m_nodeExceptions.Count == 0)
             {
@@ -89,7 +89,7 @@ namespace NodeGraph
             }
         }
         protected virtual void JudgeNodeExceptions(Model.NodeGraphObj m_targetGraph, List<NodeException> m_nodeExceptions) { }
-        protected virtual void BuildFromGraph(Model.NodeGraphObj m_targetGraph) { }
+        internal virtual void BuildFromGraph(Model.NodeGraphObj m_targetGraph) { }
         internal virtual void OnDragUpdated() { }
         internal virtual List<KeyValuePair<string, Model.Node>> OnDragAccept(UnityEngine.Object[] objectReferences) { return null; }
         internal virtual void Validate(NodeGUI node) {

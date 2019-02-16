@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEditor.Experimental.UIElements;
 using Model = NodeGraph.DataModel;
 namespace NodeGraph
 {
@@ -111,7 +111,6 @@ namespace NodeGraph
 
             public void Clear(NodeGraph.NodeGraphController controller, bool deactivate = false)
             {
-
                 if (deactivate)
                 {
                     foreach (var n in nodes)
@@ -162,26 +161,42 @@ namespace NodeGraph
         [SerializeField]
         private SavedSelection copiedSelection = null;
 
-        private bool showErrors;
+        private bool _showErrors;
+        private bool showErrors
+        {
+            get
+            {
+                return _showErrors;
+            }
+            set
+            {
+                if (_showErrors != value)
+                {
+                    _showErrors = value;
+                    OnGraphRegionChanged();
+                }
+            }
+        }
         private bool showVerboseLog;
         private NodeEvent currentEventSource;
         private Texture2D _selectionTex;
         private GUIContent _reloadButtonTexture;
         private ModifyMode modifyMode;
-        private Vector2 spacerRectRightBottom;
-        private Vector2 scrollPos = new Vector2(1500, 0);
+        private Vector2 scrollPos
+        { get { return scrollViewContainer.scrollPos; } }
+
         private Vector2 errorScrollPos = new Vector2(0, 0);
         private Rect graphRegion = new Rect();
-        private float canvasSize = 1;
-        public const float maxCanvasSize = 2.5f;
         private SelectPoint selectStartMousePosition;
         private GraphBackground background = new GraphBackground();
         private string graphAssetPath;
         private string graphAssetName;
         private NodeGraphController controller;
+        private ScrollViewContainer scrollViewContainer;
 
         private Vector2 m_LastMousePosition;
         private Vector2 m_DragNodeDistance;
+        private Vector2 old_graphRect;
         private readonly Dictionary<NodeGUI, Vector2> m_InitialDragNodePositions = new Dictionary<NodeGUI, Vector2>();
 
         private static bool autoOpen = true;
@@ -233,6 +248,7 @@ namespace NodeGraph
                 return null;
             }
         }
+
         [MenuItem(GUI_TEXT_MENU_OPEN, false, 1)]
         public static void Open()
         {
@@ -246,6 +262,94 @@ namespace NodeGraph
             autoOpen = false;
             GetWindow<NodeGraphWindow>();
         }
+
+        [UnityEditor.Callbacks.OnOpenAsset()]
+        public static bool OnOpenAsset(int instanceID, int line)
+        {
+            var graph = EditorUtility.InstanceIDToObject(instanceID) as Model.NodeGraphObj;
+            if (graph != null)
+            {
+                var window = GetWindow<NodeGraphWindow>();
+                window.OpenGraph(graph);
+                return true;
+            }
+            return false;
+        }
+
+        public void OnEnable()
+        {
+            Init();
+        }
+
+        public void OnDisable()
+        {
+            LogUtility.Logger.Log("OnDisable");
+            if (controller != null)
+            {
+                if (controller.TargetGraph != null)
+                {
+                    controller.SaveGraph(nodes.Select(x => x.Data).ToList(), connections.Select(x => x.Data).ToList(), true);
+                    EditorUtility.SetDirty(controller.TargetGraph);
+                }
+            }
+        }
+
+        public void OnGUI()
+        {
+            if (controller == null)
+            {
+                DrawNoGraphGUI();
+            }
+            else
+            {
+                if (scrollViewContainer == null)
+                {
+                    scrollViewContainer = new ScrollViewContainer();
+                    scrollViewContainer.onGUI = DrawNodeGraphContent;
+                    graphRegion = new Rect(0, EditorGUIUtility.singleLineHeight, position.width, position.height - 2 * EditorGUIUtility.singleLineHeight);
+                    scrollViewContainer.Start(this.GetRootVisualContainer(), graphRegion);
+                }
+
+                DrawGUIToolBar();
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (showErrors)
+                    {
+                        GUILayoutUtility.GetRect(graphRegion.width, graphRegion.height);
+                        background.Draw(graphRegion, scrollPos, scrollViewContainer.ZoomSize);
+                        DrawGUINodeErrors(200);
+                    }
+                    else
+                    {
+                        GUILayoutUtility.GetRect(graphRegion.width, graphRegion.height);
+                        background.Draw(graphRegion, scrollPos, scrollViewContainer.ZoomSize);
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(graphAssetPath))
+                {
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        GUILayout.Label(graphAssetPath, "MiniLabel");
+                    }
+                }
+
+                if (controller.IsAnyIssueFound)
+                {
+                    Rect msgRgn = new Rect((graphRegion.width - 250f) / 2f, graphRegion.y + 8f, 250f, 36f);
+                    EditorGUI.HelpBox(msgRgn, "All errors needs to be fixed before building.", MessageType.Error);
+                }
+            }
+
+            if (old_graphRect != position.size)
+            {
+                old_graphRect = position.size;
+                OnGraphRegionChanged();
+            }
+        }
+
         public void OnFocus()
         {
             // update handlers. these static handlers are erase when window is full-screened and badk to normal window.
@@ -264,12 +368,16 @@ namespace NodeGraph
         {
             HandleSelectionChange();
             Repaint();
+            if (scrollViewContainer != null)
+                scrollViewContainer.Refesh();
         }
 
         public void OnSelectionChange()
         {
             HandleSelectionChange();
             Repaint();
+            if(scrollViewContainer != null)
+                scrollViewContainer.Refesh();
         }
 
         public void HandleSelectionChange()
@@ -314,7 +422,6 @@ namespace NodeGraph
             modifyMode = ModifyMode.NONE;
             NodeGUIUtility.NodeEventHandler = HandleNodeEvent;
             ConnectionGUIUtility.ConnectionEventHandler = HandleConnectionEvent;
-            GUIScaleUtility.CheckInit();
 
             if (autoOpen)
             {
@@ -331,6 +438,21 @@ namespace NodeGraph
 
 
             controllerTypes = UserDefineUtility.CustomControllerTypes.ConvertAll<string>(x => x.FullName).ToArray();
+        }
+
+        private void OnGraphRegionChanged()
+        {
+            if(showErrors)
+            {
+                graphRegion = new Rect(0, EditorGUIUtility.singleLineHeight, position.width - 200, position.height - 2 * EditorGUIUtility.singleLineHeight);
+            }
+            else
+            {
+                graphRegion = new Rect(0, EditorGUIUtility.singleLineHeight, position.width, position.height - 2 * EditorGUIUtility.singleLineHeight);
+            }
+
+            scrollViewContainer.UpdateScale(graphRegion);
+            scrollViewContainer.Refesh();
         }
 
         private void ShowErrorOnNodes()
@@ -366,19 +488,6 @@ namespace NodeGraph
             }
         }
 
-        [UnityEditor.Callbacks.OnOpenAsset()]
-        public static bool OnOpenAsset(int instanceID, int line)
-        {
-            var graph = EditorUtility.InstanceIDToObject(instanceID) as Model.NodeGraphObj;
-            if (graph != null)
-            {
-                var window = GetWindow<NodeGraphWindow>();
-                window.OpenGraph(graph);
-                return true;
-            }
-            return false;
-        }
-
         public void OpenGraph(string path)
         {
             Model.NodeGraphObj graph = AssetDatabase.LoadAssetAtPath<Model.NodeGraphObj>(path);
@@ -391,13 +500,12 @@ namespace NodeGraph
 
         public void OpenGraph(Model.NodeGraphObj graph)
         {
-            CloseGraph();
+            ClearGraph();
 
             SetGraphAssetPath(AssetDatabase.GetAssetPath(graph));
 
             modifyMode = ModifyMode.NONE;
 
-            scrollPos = new Vector2(0, 0);
             errorScrollPos = new Vector2(0, 0);
 
             selectStartMousePosition = null;
@@ -409,22 +517,17 @@ namespace NodeGraph
             ConstructGraphGUI();
             Setup();
 
-            if (nodes.Any()){
-                UpdateSpacerRect();
-            }
-
             //Selection.activeObject = graph;
             NodeConnectionUtility.Reset();
         }
 
-
-        private void CloseGraph()
+        private void ClearGraph()
         {
             modifyMode = ModifyMode.NONE;
             SetGraphAssetPath(null);
             controller = null;
-            nodes = null;
-            connections = null;
+            nodes.Clear();
+            connections.Clear();
 
             selectStartMousePosition = null;
             activeSelection = null;
@@ -438,7 +541,7 @@ namespace NodeGraph
             DelyAccept(graph, OpenGraph);
         }
 
-        private void DelyAccept(Model.NodeGraphObj graph,UnityEngine.Events.UnityAction<Model.NodeGraphObj> onGet)
+        private void DelyAccept(Model.NodeGraphObj graph, UnityEngine.Events.UnityAction<Model.NodeGraphObj> onGet)
         {
             if (graph == null || onGet == null) return;
 
@@ -508,48 +611,45 @@ namespace NodeGraph
                 var startPoint = startNode.Data.FindConnectionPoint(c.FromNodeConnectionPointId);
                 var endPoint = endNode.Data.FindConnectionPoint(c.ToNodeConnectionPointId);
 
-                currentConnections.Add(ConnectionGUI.LoadConnection(c, startPoint, endPoint, controller));
+                currentConnections.Add(ConnectionGUI.LoadConnection(c, startPoint, endPoint));
             }
 
             nodes = currentNodes;
             connections = currentConnections;
         }
-        
+
 
         private void Setup(bool forceVisitAll = false)
         {
             EditorUtility.ClearProgressBar();
+
             if (controller == null)
             {
                 return;
             }
 
-            try
+            foreach (var node in nodes)
             {
-                foreach (var node in nodes)
-                {
-                    node.Controller = controller;
-                    node.Data.Object.Initialize(node.Data);
-                    node.HideProgress();
-                }
-
-                controller.SaveGraph(nodes.Select(x => x.Data).ToList(), connections.Select(x => x.Data).ToList()); ;
-
-                // update static all node names.
-                NodeGUIUtility.allNodeNames = new List<string>(nodes.Select(node => node.Name).ToList());
-
-                controller.Perform();
-
-                ShowErrorOnNodes();
+                node.Controller = controller;
+                node.Data.Validate();
+                node.Data.Object.Initialize(node.Data);
+                node.HideProgress();
             }
-            catch (Exception e)
+
+            foreach (var connection in connections)
             {
-                LogUtility.Logger.LogError(LogUtility.kTag, e);
+                connection.Data.Validate();
             }
-            finally
-            {
-                EditorUtility.ClearProgressBar();
-            }
+
+            controller.SaveGraph(nodes.Where(x => x != null).Select(x => x.Data).ToList(), connections.Where(x => x != null).Select(x => x.Data).ToList()); ;
+            // update static all node names.
+            NodeGUIUtility.allNodeNames = new List<string>(nodes.Select(node => node.Name).ToList());
+
+            controller.Perform();
+
+            ShowErrorOnNodes();
+
+            EditorUtility.ClearProgressBar();
         }
 
         private void Validate(NodeGUI node)
@@ -640,8 +740,8 @@ namespace NodeGraph
                     //menu.AddSeparator("");
                     menu.AddItem(new GUIContent("Import/Import JSON Graph to current graph..."), false, () =>
                     {
-                        var graph = JSONGraphUtility.ImportJSONToGraphFromDialog(controller.TargetGraph);
-                        if (graph != null)
+                        var graph = controller.TargetGraph;
+                        if (JSONGraphUtility.ImportJSONToGraphFromDialog(ref graph))
                         {
                             OpenGraph(graph);
                         }
@@ -649,10 +749,14 @@ namespace NodeGraph
                     menu.AddSeparator("Import/");
                     menu.AddItem(new GUIContent("Import/Import JSON Graph and create new..."), false, () =>
                     {
-                        var graph = JSONGraphUtility.ImportJSONToGraphFromDialog(null);
-                        if (graph != null)
+                        Model.NodeGraphObj graph = null;
+                        if (JSONGraphUtility.ImportJSONToGraphFromDialog(ref graph))
                         {
                             OpenGraph(graph);
+                        }
+                        else
+                        {
+                            Debug.Log("import faild!");
                         }
                     });
                     menu.AddItem(new GUIContent("Import/Import JSON Graphs in folder..."), false, () =>
@@ -686,6 +790,7 @@ namespace NodeGraph
                 #region Refresh
                 if (GUILayout.Button(new GUIContent("Refresh", ReloadButtonTexture.image, "Refresh and reload"), EditorStyles.toolbarButton, GUILayout.Width(80), GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT)))
                 {
+                    OnGraphRegionChanged();
                     Setup();
                 }
                 #endregion
@@ -700,21 +805,10 @@ namespace NodeGraph
 
                 GUILayout.Space(4);
 
-                GUILayout.Label(string.Format("canvas:[{0}]", canvasSize.ToString("0.0")));
-                GUILayout.Label("1");
-                canvasSize = GUILayout.HorizontalSlider(canvasSize, 1, maxCanvasSize, GUILayout.Width(graphRegion.width * 0.1f));
-                GUILayout.Label(maxCanvasSize.ToString());
-
-                //GUILayout.Space(4);
-
-                //GUILayout.Label(string.Format("node:[{0}]", nodeSize.ToString("0.0")));
-                //GUILayout.Label("0.5");
-                //nodeSize = GUILayout.HorizontalSlider(nodeSize, 0.5f, 2, GUILayout.Width(graphRegion.width * 0.1f));
-                //GUILayout.Label("2");
-
-
-
-                //controller.TargetGraph.UseAsAssetPostprocessor = GUILayout.Toggle(controller.TargetGraph.UseAsAssetPostprocessor, "Use As Postprocessor", EditorStyles.toolbarButton, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
+                GUILayout.Label(string.Format("canvas:[{0}]", scrollViewContainer.ZoomSize.ToString("0.0")));
+                GUILayout.Label(scrollViewContainer.minZoomSize.ToString());
+                scrollViewContainer.ZoomSize = GUILayout.HorizontalSlider(scrollViewContainer.ZoomSize, scrollViewContainer.minZoomSize, scrollViewContainer.maxZoomSize, GUILayout.Width(graphRegion.width * 0.1f));
+                GUILayout.Label(scrollViewContainer.maxZoomSize.ToString());
 
                 GUILayout.FlexibleSpace();
 
@@ -725,22 +819,7 @@ namespace NodeGraph
                 GUIStyle tbLabelTarget = new GUIStyle(tbLabel);
                 tbLabelTarget.fontStyle = FontStyle.Bold;
 
-                //GUILayout.Label("Platform:", tbLabel, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
-
-                //var supportedTargets = NodeGUIUtility.SupportedBuildTargets;
-                //int currentIndex = Mathf.Max(0, supportedTargets.FindIndex(t => t == target));
-
-                //int newIndex = EditorGUILayout.Popup(currentIndex, NodeGUIUtility.supportedBuildTargetNames,
-                //    EditorStyles.toolbarPopup, GUILayout.Width(150), GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT));
-
-                //if (newIndex != currentIndex)
-                //{
-                //    target = supportedTargets[newIndex];
-                //    Setup(true);
-                //}
-
                 EditorGUI.BeginDisabledGroup(controller.IsAnyIssueFound);
-                //using (new EditorGUI.DisabledScope(controller.IsAnyIssueFound))
                 {
                     if (GUILayout.Button("Build", EditorStyles.toolbarButton, GUILayout.Height(NGEditorSettings.GUI.TOOLBAR_HEIGHT)))
                     {
@@ -796,10 +875,9 @@ namespace NodeGraph
             }
         }
 
-        private void DrawGUINodeErrors()
+        private void DrawGUINodeErrors(float width)
         {
-
-            errorScrollPos = EditorGUILayout.BeginScrollView(errorScrollPos, GUI.skin.box, GUILayout.Width(200));
+            errorScrollPos = EditorGUILayout.BeginScrollView(errorScrollPos, GUI.skin.box, GUILayout.Width(width));
             {
                 using (new EditorGUILayout.VerticalScope())
                 {
@@ -815,107 +893,76 @@ namespace NodeGraph
             }
             EditorGUILayout.EndScrollView();
         }
-        Rect canvasRect;
-        private void DrawGUINodeGraph()
+
+        private void DrawNodeGraphContent()
         {
-            background.Draw(graphRegion, scrollPos);
+            #region DrawInteranl
+            if (connections == null)
+                Window.Close();
 
-            var windowRect = new Rect(0, 0, graphRegion.width - 15, position.height - 50);
+            var contentRect = new Rect(Vector2.zero, graphRegion.size / scrollViewContainer.minZoomSize);
 
-            using (var scrollScope = new EditorGUILayout.ScrollViewScope(scrollPos))
+            // draw node window x N.
             {
-                //var position = graphRegion;
-                scrollPos = scrollScope.scrollPosition;
-                GUILayoutUtility.GetRect(windowRect.width * maxCanvasSize / canvasSize, windowRect.height * maxCanvasSize / canvasSize);
-                //canvasRect = new Rect(-scrollPos.x, -scrollPos.y, position.width * maxCanvasSize, position.height * maxCanvasSize);
-                var vect = GUIScaleUtility.BeginScale(ref windowRect, windowRect.size * 0.5f, canvasSize, false);
+                BeginWindows();
 
-                var viewRect = new Rect(-scrollPos, 2 * vect + scrollPos);
-                //进行新的视角裁切
-                GUI.BeginClip(viewRect);
-                #region DrawInteranl
-                if (connections == null) Window.Close();
+                nodes.ForEach(node => {
+                    node.ClampRect(contentRect);
+                    node.DrawNode();
+                });
 
-                // draw node window x N.
-                {
-                    BeginWindows();
+                HandleDragNodes();
 
-                    nodes.ForEach(node => node.DrawNode());
-
-                    HandleDragNodes();
-
-                    EndWindows();
-                }
-
-                ClearBadConnection();
-
-                // draw connections.
-                foreach (var con in connections)
-                {
-                    con.DrawConnection(nodes);
-                }
-
-                // draw connection input point marks.
-                foreach (var node in nodes)
-                {
-                    node.DrawConnectionInputPointMark(currentEventSource, modifyMode == ModifyMode.CONNECTING);
-                }
-
-                // draw connection output point marks.
-                foreach (var node in nodes)
-                {
-                    node.DrawConnectionOutputPointMark(currentEventSource, modifyMode == ModifyMode.CONNECTING, Event.current);
-                }
-
-                // draw connecting line if modifing connection.
-                switch (modifyMode)
-                {
-                    case ModifyMode.CONNECTING:
-                        {
-                            // from start node to mouse.
-                            DrawStraightLineFromCurrentEventSourcePointTo(Event.current.mousePosition, currentEventSource);
-                            break;
-                        }
-                    case ModifyMode.SELECTING:
-                        {
-                            float lx = Mathf.Max(selectStartMousePosition.x, Event.current.mousePosition.x);
-                            float ly = Mathf.Max(selectStartMousePosition.y, Event.current.mousePosition.y);
-                            float sx = Mathf.Min(selectStartMousePosition.x, Event.current.mousePosition.x);
-                            float sy = Mathf.Min(selectStartMousePosition.y, Event.current.mousePosition.y);
-
-                            Rect sel = new Rect(sx, sy, lx - sx, ly - sy);
-                            GUI.Label(sel, string.Empty, "SelectionRect");
-                            break;
-                        }
-                }
-
-                // handle Graph GUI events
-                HandleGraphGUIEvents();
-                HandleDragAndDropGUI(graphRegion);
-
-                // set rect for scroll.
-                if (nodes.Any())
-                {
-                    UpdateSpacerRect();
-                    GUILayoutUtility.GetRect(new GUIContent(string.Empty), GUIStyle.none, GUILayout.Width(spacerRectRightBottom.x), GUILayout.Height(spacerRectRightBottom.y));
-                }
-                #endregion
-                //结束裁切
-                GUI.EndClip();
-                GUIScaleUtility.EndScale();
+                EndWindows();
             }
 
-            if (Event.current.type == EventType.Repaint)
-            {
-                var newRgn = GUILayoutUtility.GetLastRect();
-                //newRgn = new Rect(newRgn.x , newRgn.y , newRgn.width * scaleFacter, newRgn.height * scaleFacter);
+            ClearBadConnection();
 
-                if (newRgn != graphRegion)
-                {
-                    graphRegion = newRgn;
-                    Repaint();
-                }
+            // draw connections.
+            foreach (var con in connections)
+            {
+                con.DrawConnection(nodes);
             }
+
+            // draw connection input point marks.
+            foreach (var node in nodes)
+            {
+                node.DrawConnectionInputPointMark(currentEventSource, modifyMode == ModifyMode.CONNECTING);
+            }
+
+            // draw connection output point marks.
+            foreach (var node in nodes)
+            {
+                node.DrawConnectionOutputPointMark(currentEventSource, modifyMode == ModifyMode.CONNECTING, Event.current);
+            }
+
+            var mousePosition = Event.current.mousePosition;
+            // draw connecting line if modifing connection.
+            switch (modifyMode)
+            {
+                case ModifyMode.CONNECTING:
+                    {
+                        // from start node to mouse.
+                        DrawStraightLineFromCurrentEventSourcePointTo(mousePosition, currentEventSource);
+                        break;
+                    }
+                case ModifyMode.SELECTING:
+                    {
+                        float lx = Mathf.Max(selectStartMousePosition.x, Event.current.mousePosition.x);
+                        float ly = Mathf.Max(selectStartMousePosition.y, mousePosition.y);
+                        float sx = Mathf.Min(selectStartMousePosition.x, Event.current.mousePosition.x);
+                        float sy = Mathf.Min(selectStartMousePosition.y, mousePosition.y);
+                        Rect sel = new Rect(sx, sy, lx - sx, ly - sy);
+                        GUI.Label(sel, string.Empty, "SelectionRect");
+                        break;
+                    }
+            }
+
+            // handle Graph GUI events
+            HandleGraphGUIEvents(contentRect);
+            HandleDragAndDropGUI(contentRect);
+            HandleGUIEvent();
+            #endregion
         }
 
         private void ClearBadConnection()
@@ -930,16 +977,8 @@ namespace NodeGraph
             }
         }
 
-        private void ShowRect(Rect rect)
+        private void HandleGraphGUIEvents(Rect rect)
         {
-            GUI.backgroundColor = Color.green;
-            GUI.Box(rect, "");
-            GUI.backgroundColor = Color.white;
-        }
-
-        private void HandleGraphGUIEvents()
-        {
-
             //mouse drag event handling.
             switch (Event.current.type)
             {
@@ -953,8 +992,9 @@ namespace NodeGraph
                                     switch (Event.current.button)
                                     {
                                         case 0:
-                                            {// left click
-                                                if (graphRegion.Contains(Event.current.mousePosition - scrollPos))
+                                            {
+                                                // left click
+                                                if (rect.Contains(Event.current.mousePosition))
                                                 {
                                                     selectStartMousePosition = new SelectPoint(Event.current.mousePosition);
                                                     modifyMode = ModifyMode.SELECTING;
@@ -1102,63 +1142,6 @@ namespace NodeGraph
                         Event.current.Use();
                     }
                     break;
-            }
-        }
-
-        public void OnEnable()
-        {
-            Init();
-        }
-
-        public void OnDisable()
-        {
-            LogUtility.Logger.Log("OnDisable");
-            if (controller != null)
-            {
-                if (controller.TargetGraph != null)
-                {
-                    controller.SaveGraph(nodes.Select(x=>x.Data).ToList(),connections.Select(x=>x.Data).ToList(),true);
-                }
-                EditorUtility.SetDirty(controller.TargetGraph);
-            }
-        }
-
-        public void OnGUI()
-        {
-            if (controller == null)
-            {
-                DrawNoGraphGUI();
-            }
-            else
-            {
-                DrawGUIToolBar();
-
-                using (new EditorGUILayout.HorizontalScope())
-                {
-                    DrawGUINodeGraph();
-
-                    if (showErrors)
-                    {
-                        DrawGUINodeErrors();
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(graphAssetPath))
-                {
-                    using (new EditorGUILayout.HorizontalScope())
-                    {
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Label(graphAssetPath, "MiniLabel");
-                    }
-                }
-
-                if (controller.IsAnyIssueFound)
-                {
-                    Rect msgRgn = new Rect((graphRegion.width - 250f) / 2f, graphRegion.y + 8f, 250f, 36f);
-                    EditorGUI.HelpBox(msgRgn, "All errors needs to be fixed before building.", MessageType.Error);
-                }
-
-                HandleGUIEvent();
             }
         }
 
@@ -1398,9 +1381,10 @@ namespace NodeGraph
                     false,
                     () =>
                     {
-                        AddNodeFromGUI(customNodes[index].CreateInstance(), GetNodeNameFromMenu(path), pos.x + scrollPos.x, pos.y + scrollPos.y);
+                        AddNodeFromGUI(customNodes[index].CreateInstance(), GetNodeNameFromMenu(path), pos.x, pos.y);
                         Setup();
                         Repaint();
+                        scrollViewContainer.Refesh();
                     }
                 );
             }
@@ -1760,14 +1744,6 @@ namespace NodeGraph
             return position;
         }
 
-        private void UpdateSpacerRect()
-        {
-            var rightPoint = nodes.OrderByDescending(node => node.GetRightPos()).First().GetRightPos() + NGSettings.WINDOW_SPAN;
-            var bottomPoint = nodes.OrderByDescending(node => node.GetBottomPos()).First().GetBottomPos() + NGSettings.WINDOW_SPAN;
-
-            spacerRectRightBottom = new Vector2(rightPoint, bottomPoint);
-        }
-
         public NodeGUI DuplicateNode(NodeGUI node, float offset)
         {
             var newNode = node.Duplicate(
@@ -1833,6 +1809,7 @@ namespace NodeGraph
             {
                 var n = nodes[deletedNodeIndex];
                 n.SetActive(false);
+                ScriptObjectCatchUtil.Catch(n.Data.Id, n.Data.Object);
                 nodes.RemoveAt(deletedNodeIndex);
             }
 
@@ -1928,7 +1905,7 @@ namespace NodeGraph
 
             if (!connections.ContainsConnection(startPoint, endPoint))
             {
-                connections.Add(ConnectionGUI.CreateConnection(type, startPoint, endPoint, controller));
+                connections.Add(ConnectionGUI.CreateConnection(type, startPoint, endPoint));
             }
         }
         /// <summary>
@@ -1996,6 +1973,8 @@ namespace NodeGraph
             {
                 var c = connections[deletedConnectionIndex];
                 c.SetActive(false);
+                //Debug.Log("catch:" + c.Data.Id);
+                ScriptObjectCatchUtil.Catch(c.Data.Id, c.Data.Object);
                 connections.RemoveAt(deletedConnectionIndex);
             }
         }

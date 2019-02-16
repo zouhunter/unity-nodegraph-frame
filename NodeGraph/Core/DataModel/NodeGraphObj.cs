@@ -32,18 +32,18 @@ namespace NodeGraph.DataModel
         [SerializeField]
         private string m_controllerType;
         public static bool log = false;
-        void OnEnable()
+
+        private void OnEnable()
         {
             Initialize();
             Validate();
         }
-
         private string GetFileTimeUtcString()
         {
             return DateTime.Now.ToFileTimeUtc().ToString();
         }
 
-        private void Initialize()
+        public void Initialize()
         {
             if (string.IsNullOrEmpty(m_lastModified))
             {
@@ -152,7 +152,7 @@ namespace NodeGraph.DataModel
 		 * Checks deserialized SaveData, and make some changes if necessary
 		 * return false if any changes are perfomed.
 		 */
-        private bool Validate()
+        public bool Validate()
         {
             var changed = false;
 

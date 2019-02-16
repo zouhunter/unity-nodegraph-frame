@@ -53,7 +53,7 @@ namespace NodeGraph {
 		}
 
 			
-		public void Draw(Rect position, Vector2 scroll)
+		public void Draw(Rect position, Vector2 scroll,float scale)
 		{
 			m_graphRegion = position;
 			m_scrollPosition = scroll;
@@ -62,10 +62,10 @@ namespace NodeGraph {
                 UnityEditor.Graphs.Styles.graphBackground.Draw(position, false, false, false, false);
             }
 
-			DrawGrid ();
+			DrawGrid (scale);
 		}
 
-		private void DrawGrid ()
+		private void DrawGrid (float scale)
 		{
 			if (Event.current.type != EventType.Repaint) {
 				return;
@@ -80,8 +80,8 @@ namespace NodeGraph {
 			GL.PushMatrix ();
 			GL.Begin (GL.LINES);
 
-			DrawGridLines (kNodeGridSize, gridMinorColor);
-			DrawGridLines (kMajorGridSize, gridMajorColor);
+			DrawGridLines (kNodeGridSize* scale, gridMinorColor);
+			DrawGridLines (kMajorGridSize* scale, gridMajorColor);
 
 			GL.End ();
 			GL.PopMatrix ();

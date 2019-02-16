@@ -18,9 +18,8 @@ namespace NodeGraph
         private ConnectionPointData m_outputPoint;
         [SerializeField]
         private ConnectionPointData m_inputPoint;
-        [SerializeField]
+
         private ConnectionGUIInspectorHelper m_inspector;
-        [SerializeField]
         private NodeGraphController m_controller;
         private ConnectionView _connectionDrawer;
         private ConnectionView connectionDrawer
@@ -60,21 +59,6 @@ namespace NodeGraph
             get
             {
                 return m_data.Id;
-            }
-        }
-
-        public NodeGraphObj ParentGraph
-        {
-            get
-            {
-                return m_controller.TargetGraph;
-            }
-        }
-        public NodeGraphController Controller
-        {
-            get
-            {
-                return m_controller;
             }
         }
 
@@ -122,11 +106,11 @@ namespace NodeGraph
         {
             get
             {
-                if (m_inspector == null)
-                {
+                if (m_inspector == null) {
                     m_inspector = ScriptableObject.CreateInstance<ConnectionGUIInspectorHelper>();
                     m_inspector.hideFlags = HideFlags.DontSave;
                 }
+                m_inspector.UpdateInspector(this);
                 return m_inspector;
             }
         }
@@ -141,34 +125,30 @@ namespace NodeGraph
 
         private Rect m_buttonRect;
 
-        public static ConnectionGUI LoadConnection(ConnectionData data, ConnectionPointData output, ConnectionPointData input, NodeGraphController controller)
+        public static ConnectionGUI LoadConnection(ConnectionData data, ConnectionPointData output, ConnectionPointData input)
         {
             return new ConnectionGUI(
                 data,
                 output,
-                input,
-                controller
+                input
             );
         }
 
-        public static ConnectionGUI CreateConnection(string type,/* string type, */ConnectionPointData output, ConnectionPointData input, NodeGraphController controller)
+        public static ConnectionGUI CreateConnection(string type,ConnectionPointData output, ConnectionPointData input)
         {
             var connection = NodeConnectionUtility.CustomConnectionTypes.Find(x => x.connection.Name == type).CreateInstance();
-
             return new ConnectionGUI(
                 new ConnectionData(type, connection, output, input),
                 output,
-                input,
-                controller
+                input
             );
         }
 
-        private ConnectionGUI(ConnectionData data, ConnectionPointData output, ConnectionPointData input, NodeGraphController controller)
+        private ConnectionGUI(ConnectionData data, ConnectionPointData output, ConnectionPointData input)
         {
-            UnityEngine.Assertions.Assert.IsTrue(output.IsOutput, "Given Output point is not output.");
-            UnityEngine.Assertions.Assert.IsTrue(input.IsInput, "Given Input point is not input.");
+            //UnityEngine.Assertions.Assert.IsTrue(output.IsOutput, "Given Output point is not output.");
+            //UnityEngine.Assertions.Assert.IsTrue(input.IsInput, "Given Input point is not input.");
 
-            m_controller = controller;
             m_inspector = ScriptableObject.CreateInstance<ConnectionGUIInspectorHelper>();
             m_inspector.hideFlags = HideFlags.DontSave;
 
@@ -236,14 +216,15 @@ namespace NodeGraph
 
             var endTan = new Vector3(endPoint.x - pointDistanceX, centerPoint.y, 0f);
 
-            //var style = new GUIStyle(connectionButtonStyle);
-            //DrawCurve
+            //用于批量选中曲线
+            m_buttonRect = new Rect(centerPoint.x - 10, centerPoint.y - 10, 20, 20);
+            //绘制曲线
             DrawCurve(startPoint, endPoint, startTan, endTan);
             //处理右键事件
-            HandleClick(centerPoint);
-            //DrawNode
+            HandleClick(startPoint, endPoint, startTan, endTan);
+            //自定义绘制
             connectionDrawer.OnConnectionGUI(startPoint, endPoint, startTan, endTan);
-            //DrawLabel
+            //绘制标签
             connectionDrawer.OnDrawLabel(centerPoint, ConnectionType);
         }
         private void DrawCurve(Vector2 startV3, Vector2 endV3, Vector2 startTan, Vector2 endTan)
@@ -265,25 +246,14 @@ namespace NodeGraph
             Handles.DrawBezier(startV3, endV3, startTan, endTan, lineColor, null, lineWidth);
         }
 
-        private void HandleClick(Vector3 center,float size = 10)
+        private void HandleClick(Vector2 startV3, Vector2 endV3, Vector2 startTan, Vector2 endTan)
         {
-            m_buttonRect = new Rect(center.x - size, center.y - size, size * 2, size * 2);
-            HandleClick(m_buttonRect);
-        }
-
-        private void HandleClick(Rect m_buttonRect)
-        {
-            Handles.BeginGUI();
-            GUI.Box(m_buttonRect, "");
-            Handles.EndGUI();
+            var bezierPoses = Handles.MakeBezierPoints(startV3, endV3, startTan, endTan, (int)(Vector3.Distance(startV3, endV3) * 0.1f));
 
             if ((Event.current.type == EventType.MouseUp && Event.current.button == 0))
             {
-                var clickPos = Event.current.mousePosition;
-
-                if (m_buttonRect.Contains(clickPos))
+                if (ClickedOnBezier(bezierPoses))
                 {
-                    this.Inspector.UpdateInspector(this);
                     ConnectionGUIUtility.ConnectionEventHandler(new ConnectionEvent(ConnectionEvent.EventType.EVENT_CONNECTION_TAPPED, this));
                     Event.current.Use();
                 }
@@ -292,9 +262,7 @@ namespace NodeGraph
 
             else if (Event.current.type == EventType.ContextClick || (Event.current.type == EventType.MouseUp && Event.current.button == 1))
             {
-                var clickPos = Event.current.mousePosition;
-
-                if (m_buttonRect.Contains(clickPos))
+                if (ClickedOnBezier(bezierPoses))
                 {
                     var menu = new GenericMenu();
 
@@ -317,6 +285,13 @@ namespace NodeGraph
             }
         }
 
+        private bool ClickedOnBezier(Vector3[] postions)
+        {
+            var clickPos = Event.current.mousePosition;
+            var smallDistence = postions.Select(x => Vector3.Distance(x, clickPos)).Min();
+            return smallDistence < 10;
+        }
+
         public bool IsEqual(ConnectionPointData from, ConnectionPointData to)
         {
             return (m_outputPoint == from && m_inputPoint == to);
@@ -325,8 +300,7 @@ namespace NodeGraph
 
         public void SetActive(bool active)
         {
-            if (active)
-            {
+            if (active){
                 Selection.activeObject = Inspector;
             }
         }
@@ -337,9 +311,7 @@ namespace NodeGraph
                 connectionDrawer.OnInspectorGUI();
             if (EditorGUI.EndChangeCheck())
             {
-                if(Controller != null) Controller.Perform();
-                EditorUtility.SetDirty( Data.Object);
-                EditorUtility.SetDirty(ParentGraph);
+                EditorUtility.SetDirty(Data.Object);
             }
         }
         public void Delete()

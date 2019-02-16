@@ -48,9 +48,9 @@ namespace NodeGraph {
 		public static void PreferencesGUI() {
 			LoadAllPreferenceValues();
 
-			s_editorWindowGridSize = EditorGUILayout.FloatField("Graph Editor Grid Size", s_editorWindowGridSize);
-
-			if (GUI.changed) {
+			s_editorWindowGridSize = EditorGUILayout.FloatField("背景格子尺寸", s_editorWindowGridSize);
+           
+            if (GUI.changed) {
 				SaveAllPreferenceValues();
 			}
 		}
